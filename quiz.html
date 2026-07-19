@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VITALFORM – Welcher Abnehm-Typ bist du?</title>
+<style>
+  :root{
+    --green:#16a34a;--green-2:#0f7a37;--lime:#a3e635;--ink:#0c1512;--ink-2:#1c2b24;
+    --muted:#5c6b63;--line:#e7efe9;--soft:#f4f9f5;--grad:linear-gradient(135deg,#1bb356,#0b8a4f);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);
+    background:radial-gradient(900px 540px at 82% -12%,rgba(163,230,53,.16),transparent 60%),
+      radial-gradient(760px 520px at 4% 4%,rgba(22,163,74,.10),transparent 55%),
+      linear-gradient(180deg,#fbfefb,#f5faf6);
+    min-height:100dvh;display:flex;flex-direction:column}
+  header{display:flex;align-items:center;gap:11px;padding:16px 22px;max-width:640px;margin:0 auto;width:100%}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:850;font-size:1.25rem;letter-spacing:-.03em;text-decoration:none;color:var(--ink)}
+  .logo .mark{width:36px;height:36px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(22,163,74,.4)}
+  .logo span{color:var(--green-2)}
+  .back{margin-left:auto;font-size:.85rem;color:var(--muted);text-decoration:none}
+  .back:hover{color:var(--green-2)}
+
+  .stage{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:16px 20px 60px}
+  .card{max-width:600px;width:100%;background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 24px 60px rgba(12,60,35,.12);padding:36px 32px;animation:rise .35s cubic-bezier(.2,.9,.3,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .progress{height:8px;background:var(--soft);border-radius:50px;overflow:hidden;margin-bottom:26px}
+  .progress .bar{height:100%;background:var(--grad);border-radius:50px;width:0;transition:width .4s cubic-bezier(.2,.9,.3,1)}
+  .step-label{font-size:.78rem;font-weight:750;color:var(--green-2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+
+  h1{font-size:clamp(1.7rem,4.5vw,2.3rem);font-weight:850;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px}
+  h2{font-size:clamp(1.35rem,3.6vw,1.7rem);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin-bottom:22px}
+  p{color:var(--muted);line-height:1.6}
+  .lead{font-size:1.08rem;margin-bottom:26px}
+
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);
+    border-radius:15px;padding:16px 18px;margin-bottom:12px;font-size:1.02rem;font-weight:600;color:var(--ink);cursor:pointer;transition:.18s}
+  .opt:hover{border-color:var(--green);background:var(--soft);transform:translateY(-2px);box-shadow:0 8px 20px rgba(22,163,74,.13)}
+  .opt .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;transition:.18s}
+  .opt:hover .dot{border-color:var(--green);background:var(--green);box-shadow:inset 0 0 0 4px #fff}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--grad);color:#fff;border:none;
+    padding:16px 30px;border-radius:50px;font-size:1.05rem;font-weight:750;cursor:pointer;text-decoration:none;transition:.2s;
+    box-shadow:0 10px 26px rgba(22,163,74,.35);width:100%}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 16px 32px rgba(22,163,74,.45)}
+  .btn.alt{background:#fff;color:var(--green-2);border:1.5px solid var(--line);box-shadow:none;margin-top:10px}
+  .btn.alt:hover{background:var(--soft)}
+
+  .trust{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:.86rem;color:var(--ink-2);font-weight:600}
+  .trust div{display:flex;align-items:center;gap:6px}
+
+  input[type=email]{width:100%;padding:16px 18px;border:1.5px solid var(--line);border-radius:14px;font-size:1rem;outline:none;margin-bottom:14px}
+  input[type=email]:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(22,163,74,.1)}
+  .fineprint{font-size:.76rem;color:var(--muted);margin-top:12px;text-align:center}
+
+  .result-badge{width:96px;height:96px;border-radius:26px;background:var(--grad);display:flex;align-items:center;justify-content:center;
+    font-size:3rem;margin:0 auto 18px;box-shadow:0 14px 30px rgba(22,163,74,.4)}
+  .result-type{text-align:center}
+  .tag{display:inline-block;background:var(--soft);border:1px solid var(--line);color:var(--green-2);font-weight:750;
+    font-size:.8rem;padding:6px 14px;border-radius:50px;margin-bottom:14px}
+  .rec{background:var(--soft);border-left:4px solid var(--green);border-radius:12px;padding:16px 18px;margin:18px 0;text-align:left}
+  .rec b{color:var(--ink)}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+  <header>
+    <a class="logo" href="index.html"><span class="mark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.2" stroke-linecap="round"/></svg></span>VITAL<span>FORM</span></a>
+    <a class="back" href="index.html">✕ Schließen</a>
+  </header>
+
+  <div class="stage">
+    <!-- INTRO -->
+    <div class="card" id="intro">
+      <div class="step-label">Kostenloser Test · 60 Sekunden</div>
+      <h1>Welcher <span style="color:var(--green-2)">Abnehm-Typ</span> bist du?</h1>
+      <p class="lead">Beantworte 7 kurze Fragen und erhalte deinen persönlichen Typ – plus einen kostenlosen 7-Tage-Plan, der genau zu dir passt.</p>
+      <button class="btn" onclick="startQuiz()">Jetzt starten →</button>
+      <div class="trust">
+        <div>✅ 100% kostenlos</div>
+        <div>✅ Nur 60 Sekunden</div>
+        <div>✅ Sofortiges Ergebnis</div>
+      </div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="card hidden" id="question">
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="step-label" id="qcount">Frage 1 von 7</div>
+      <h2 id="qtext"></h2>
+      <div id="qoptions"></div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="card hidden" id="emailscreen">
+      <div class="progress"><div class="bar" style="width:92%"></div></div>
+      <div class="step-label">Fast geschafft!</div>
+      <h2>Wohin dürfen wir dein Ergebnis schicken?</h2>
+      <p style="margin-bottom:20px">Trag deine E-Mail ein und erhalte sofort deinen Abnehm-Typ + deinen kostenlosen 7-Tage-Plan.</p>
+      <form onsubmit="return submitEmail(event)">
+        <input type="email" id="email" placeholder="deine@email.de" required>
+        <button class="btn" type="submit">Ergebnis anzeigen →</button>
+      </form>
+      <div class="fineprint">Kein Spam. Jederzeit abbestellbar. Mit dem Absenden stimmst du der Datenschutzerklärung zu.</div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="card hidden" id="result">
+      <div class="progress"><div class="bar" style="width:100%"></div></div>
+      <div class="result-type">
+        <div class="result-badge" id="r-icon">🔥</div>
+        <div class="tag">Dein Abnehm-Typ</div>
+        <h2 id="r-title" style="margin-bottom:10px"></h2>
+        <p id="r-desc"></p>
+      </div>
+      <div class="rec" id="r-rec"></div>
+      <a class="btn" href="index.html#programme">Mein Programm starten →</a>
+      <a class="btn alt" href="coach.html">KI-Coach kostenlos testen</a>
+      <div class="fineprint">Dein 7-Tage-Plan ist unterwegs in dein Postfach. 📩</div>
+    </div>
+  </div>
+
+<script>
+  // ===== Optional: E-Mail-Tool anbinden (Brevo / Formspree URL). Leer = nur Demo. =====
+  var LEAD_ENDPOINT = "";
+
+  var QUESTIONS = [
+    { q:"Was ist dein Ziel?", key:"ziel", opts:["Abnehmen","Gewicht halten","Fitter & straffer werden","Gesünder essen"] },
+    { q:"Dein Geschlecht?", key:"geschlecht", opts:["Weiblich","Männlich","Divers"] },
+    { q:"Deine Altersgruppe?", key:"alter", opts:["18–29","30–44","45–59","60+"] },
+    { q:"Wie aktiv bist du im Alltag?", key:"aktiv", opts:["Kaum aktiv (viel sitzen)","Etwas aktiv","Ziemlich aktiv"] },
+    { q:"Was ist deine größte Herausforderung?", key:"challenge", opts:["Heißhunger & Snacking","Keine Zeit zum Kochen","Motivation & Durchhalten","Zu wenig Wissen, wo anfangen"] },
+    { q:"Wie oft kochst du selbst?", key:"kochen", opts:["Selten","Manchmal","Oft"] },
+    { q:"Wie viel möchtest du erreichen?", key:"ziel_kg", opts:["2–5 kg","5–10 kg","10–20 kg","Mehr als 20 kg"] }
+  ];
+
+  var TYPES = {
+    "Heißhunger & Snacking": { icon:"🍫", title:"Der Genuss-Typ",
+      desc:"Du liebst gutes Essen – und das ist völlig okay. Deine Herausforderung sind Heißhunger und spontane Snacks.",
+      rec:"Dein Weg: sättigende, eiweißreiche Mahlzeiten, die Heißhunger stoppen, plus clevere Snack-Alternativen. Dein KI-Coach hilft dir in Heißhunger-Momenten sofort weiter – rund um die Uhr." },
+    "Keine Zeit zum Kochen": { icon:"⏱️", title:"Der Effizienz-Typ",
+      desc:"Beruf, Familie, Alltag – dir fehlt einfach die Zeit. Du brauchst kein kompliziertes System, sondern schnelle Lösungen.",
+      rec:"Dein Weg: 10-Minuten-Rezepte, Meal-Prep und einfache Einkaufslisten. Dein KI-Coach passt alles an deinen vollen Terminkalender an." },
+    "Motivation & Durchhalten": { icon:"🔥", title:"Der Motivations-Typ",
+      desc:"Du weißt oft, was zu tun ist – aber Durchhalten und dranbleiben ist die eigentliche Hürde.",
+      rec:"Dein Weg: kleine erreichbare Ziele, sichtbarer Fortschritt und tägliche Begleitung. Dein KI-Coach erinnert und motiviert dich jeden Tag, damit du nicht aufgibst." },
+    "Zu wenig Wissen, wo anfangen": { icon:"🧭", title:"Der Entdecker-Typ",
+      desc:"Zu viele widersprüchliche Infos – du weißt nicht, wo du anfangen sollst. Dir fehlt ein klarer Plan.",
+      rec:"Dein Weg: ein einfacher Schritt-für-Schritt-Plan ohne Fachchinesisch. Dein KI-Coach erklärt dir alles verständlich und beantwortet jede Frage sofort." }
+  };
+
+  var answers = {};
+  var step = 0;
+
+  var elIntro = document.getElementById("intro");
+  var elQ = document.getElementById("question");
+  var elEmail = document.getElementById("emailscreen");
+  var elResult = document.getElementById("result");
+
+  function show(el){ [elIntro,elQ,elEmail,elResult].forEach(function(e){ e.classList.add("hidden"); }); el.classList.remove("hidden"); window.scrollTo(0,0); }
+
+  function startQuiz(){ step = 0; renderQuestion(); show(elQ); }
+
+  function renderQuestion(){
+    var Q = QUESTIONS[step];
+    document.getElementById("qcount").textContent = "Frage " + (step+1) + " von " + QUESTIONS.length;
+    document.getElementById("qtext").textContent = Q.q;
+    document.getElementById("bar").style.width = Math.round((step/QUESTIONS.length)*100) + "%";
+    var box = document.getElementById("qoptions");
+    box.innerHTML = "";
+    Q.opts.forEach(function(opt){
+      var b = document.createElement("button");
+      b.className = "opt";
+      b.innerHTML = '<span class="dot"></span><span>'+opt+'</span>';
+      b.addEventListener("click", function(){ selectAnswer(Q.key, opt); });
+      box.appendChild(b);
+    });
+  }
+
+  function selectAnswer(key, value){
+    answers[key] = value;
+    if(step < QUESTIONS.length - 1){ step++; renderQuestion(); }
+    else { show(elEmail); document.getElementById("email").focus(); }
+  }
+
+  async function submitEmail(e){
+    e.preventDefault();
+    var email = document.getElementById("email").value.trim();
+    if(!email) return false;
+    // optional: an dein E-Mail-Tool senden
+    if(LEAD_ENDPOINT && LEAD_ENDPOINT.indexOf("http")===0){
+      try{ await fetch(LEAD_ENDPOINT, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(Object.assign({email:email}, answers)) }); }catch(err){}
+    }
+    showResult();
+    return false;
+  }
+
+  function showResult(){
+    var t = TYPES[answers.challenge] || TYPES["Motivation & Durchhalten"];
+    document.getElementById("r-icon").textContent = t.icon;
+    document.getElementById("r-title").textContent = t.title;
+    document.getElementById("r-desc").textContent = t.desc;
+    var zielTxt = answers.ziel_kg ? (" Dein Ziel: " + answers.ziel_kg + ".") : "";
+    document.getElementById("r-rec").innerHTML = "<b>Deine Empfehlung:</b> " + t.rec + zielTxt;
+    show(elResult);
+  }
+</script>
+</body>
+</html>

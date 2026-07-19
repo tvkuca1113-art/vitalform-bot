@@ -108,6 +108,15 @@
   .send:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 12px 24px rgba(22,163,74,.5)}
   .send:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
   .disclaimer{max-width:760px;margin:9px auto 0;text-align:center;font-size:.71rem;color:var(--muted)}
+  .attach{width:44px;height:44px;border-radius:50%;border:none;background:var(--soft);color:var(--green-2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.2s}
+  .attach:hover{background:#e3f2e9;transform:translateY(-1px)}
+  .preview{max-width:760px;margin:0 auto 8px;display:none;align-items:center;gap:11px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:8px 12px;box-shadow:0 4px 14px rgba(12,60,35,.06)}
+  .preview.show{display:flex}
+  .preview img{width:50px;height:50px;object-fit:cover;border-radius:10px;flex-shrink:0}
+  .preview span{font-size:.86rem;color:var(--muted)}
+  .preview .pv-x{margin-left:auto;background:var(--soft);border:none;color:var(--muted);cursor:pointer;font-size:1rem;width:28px;height:28px;border-radius:50%;flex-shrink:0}
+  .preview .pv-x:hover{background:#fde8e8;color:#b91c1c}
+  .bubble .food-img{display:block;max-width:230px;width:100%;border-radius:12px;margin-bottom:8px}
 
   /* OVERLAY */
   .overlay{position:fixed;inset:0;background:rgba(8,20,14,.55);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
@@ -158,6 +167,7 @@
       </div>
       <div class="chips" id="chips">
         <button class="chip" onclick="chip(this)">Ich möchte abnehmen 🎯</button>
+        <button class="chip" onclick="document.getElementById('photo').click()">📷 Essen-Foto analysieren</button>
         <button class="chip" onclick="chip(this)">Erstelle mir einen Ernährungsplan 🥗</button>
         <button class="chip" onclick="chip(this)">Trainingsplan für zu Hause 🏠</button>
         <button class="chip" onclick="chip(this)">Schnelle Rezept-Idee 🍳</button>
@@ -173,12 +183,17 @@
   </div>
 
   <div class="composer">
+    <div class="preview" id="preview"></div>
     <div class="cwrap">
-      <textarea id="input" rows="1" placeholder="Schreibe deinem Coach…"></textarea>
+      <button class="attach" id="attach" title="Foto deiner Mahlzeit senden" onclick="document.getElementById('photo').click()" aria-label="Foto senden">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </button>
+      <textarea id="input" rows="1" placeholder="Schreibe oder sende ein Foto deiner Mahlzeit…"></textarea>
       <button class="send" id="send" title="Senden">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-3-6-7-2z" fill="#fff"/></svg>
       </button>
     </div>
+    <input type="file" id="photo" accept="image/*" style="display:none">
     <div class="disclaimer">VITALFORM KI-Coach ist ein KI-Assistent und ersetzt keine ärztliche Beratung.</div>
   </div>
 
@@ -216,6 +231,7 @@
   var stopFlag = false;
   var streamTimer = null;
   var lastAIEl = null;
+  var pendingImage = null;
 
   var chat = document.getElementById("chat");
   var wrap = document.getElementById("wrap");
@@ -274,12 +290,13 @@
     return blocks.join("");
   }
 
-  function addUserMessage(text){
+  function addUserMessage(text, imgUrl){
     var el = document.createElement("div");
     el.className = "msg me";
     var bubble = document.createElement("div");
     bubble.className = "bubble";
-    bubble.textContent = text;
+    if(imgUrl){ var im = document.createElement("img"); im.className = "food-img"; im.src = imgUrl; bubble.appendChild(im); }
+    if(text){ var tx = document.createElement("span"); tx.textContent = text; bubble.appendChild(tx); }
     var col = document.createElement("div");
     col.className = "col";
     col.appendChild(bubble);
@@ -419,13 +436,22 @@
     }catch(e){ fb.className="fb no"; fb.textContent="Fehler. Bitte erneut versuchen."; }
   }
 
-  async function requestReply(){
+  async function requestReply(img){
     sendBtn.disabled = true;
     var typing = addTyping();
+    var payloadMsgs = chatHistory;
+    if(img){
+      payloadMsgs = chatHistory.slice();
+      var last = payloadMsgs[payloadMsgs.length-1];
+      payloadMsgs[payloadMsgs.length-1] = { role:"user", content:[
+        { type:"text", text: last.content },
+        { type:"image", source:{ type:"base64", media_type: img.mediaType, data: img.base64 } }
+      ]};
+    }
     try{
       var res = await fetch("/api/chat", {
         method:"POST", headers:{"content-type":"application/json"},
-        body: JSON.stringify({ messages: chatHistory, accessCode: accessCode })
+        body: JSON.stringify({ messages: payloadMsgs, accessCode: accessCode })
       });
       var data = await res.json();
       typing.remove();
@@ -453,13 +479,16 @@
     if(isStreaming) return;
     if(trialEnded && !privileged){ showUpsell(); return; }
     var text = input.value.trim();
-    if(!text) return;
+    var img = pendingImage;
+    if(!text && !img) return;
     removeChips();
     input.value = ""; input.style.height = "auto";
-    addUserMessage(text);
-    chatHistory.push({ role:"user", content: text });
+    var storedText = text || (img ? "Analysiere bitte dieses Essen: Kalorien und Makros?" : "");
+    addUserMessage(text || (img ? "📷 Foto meiner Mahlzeit" : ""), img ? img.dataUrl : null);
+    chatHistory.push({ role:"user", content: storedText });
     saveHistory();
-    requestReply();
+    clearPreview();
+    requestReply(img);
   }
 
   function regenerate(){
@@ -473,6 +502,39 @@
   input.addEventListener("keydown", function(e){ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); send(); } });
   input.addEventListener("input", function(){ input.style.height="auto"; input.style.height=Math.min(input.scrollHeight,150)+"px"; });
   document.getElementById("access-input").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); submitAccess(); } });
+
+  // ---- Foto der Mahlzeit (Kompression + Vorschau) ----
+  function clearPreview(){ pendingImage = null; var pv=document.getElementById("preview"); if(pv){ pv.classList.remove("show"); pv.innerHTML=""; } }
+  function processImage(file, cb){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var im = new Image();
+      im.onload = function(){
+        var max = 1024, w = im.width, h = im.height;
+        if(w > h && w > max){ h = Math.round(h*max/w); w = max; }
+        else if(h >= w && h > max){ w = Math.round(w*max/h); h = max; }
+        var c = document.createElement("canvas"); c.width = w; c.height = h;
+        c.getContext("2d").drawImage(im, 0, 0, w, h);
+        var dataUrl = c.toDataURL("image/jpeg", 0.82);
+        cb({ dataUrl: dataUrl, base64: dataUrl.split(",")[1], mediaType: "image/jpeg" });
+      };
+      im.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  document.getElementById("photo").addEventListener("change", function(){
+    var file = this.files && this.files[0];
+    this.value = "";
+    if(!file || !/^image\//.test(file.type)) return;
+    processImage(file, function(img){
+      pendingImage = img;
+      var pv = document.getElementById("preview");
+      pv.innerHTML = '<img src="'+img.dataUrl+'" alt=""><span>Foto bereit – schreib etwas dazu oder sende direkt. 📷</span><button class="pv-x" title="Entfernen">✕</button>';
+      pv.querySelector(".pv-x").addEventListener("click", clearPreview);
+      pv.classList.add("show");
+      input.focus();
+    });
+  });
 
   (async function init(){
     accessCode = loadCode();
