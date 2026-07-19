@@ -1,10 +1,15 @@
 # VITALFORM KI-Coach – gotov bot 🤖
 
-Ovo je pravi, radni AI-chat coach koji priča preko Claude API-ja. Sadrži:
+Ovo je cijela VITALFORM stranica ZAJEDNO s radnim AI-chat coachom. Jednim deployom na Vercel oživi sve odjednom. Sadrži:
 
-- `index.html` – brendirani VITALFORM chat (ono što klijent vidi)
+- `index.html` – VITALFORM web stranica (početna, ono što posjetilac prvo vidi)
+- `coach.html` – brendirani chat s KI-Coachom (klijent tu priča s botom)
 - `api/chat.js` – server koji sigurno zove Claude (tvoj API ključ ostaje skriven na serveru)
 - `vercel.json`, `package.json`, `.env.example` – konfiguracija
+
+Dugme „Coach testen" na stranici automatski vodi na `coach.html`. Kad je sve online:
+- Stranica je na glavnom linku (npr. `https://tvoj-projekat.vercel.app`)
+- Bot je na `https://tvoj-projekat.vercel.app/coach.html`
 
 Bot je **spreman**. Preostaje samo da ga postaviš online i ubaciš svoj Claude API ključ. Ispod je uputstvo korak po korak. Ne treba ti programiranje.
 
@@ -49,9 +54,9 @@ Otvori link, napiši coachu poruku (npr. „Želim smršati 8 kg"). Ako odgovori
 
 ---
 
-## Kako povezati s glavnom stranicom
+## Stranica i bot su već povezani
 
-Kad je bot živ, na VITALFORM stranici (dugmad „Coach testen" / „Jetzt starten") samo stavi link na tvoj Vercel bot. Kasnije, kad postaviš Stripe, dostup botu daješ tek nakon uplate (o tome u tehničkom planu).
+Dugme „Coach testen" na stranici već vodi na `coach.html` (tvog bota). Ne moraš ništa ručno povezivati. Kasnije, kad postaviš Stripe, pristup botu daješ tek nakon uplate (o tome u tehničkom planu).
 
 ## Trošak
 
