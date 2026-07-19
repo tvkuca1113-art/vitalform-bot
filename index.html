@@ -194,6 +194,8 @@
   /* FOOTER */
   footer{background:var(--ink);color:#a9bcb1;padding:64px 0 32px;font-size:.94rem}
   .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:40px}
+  @media(max-width:880px){.foot-grid{grid-template-columns:1fr 1fr;gap:28px}}
+  @media(max-width:520px){.foot-grid{grid-template-columns:1fr;gap:24px}}
   footer h4{color:#fff;margin-bottom:16px;font-size:1rem}
   footer a{display:block;color:#a9bcb1;padding:6px 0;cursor:pointer;transition:.2s}
   footer a:hover{color:var(--lime)}
