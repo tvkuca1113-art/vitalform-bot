@@ -124,8 +124,8 @@
   </div>
 
 <script>
-  // ===== Optional: E-Mail-Tool anbinden (Brevo / Formspree URL). Leer = nur Demo. =====
-  var LEAD_ENDPOINT = "";
+  // E-Mail-Capture über eigene Serverless-Funktion (Brevo). Leer lassen = Demo.
+  var LEAD_ENDPOINT = "/api/lead";
 
   var QUESTIONS = [
     { q:"Was ist dein Ziel?", key:"ziel", opts:["Abnehmen","Gewicht halten","Fitter & straffer werden","Gesünder essen"] },
@@ -191,8 +191,8 @@
     var email = document.getElementById("email").value.trim();
     if(!email) return false;
     // optional: an dein E-Mail-Tool senden
-    if(LEAD_ENDPOINT && LEAD_ENDPOINT.indexOf("http")===0){
-      try{ await fetch(LEAD_ENDPOINT, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(Object.assign({email:email}, answers)) }); }catch(err){}
+    if(LEAD_ENDPOINT){
+      try{ await fetch(LEAD_ENDPOINT, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(Object.assign({email:email, source:"quiz"}, answers)) }); }catch(err){}
     }
     showResult();
     return false;

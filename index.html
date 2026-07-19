@@ -775,13 +775,24 @@
     if(email){ email.placeholder = lang==='de' ? 'Deine E-Mail-Adresse' : 'Your email address'; }
   }
   function toggleFaq(el){ el.parentElement.classList.toggle('open'); }
-  function leadSubmit(e){
+  async function leadSubmit(e){
     e.preventDefault();
     var lang=document.documentElement.lang;
-    document.getElementById('lead-msg').textContent = lang==='de'
-      ? '✅ Danke! (Demo – hier später dein E-Mail-Tool anbinden.)'
-      : '✅ Thanks! (Demo – connect your email tool here later.)';
-    document.getElementById('lead-email').value='';
+    var email=document.getElementById('lead-email').value.trim();
+    var msg=document.getElementById('lead-msg');
+    msg.textContent = lang==='de' ? 'Wird gesendet…' : 'Sending…';
+    try{
+      var r = await fetch('/api/lead', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ email: email, source: 'landing' }) });
+      var d = await r.json();
+      if(r.ok && d.ok){
+        msg.textContent = lang==='de' ? '✅ Geschafft! Check dein Postfach für deinen Gratis-Plan.' : '✅ Done! Check your inbox for your free plan.';
+        document.getElementById('lead-email').value='';
+      } else {
+        msg.textContent = (d && d.error) ? d.error : (lang==='de' ? 'Etwas ist schiefgelaufen. Bitte erneut versuchen.' : 'Something went wrong. Please try again.');
+      }
+    }catch(err){
+      msg.textContent = lang==='de' ? 'Verbindungsfehler. Bitte erneut versuchen.' : 'Connection error. Please try again.';
+    }
     return false;
   }
   function showPage(id){
