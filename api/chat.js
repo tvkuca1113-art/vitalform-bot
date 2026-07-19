@@ -1,6 +1,13 @@
 // VITALFORM KI-Coach – Backend (Vercel Serverless Function)
-// Ova funkcija sigurno zove Claude API. API kljuc ostaje na serveru (nikad u browseru).
-// Sadrzi personu coacha + profesionalnu bazu znanja (jelovnici, treninzi, FAQ).
+// ------------------------------------------------------------------
+// SIGURNOST & ZAŠTITA (ugrađeno):
+//  - API ključ ostaje SAMO na serveru (klijenti ga nikad ne vide)
+//  - Rate-limiting po IP-u (Upstash Redis ako je konfigurisan, inače in-memory)
+//  - Besplatni probni limit (npr. 5 poruka po posjetiocu / 24h)
+//  - Owner/Member pristupni kodovi (neograničen pristup, za tebe i kupce)
+//  - Validacija ulaza (dužina poruke, broj poruka) da se spriječi trošenje API-ja
+//  - Prompt caching (jeftiniji ponovljeni pozivi)
+// ------------------------------------------------------------------
 
 const SYSTEM_PROMPT = `Du bist der VITALFORM KI-Coach – ein persönlicher, digitaler Ernährungs- und Fitnesscoach. Du begleitest Menschen dabei, gesund, nachhaltig und ohne Crash-Diäten abzunehmen und sich in ihrem Körper wohlzufühlen. Du bist rund um die Uhr für deine Nutzer da.
 
@@ -27,63 +34,36 @@ Du vereinst das Wissen eines erfahrenen Ernährungsberaters und eines Personal T
 - Setze niemals weniger als ca. 1.200 kcal (Frauen) bzw. 1.500 kcal (Männer) an – außer mit ärztlicher Begleitung.
 - Protein: 1,6–2,2 g pro kg Körpergewicht – schützt Muskeln und hält lange satt.
 - Einfache Teller-Regel pro Mahlzeit: eine Handfläche Protein, eine Faust Kohlenhydrate, ein Daumen Fette, zwei Hände Gemüse.
-- Täglich: 1,5–2 l Wasser, 7–9 h Schlaf, möglichst 7.000–10.000 Schritte (Alltagsbewegung ist entscheidend).
+- Täglich: 1,5–2 l Wasser, 7–9 h Schlaf, möglichst 7.000–10.000 Schritte.
 
 ### B) Beispiel-Tagespläne (anpassen an den Bedarf des Nutzers)
-**~1.500 kcal (~120 g Protein):**
-- Frühstück: 250 g Magerquark + Beeren + 20 g Haferflocken (~300 kcal)
-- Mittag: 150 g Hähnchenbrust + 60 g Reis (roh) + Brokkoli (~500 kcal)
-- Snack: 1 Apfel + 20 g Mandeln (~200 kcal)
-- Abend: Rührei aus 3 Eiern + Gemüse + 1 Scheibe Vollkornbrot (~450 kcal)
+**~1.500 kcal (~120 g Protein):** Frühstück 250 g Magerquark + Beeren + 20 g Haferflocken; Mittag 150 g Hähnchenbrust + 60 g Reis (roh) + Brokkoli; Snack Apfel + 20 g Mandeln; Abend Rührei (3 Eier) + Gemüse + 1 Scheibe Vollkornbrot.
+**~1.800 kcal (~140 g Protein):** Frühstück Overnight Oats (50 g Haferflocken, 200 g Skyr, Beeren); Mittag 160 g Pute + 80 g Vollkornnudeln + Gemüse; Snack 200 g Skyr + Banane; Abend 150 g Lachs + Süßkartoffel + Salat.
+**~2.000 kcal (~150 g Protein):** Frühstück 2 Scheiben Vollkornbrot + Frischkäse + 2 Eier; Mittag 180 g mageres Rindhack + 90 g Reis + Bohnen; Snack Proteinshake + Nüsse; Abend Hähnchen-Gemüse-Pfanne + 70 g Quinoa.
+**Vegetarisch ~1.600 kcal:** Skyr + Beeren + Nüsse; Linsen-Dal + Vollkornreis; Hüttenkäse + Gemüsesticks; Tofu-Gemüse-Pfanne + Vollkornnudeln.
 
-**~1.800 kcal (~140 g Protein):**
-- Frühstück: Overnight Oats (50 g Haferflocken, 200 g Skyr, Beeren) (~400 kcal)
-- Mittag: 160 g Pute + 80 g Vollkornnudeln + Gemüse (~600 kcal)
-- Snack: 200 g Skyr + Banane (~250 kcal)
-- Abend: 150 g Lachs + Süßkartoffel + Salat (~550 kcal)
-
-**~2.000 kcal (~150 g Protein):**
-- Frühstück: Vollkornbrot (2 Scheiben) + Frischkäse + 2 Eier + Tomate (~500 kcal)
-- Mittag: 180 g Rindhackfleisch (mager) + 90 g Reis + Bohnen (~650 kcal)
-- Snack: Proteinshake + 1 Handvoll Nüsse (~300 kcal)
-- Abend: Hähnchen-Gemüse-Pfanne + 70 g Quinoa (~550 kcal)
-
-**Vegetarisch ~1.600 kcal:**
-- Frühstück: Skyr (250 g) + Beeren + 20 g Nüsse
-- Mittag: Linsen-Dal + Vollkornreis
-- Snack: Hüttenkäse + Gemüsesticks
-- Abend: Tofu-Gemüse-Pfanne + Vollkornnudeln
-
-### C) Schnelle Rezepte (10–15 Minuten)
+### C) Schnelle Rezepte (10–15 Min)
 - Protein-Bowl: Reis/Quinoa + Hähnchen oder Tofu + viel Gemüse + Joghurt-Dressing.
-- Overnight Oats: Haferflocken + Skyr + Milch + Beeren, über Nacht in den Kühlschrank.
-- One-Pan Hähnchen-Gemüse: Hähnchen + Paprika, Zucchini, Zwiebel mit Gewürzen im Ofen (20 Min).
+- Overnight Oats: Haferflocken + Skyr + Milch + Beeren, über Nacht kühlen.
+- One-Pan Hähnchen-Gemüse: Hähnchen + Paprika, Zucchini, Zwiebel, Gewürze, 20 Min Ofen.
 - Linsen-Curry (veg): rote Linsen + Kokosmilch (light) + Currypaste + Spinat.
 
 ### D) Trainingspläne
-**Zu Hause, ohne Geräte (3×/Woche, Ganzkörper, Anfänger):**
-- Aufwärmen: 5 Min lockeres Bewegen / Hampelmänner.
-- Kniebeugen 3×12, Liegestütze (auch auf Knien) 3×8–12, Ausfallschritte 3×10 pro Bein, Plank 3×20–40 Sek, Glute Bridge 3×15, Superman 3×12.
-- Steigerung: jede Woche 1–2 Wiederholungen oder einen Satz mehr.
-
-**Fitnessstudio (3–4×/Woche, Ober-/Unterkörper-Split):**
-- Unterkörper: Kniebeugen, Beinpresse, rumänisches Kreuzheben, Wadenheben.
-- Oberkörper: Bankdrücken/Brustpresse, Latzug, Rudern, Schulterdrücken, Bizeps/Trizeps.
-- 3–4 Sätze, 8–12 Wiederholungen, letzte Wiederholungen fordernd.
-- Cardio: 2–3×/Woche 20–30 Min zügiges Gehen oder Intervalle.
+**Zu Hause ohne Geräte (3×/Woche, Ganzkörper, Anfänger):** Aufwärmen 5 Min; Kniebeugen 3×12; Liegestütze (auch auf Knien) 3×8–12; Ausfallschritte 3×10/Bein; Plank 3×20–40 Sek; Glute Bridge 3×15; Superman 3×12. Steigerung: wöchentlich 1–2 Wiederholungen mehr.
+**Fitnessstudio (3–4×/Woche, Ober-/Unterkörper-Split):** Unterkörper: Kniebeugen, Beinpresse, rumänisches Kreuzheben, Wadenheben. Oberkörper: Bankdrücken/Brustpresse, Latzug, Rudern, Schulterdrücken, Bizeps/Trizeps. 3–4 Sätze, 8–12 Wiederholungen. Cardio 2–3×/Woche 20–30 Min.
 
 ### E) Typische Situationen
-- Heißhunger: genug essen, proteinreich & ballaststoffreich, Wasser trinken, kurz ablenken. Ein bewusstes Stück reicht.
-- Auswärts/Restaurant: ein Essen ändert nichts. Proteinreich wählen, Beilagen bewusst, den Rest des Tages leicht anpassen.
-- Plateau: Defizit prüfen, Schritte erhöhen, Protein hoch halten, Schlaf & Stress checken; ggf. 1–2 Wochen auf Erhaltung essen.
-- Wochenende: nicht alles verwerfen – eine Genuss-Mahlzeit einplanen, Grundstruktur beibehalten.
-- Motivation: kleine Ziele, Fortschritt sichtbar machen (Fotos & Maße statt nur Waage), Gewohnheiten schlagen Perfektion.
+- Heißhunger: genug & proteinreich essen, Wasser, kurz ablenken.
+- Auswärts essen: ein Essen ändert nichts – proteinreich wählen, Rest des Tages anpassen.
+- Plateau: Defizit prüfen, Schritte erhöhen, Protein hoch, Schlaf/Stress checken.
+- Wochenende: eine Genuss-Mahlzeit einplanen, Struktur behalten.
+- Motivation: kleine Ziele, Fotos & Maße statt nur Waage, Gewohnheiten > Perfektion.
 
-### F) Kurz-Antworten auf häufige Fragen
-- "Muss ich hungern?" Nein – proteinreich und sättigend essen bei moderatem Defizit.
-- "Wie schnell nehme ich ab?" Realistisch 0,3–0,7 kg pro Woche, individuell verschieden.
-- "Kohlenhydrate am Abend?" Kein Problem – die Gesamtbilanz des Tages zählt.
-- "Brauche ich Nahrungsergänzung?" Meist nein, die Basis ist echtes Essen. (Keine Heilmittel-Empfehlungen geben.)
+### F) Häufige Fragen (Kurz)
+- "Muss ich hungern?" → Nein, sättigend & proteinreich bei moderatem Defizit.
+- "Wie schnell?" → 0,3–0,7 kg/Woche, individuell.
+- "Kohlenhydrate am Abend?" → Kein Problem, Gesamtbilanz zählt.
+- "Nahrungsergänzung nötig?" → Meist nein; Basis ist echtes Essen.
 
 ## WICHTIGE SICHERHEITS- UND RECHTSREGELN (immer einhalten)
 - Du bist keine medizinische Fachkraft. Deine Hinweise ersetzen keine ärztliche, therapeutische oder ernährungsmedizinische Beratung.
@@ -99,30 +79,140 @@ Du vereinst das Wissen eines erfahrenen Ernährungsberaters und eines Personal T
 - Erfinde keine Fakten. Bist du unsicher, sag es ehrlich.
 
 ## ÜBER VITALFORM
-Du bist Teil von VITALFORM, einem Online-Programm für nachhaltiges Abnehmen und gesunde Ernährung. Der Nutzer hat Zugang zu Ernährungsplänen, Trainingsplänen, Rezepten und dir als KI-Coach.`;
+Du bist Teil von VITALFORM, einem Online-Programm für nachhaltiges Abnehmen und gesunde Ernährung.`;
+
+// ---------- Konfiguracija (preko Vercel Environment Variables) ----------
+const FREE_TRIAL_LIMIT = parseInt(process.env.FREE_TRIAL_LIMIT || "5", 10); // besplatnih poruka / 24h
+const TRIAL_WINDOW = 24 * 60 * 60;   // 24h
+const BURST_WINDOW = 60;             // 60s
+const BURST_MAX = 15;                // maks. poruka/min za probne korisnike
+const BURST_MAX_PRIV = 60;           // maks. poruka/min za članove/vlasnika
+const MAX_INPUT_CHARS = 2000;        // maks. dužina jedne poruke
+const MAX_MESSAGES = 20;             // maks. poruka iz istorije
+
+// ---------- Rate-limit skladište: Upstash Redis (REST) ili in-memory ----------
+async function redisIncr(key, ttlSec) {
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) return null; // nije konfigurisan -> koristi in-memory
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token, "content-type": "application/json" },
+      body: JSON.stringify([["INCR", key], ["EXPIRE", key, String(ttlSec), "NX"]])
+    });
+    if (!r.ok) return null;
+    const j = await r.json();
+    // pipeline vraća niz rezultata; prvi je INCR
+    if (Array.isArray(j) && j[0] && typeof j[0].result !== "undefined") return j[0].result;
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+const memStore = new Map();
+function memIncr(key, ttlSec) {
+  const now = Date.now();
+  const rec = memStore.get(key);
+  if (!rec || now > rec.exp) { memStore.set(key, { count: 1, exp: now + ttlSec * 1000 }); return 1; }
+  rec.count++;
+  return rec.count;
+}
+// povremeno čišćenje da Map ne raste beskonačno
+function memCleanup() {
+  const now = Date.now();
+  if (memStore.size > 5000) {
+    for (const [k, v] of memStore) { if (now > v.exp) memStore.delete(k); }
+  }
+}
+
+async function incrWithTTL(key, ttlSec) {
+  const viaRedis = await redisIncr(key, ttlSec);
+  if (viaRedis !== null) return viaRedis;
+  memCleanup();
+  return memIncr(key, ttlSec);
+}
+
+function getIp(req) {
+  const xff = req.headers["x-forwarded-for"];
+  if (xff) return String(xff).split(",")[0].trim();
+  return req.headers["x-real-ip"] || "unknown";
+}
+
+function json(res, status, obj) { return res.status(status).json(obj); }
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
-    return res.status(405).json({ error: "Method not allowed" });
+    return json(res, 405, { error: "Method not allowed" });
+  }
+
+  // (opciono) stroga provjera porijekla – uključi postavljanjem ENFORCE_ORIGIN=true
+  if (process.env.ENFORCE_ORIGIN === "true") {
+    const origin = req.headers.origin;
+    const host = req.headers.host;
+    if (origin && host && origin.indexOf(host) === -1) {
+      return json(res, 403, { error: "Forbidden" });
+    }
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: "Server nije konfigurisan: nedostaje ANTHROPIC_API_KEY." });
+    return json(res, 500, { error: "Server nije konfigurisan: nedostaje ANTHROPIC_API_KEY." });
   }
 
+  let body;
   try {
-    const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
-    const messages = Array.isArray(body.messages) ? body.messages : [];
+    body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : (req.body || {});
+  } catch (e) {
+    return json(res, 400, { error: "Neispravan zahtjev." });
+  }
 
-    if (messages.length === 0) {
-      return res.status(400).json({ error: "Nema poruka." });
+  const ip = getIp(req);
+
+  // Pristupni kodovi: vlasnik + članovi (neograničen pristup)
+  const codes = [process.env.OWNER_ACCESS_CODE, process.env.MEMBER_ACCESS_CODE].filter(Boolean);
+  const provided = (body.accessCode || "").toString();
+  const privileged = provided.length > 0 && codes.indexOf(provided) !== -1;
+
+  // Akcija "validate": provjeri kod BEZ poziva Claude API-ja (bez troška)
+  if (body.action === "validate") {
+    return json(res, 200, { valid: privileged });
+  }
+
+  // Burst zaštita (protiv spama) – važi za sve
+  const burst = await incrWithTTL("burst:" + ip, BURST_WINDOW);
+  const burstMax = privileged ? BURST_MAX_PRIV : BURST_MAX;
+  if (burst > burstMax) {
+    return json(res, 429, { error: "Zu viele Anfragen. Bitte warte einen Moment. ⏳", code: "RATE_LIMIT" });
+  }
+
+  // Validacija poruka
+  let messages = Array.isArray(body.messages) ? body.messages : [];
+  if (messages.length === 0) return json(res, 400, { error: "Nema poruka." });
+  messages = messages.slice(-MAX_MESSAGES).map(function (m) {
+    return {
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: String(m.content || "").slice(0, MAX_INPUT_CHARS)
+    };
+  });
+
+  // Besplatni probni limit (samo za NE-privilegovane)
+  let remaining = null;
+  if (!privileged) {
+    const trialCount = await incrWithTTL("trial:" + ip, TRIAL_WINDOW);
+    if (trialCount > FREE_TRIAL_LIMIT) {
+      return json(res, 402, {
+        error: "Dein kostenloser Test ist aufgebraucht. Hol dir vollen Zugang, um weiterzumachen. 🚀",
+        code: "TRIAL_ENDED"
+      });
     }
+    remaining = Math.max(0, FREE_TRIAL_LIMIT - trialCount);
+  }
 
-    // Zadrzi samo zadnjih 20 poruka da kontrolises troskove
-    const trimmed = messages.slice(-20);
-
+  // Poziv Claude API-ja
+  try {
     const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -131,28 +221,22 @@ export default async function handler(req, res) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        // Model se moze promijeniti preko env varijable CLAUDE_MODEL.
-        // Najnoviji ID: https://platform.claude.com/docs/en/about-claude/models
         model: process.env.CLAUDE_MODEL || "claude-sonnet-4-5",
         max_tokens: 1024,
-        // Prompt caching: velika baza znanja se kesira -> jeftiniji i brzi ponovljeni pozivi.
-        system: [
-          { type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }
-        ],
-        messages: trimmed
+        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+        messages: messages
       })
     });
 
     const data = await anthropicRes.json();
-
     if (!anthropicRes.ok) {
-      const msg = (data && data.error && data.error.message) ? data.error.message : "Greska pri pozivu Claude API-ja.";
-      return res.status(anthropicRes.status).json({ error: msg });
+      const msg = (data && data.error && data.error.message) ? data.error.message : "Fehler beim KI-Coach.";
+      return json(res, anthropicRes.status, { error: msg });
     }
 
     const reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : "";
-    return res.status(200).json({ reply });
+    return json(res, 200, { reply: reply, remaining: remaining, privileged: privileged });
   } catch (err) {
-    return res.status(500).json({ error: "Serverska greska: " + (err && err.message ? err.message : String(err)) });
+    return json(res, 500, { error: "Serverska greška. Pokušaj ponovo." });
   }
 }

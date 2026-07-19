@@ -213,6 +213,14 @@
   .ph{background:#fff3cd;border-bottom:2px dashed #e0b400;padding:0 4px;border-radius:3px;font-weight:700;color:#7a5c00}
   .legal-note{background:var(--soft);border-left:4px solid var(--green);padding:16px 20px;border-radius:10px;margin:0 0 28px;font-size:.9rem;color:var(--ink-2)}
 
+  .pay-badges{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .pay-badge{height:40px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#fff;display:flex;align-items:center;font-weight:800;font-size:.9rem;color:#1c2b24;box-shadow:var(--shadow-sm);letter-spacing:.02em}
+  .pay-badge .pp{color:#003087}.pay-badge .pp2{color:#009cde}
+  .card-pay{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px}
+  .trylink{display:inline-block;margin-top:12px;color:var(--green-2);font-weight:750;font-size:.92rem;cursor:pointer;text-decoration:none}
+  .trylink:hover{text-decoration:underline}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#0c1512;color:#fff;padding:15px 24px;border-radius:12px;font-size:.94rem;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:.3s;z-index:200;max-width:90%;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.8,.2,1)}
   .reveal.visible{opacity:1;transform:none}
   .hidden{display:none !important}
@@ -258,7 +266,7 @@
       <p class="lead" data-de="Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn automatisch an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit." data-en="Your AI coach builds your nutrition and training plan, adjusts it automatically and answers your questions 24/7. No starving, no gym pressure, no waiting.">Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn automatisch an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit.</p>
       <div class="hero-cta">
         <a onclick="goHome('#programme')" class="btn" data-de="Programm ansehen" data-en="View programs">Programm ansehen →</a>
-        <a onclick="goHome('#lead')" class="btn ghost" data-de="Gratis 7-Tage-Plan" data-en="Free 7-day plan">Gratis 7-Tage-Plan</a>
+        <a href="coach.html" class="btn ghost" data-de="KI-Coach kostenlos testen" data-en="Try the AI coach free">KI-Coach kostenlos testen</a>
       </div>
       <div class="trust">
         <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#dcfce7"/><path d="M7 12l3.5 3.5L17 8.5" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-de="100% online" data-en="100% online">100% online</span></div>
@@ -386,7 +394,8 @@
         <li data-de="Einkaufslisten" data-en="Shopping lists">Einkaufslisten</li>
         <li data-de="Kalorien- & Makro-Guide" data-en="Calorie & macro guide">Kalorien- & Makro-Guide</li>
       </ul>
-      <a onclick="goHome('#lead')" class="btn ghost" data-de="Auswählen" data-en="Choose">Auswählen</a>
+      <a onclick="buyNow('plan')" class="btn ghost" style="cursor:pointer" data-de="Jetzt kaufen" data-en="Buy now">Jetzt kaufen</a>
+      <div class="card-pay">Apple&nbsp;Pay · PayPal · Kreditkarte</div>
     </div>
     <div class="price featured reveal">
       <div class="tag" data-de="★ Bestseller" data-en="★ Bestseller">★ Bestseller</div>
@@ -401,7 +410,8 @@
         <li data-de="1 Monat KI-Coach inklusive" data-en="1 month AI coach included">1 Monat KI-Coach inklusive</li>
         <li data-de="Zugang zur Community" data-en="Community access">Zugang zur Community</li>
       </ul>
-      <a onclick="goHome('#lead')" class="btn" data-de="Jetzt starten" data-en="Start now">Jetzt starten</a>
+      <a onclick="buyNow('programm')" class="btn" style="cursor:pointer" data-de="Jetzt kaufen" data-en="Buy now">Jetzt kaufen</a>
+      <div class="card-pay">Apple&nbsp;Pay · PayPal · Kreditkarte</div>
     </div>
     <div class="price reveal">
       <h3 data-de="VITALFORM KI-Coach" data-en="VITALFORM AI Coach">VITALFORM KI-Coach</h3>
@@ -414,11 +424,19 @@
         <li data-de="Motivation & Erinnerungen" data-en="Motivation & reminders">Motivation & Erinnerungen</li>
         <li data-de="Jederzeit kündbar" data-en="Cancel anytime">Jederzeit kündbar</li>
       </ul>
-      <a href="coach.html" class="btn ghost" data-de="Coach testen" data-en="Try the coach">Coach testen</a>
+      <a onclick="buyNow('coach')" class="btn ghost" style="cursor:pointer" data-de="Abo starten" data-en="Start subscription">Abo starten</a>
+      <a href="coach.html" class="trylink" data-de="oder kostenlos testen →" data-en="or try for free →">oder kostenlos testen →</a>
     </div>
   </div>
   <div class="wrap center" style="margin-top:30px">
     <p data-de="💳 Sichere Zahlung · 14 Tage Geld-zurück-Garantie auf digitale Programme (sofern nicht bereits vollständig genutzt)." data-en="💳 Secure payment · 14-day money-back guarantee on digital programs (unless already fully used).">💳 Sichere Zahlung · 14 Tage Geld-zurück-Garantie auf digitale Programme (sofern nicht bereits vollständig genutzt).</p>
+    <div class="pay-badges">
+      <span class="pay-badge">Apple&nbsp;Pay</span>
+      <span class="pay-badge"><span class="pp">Pay</span><span class="pp2">Pal</span></span>
+      <span class="pay-badge">VISA</span>
+      <span class="pay-badge">Mastercard</span>
+      <span class="pay-badge">Klarna</span>
+    </div>
   </div>
 </section>
 
@@ -619,6 +637,7 @@
         <a onclick="goHome('#ki-coach')" data-de="Über den KI-Coach" data-en="About the AI coach">Über den KI-Coach</a>
         <a onclick="goHome('#faq')" data-de="FAQ" data-en="FAQ">FAQ</a>
         <a onclick="goHome('#lead')" data-de="Gratis 7-Tage-Plan" data-en="Free 7-day plan">Gratis 7-Tage-Plan</a>
+        <a href="coach.html" data-de="🔑 Inhaber-Login" data-en="🔑 Owner login">🔑 Inhaber-Login</a>
       </div>
       <div>
         <h4 data-de="Rechtliches" data-en="Legal">Rechtliches</h4>
@@ -682,6 +701,34 @@
     entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('visible'); io.unobserve(en.target); } });
   },{threshold:.12});
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+</script>
+
+<div class="toast" id="toast"></div>
+<script>
+  // ================= ZAHLUNGSLINKS =================
+  // HIER trägst du deine echten Links ein (Stripe Payment Link oder PayPal).
+  // Stripe Payment Link zeigt Apple Pay, Google Pay & Kreditkarte automatisch an.
+  // Solange leer, zeigt der Button einen Hinweis (Test/Platzhalter).
+  const PAYMENT_LINKS = {
+    plan: "",      // 47€  – Ernährungsplan (einmalig)
+    programm: "",  // 97€  – 12-Wochen-Programm (einmalig)
+    coach: ""      // 29€  – KI-Coach (Abo / Monat)
+  };
+
+  function toast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(window.__tt);
+    window.__tt = setTimeout(function(){ t.classList.remove("show"); }, 3800);
+  }
+  function buyNow(key){
+    var url = PAYMENT_LINKS[key];
+    if(url && url.indexOf("http") === 0){ window.open(url, "_blank"); return; }
+    var de = document.documentElement.lang !== "en";
+    toast(de
+      ? "💳 Zahlung wird in Kürze aktiviert – trage deinen Zahlungslink im Code ein."
+      : "💳 Payment will be activated soon – add your payment link in the code.");
+  }
 </script>
 </body>
 </html>

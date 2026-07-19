@@ -16,15 +16,19 @@
     radial-gradient(700px 500px at 5% 5%,rgba(22,163,74,.10),transparent 55%),
     #f7fbf8;color:var(--ink);display:flex;flex-direction:column;height:100dvh}
 
-  header{display:flex;align-items:center;gap:12px;padding:12px 20px;background:rgba(255,255,255,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+  header{display:flex;align-items:center;gap:12px;padding:12px 18px;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
   .mark{width:38px;height:38px;border-radius:11px;background:var(--grad);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(22,163,74,.4);flex-shrink:0}
-  header .t b{font-size:1.02rem;letter-spacing:-.02em}
-  header .t small{display:block;color:var(--green-2);font-weight:700;font-size:.74rem}
-  header .status{margin-left:auto;font-size:.74rem;color:var(--muted);display:flex;align-items:center;gap:6px;background:var(--soft);padding:6px 12px;border-radius:50px;border:1px solid var(--line)}
-  header .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
-  .back-link{text-decoration:none;color:inherit;display:flex;align-items:center;gap:12px}
+  header .t b{font-size:1.0rem;letter-spacing:-.02em}
+  header .t small{display:block;color:var(--green-2);font-weight:700;font-size:.72rem}
+  .back-link{text-decoration:none;color:inherit;display:flex;align-items:center;gap:11px}
+  .h-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .key-btn{background:var(--soft);border:1px solid var(--line);color:var(--ink-2);font-weight:650;font-size:.82rem;padding:8px 13px;border-radius:50px;cursor:pointer;transition:.2s}
+  .key-btn:hover{border-color:var(--green);color:var(--green-2)}
 
-  .chat{flex:1;overflow-y:auto;padding:26px 16px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
+  .trialbar{text-align:center;font-size:.82rem;font-weight:650;padding:8px 14px;background:#fffdf3;border-bottom:1px solid #f2ecd0;color:#8a7a20}
+  .trialbar.full{background:var(--soft);border-color:var(--line);color:var(--green-2)}
+
+  .chat{flex:1;overflow-y:auto;padding:24px 16px;display:flex;flex-direction:column;gap:16px;scroll-behavior:smooth}
   .wrap{max-width:740px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:16px}
   .msg{display:flex;gap:11px;max-width:90%;animation:pop .25s ease}
   @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -38,8 +42,7 @@
   .bubble strong{font-weight:750}
   .bubble ul{margin:6px 0 2px;padding-left:20px}
   .bubble li{margin:3px 0}
-  .bubble p{margin:0 0 8px}
-  .bubble p:last-child{margin-bottom:0}
+  .bubble p{margin:0 0 8px}.bubble p:last-child{margin-bottom:0}
 
   .chips{display:flex;flex-wrap:wrap;gap:9px;margin:2px 0 0 45px}
   .chip{background:#fff;border:1.5px solid var(--line);color:var(--ink-2);padding:9px 15px;border-radius:50px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s}
@@ -54,11 +57,29 @@
   .composer .wrap{flex-direction:row;align-items:flex-end;gap:10px}
   textarea{flex:1;resize:none;border:1.5px solid var(--line);border-radius:24px;padding:14px 18px;font-size:1rem;font-family:inherit;max-height:150px;line-height:1.4;outline:none;background:#fff;transition:.2s}
   textarea:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(22,163,74,.1)}
+  textarea:disabled{background:#f3f4f3;color:#9aa}
   .send{width:50px;height:50px;border-radius:50%;border:none;background:var(--grad);color:#fff;font-size:1.25rem;cursor:pointer;flex-shrink:0;box-shadow:0 8px 18px rgba(22,163,74,.38);transition:.2s;display:flex;align-items:center;justify-content:center}
   .send:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(22,163,74,.48)}
   .send:disabled{opacity:.5;cursor:not-allowed;transform:none}
   .disclaimer{max-width:740px;margin:10px auto 0;text-align:center;font-size:.72rem;color:var(--muted)}
   .err{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;padding:11px 15px;border-radius:12px;font-size:.88rem;text-align:center}
+
+  /* Overlay (upsell + modal) */
+  .overlay{position:fixed;inset:0;background:rgba(8,20,14,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+  .overlay.show{display:flex}
+  .card{background:#fff;border-radius:22px;max-width:420px;width:100%;padding:32px 28px;box-shadow:0 30px 80px rgba(0,0,0,.35);text-align:center;animation:pop .25s ease}
+  .card .ic{width:64px;height:64px;border-radius:18px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 16px;box-shadow:0 10px 24px rgba(22,163,74,.4)}
+  .card h3{font-size:1.35rem;margin-bottom:8px;letter-spacing:-.02em}
+  .card p{color:var(--muted);font-size:.95rem;margin-bottom:20px}
+  .card .btn{display:block;width:100%;background:var(--grad);color:#fff;border:none;padding:14px;border-radius:12px;font-size:1rem;font-weight:750;cursor:pointer;text-decoration:none;margin-bottom:10px;transition:.2s}
+  .card .btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(22,163,74,.35)}
+  .card .btn.alt{background:#fff;color:var(--green-2);border:1.5px solid var(--line)}
+  .card .btn.alt:hover{background:var(--soft)}
+  .card input{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:1rem;margin-bottom:12px;outline:none;text-align:center;letter-spacing:.05em}
+  .card input:focus{border-color:var(--green)}
+  .card .close{margin-top:6px;color:var(--muted);font-size:.85rem;cursor:pointer;background:none;border:none}
+  .card .fb{font-size:.85rem;font-weight:650;min-height:20px;margin-bottom:6px}
+  .card .fb.ok{color:var(--green-2)} .card .fb.no{color:#b91c1c}
 </style>
 </head>
 <body>
@@ -69,8 +90,12 @@
       </span>
       <div class="t"><b>VITALFORM KI-Coach</b><small>● Dein Coach, 24/7</small></div>
     </a>
-    <div class="status"><span class="dot"></span> Online</div>
+    <div class="h-actions">
+      <button class="key-btn" id="access-btn" onclick="openAccess()">🔑 Zugang</button>
+    </div>
   </header>
+
+  <div class="trialbar" id="trialbar">🎁 Kostenloser Test aktiv</div>
 
   <div class="chat" id="chat">
     <div class="wrap" id="wrap">
@@ -95,25 +120,75 @@
     <div class="disclaimer">VITALFORM KI-Coach ist ein KI-Assistent und ersetzt keine ärztliche Beratung.</div>
   </div>
 
+  <!-- Upsell overlay -->
+  <div class="overlay" id="upsell">
+    <div class="card">
+      <div class="ic">🚀</div>
+      <h3>Dein kostenloser Test ist aufgebraucht</h3>
+      <p>Du hast einen ersten Eindruck von deinem KI-Coach bekommen. Hol dir jetzt vollen, unbegrenzten Zugang und erreiche dein Ziel.</p>
+      <a class="btn" href="index.html#programme">Zu den Programmen ansehen</a>
+      <button class="btn alt" onclick="closeUpsell();openAccess()">Ich habe einen Zugangscode</button>
+      <button class="close" onclick="closeUpsell()">Später</button>
+    </div>
+  </div>
+
+  <!-- Access code modal -->
+  <div class="overlay" id="access">
+    <div class="card">
+      <div class="ic">🔑</div>
+      <h3>Zugangscode eingeben</h3>
+      <p>Für Mitglieder und den Inhaber. Gib deinen Code ein, um vollen Zugang freizuschalten.</p>
+      <div class="fb" id="access-fb"></div>
+      <input type="password" id="access-input" placeholder="Dein Zugangscode" autocomplete="off">
+      <button class="btn" onclick="submitAccess()">Freischalten</button>
+      <button class="close" onclick="closeAccess()">Abbrechen</button>
+    </div>
+  </div>
+
 <script>
-  const history = [];
-  const chat = document.getElementById("chat");
-  const wrap = document.getElementById("wrap");
-  const input = document.getElementById("input");
-  const sendBtn = document.getElementById("send");
-  const chipsEl = document.getElementById("chips");
+  var history = [];
+  var accessCode = "";
+  var privileged = false;
+  var trialEnded = false;
+
+  var chat = document.getElementById("chat");
+  var wrap = document.getElementById("wrap");
+  var input = document.getElementById("input");
+  var sendBtn = document.getElementById("send");
+  var chipsEl = document.getElementById("chips");
+  var trialbar = document.getElementById("trialbar");
+
+  // --- sessionStorage (sigurno, ne ruši ako je blokiran) ---
+  function saveCode(c){ try{ sessionStorage.setItem("vf_code", c); }catch(e){} }
+  function loadCode(){ try{ return sessionStorage.getItem("vf_code") || ""; }catch(e){ return ""; } }
 
   function scrollDown(){ chat.scrollTop = chat.scrollHeight; }
 
-  // Sigurno formatiranje: escape HTML, pa **bold**, - liste i prazni redovi -> paragrafi.
+  function setFullAccess(){
+    privileged = true; trialEnded = false;
+    trialbar.className = "trialbar full";
+    trialbar.textContent = "✓ Voller Zugang aktiv";
+    input.disabled = false;
+  }
+  function setTrial(remaining){
+    if(privileged) return;
+    trialbar.className = "trialbar";
+    if(typeof remaining === "number"){
+      trialbar.textContent = remaining > 0
+        ? "🎁 Noch " + remaining + " Gratis-Nachricht" + (remaining===1?"":"en")
+        : "🎁 Letzte Gratis-Nachricht war das";
+    }
+  }
+
+  // --- sigurno formatiranje odgovora ---
   function formatText(t){
-    let s = t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    var s = t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = s.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
-    const blocks = s.split(/\n\s*\n/).map(function(block){
-      const lines = block.split(/\n/);
-      const isList = lines.every(function(l){ return /^\s*[-•]\s+/.test(l) || l.trim()===""; }) && /[-•]/.test(block);
+    var blocks = s.split(/\n\s*\n/).map(function(block){
+      var lines = block.split(/\n/);
+      var isList = lines.every(function(l){ return /^\s*[-•]\s+/.test(l) || l.trim()===""; }) && /[-•]/.test(block);
       if(isList){
-        const items = lines.filter(function(l){ return l.trim()!==""; })
+        var items = lines.filter(function(l){ return l.trim()!==""; })
           .map(function(l){ return "<li>"+l.replace(/^\s*[-•]\s+/,"")+"</li>"; }).join("");
         return "<ul>"+items+"</ul>";
       }
@@ -123,76 +198,98 @@
   }
 
   function addMessage(role, text){
-    const el = document.createElement("div");
+    var el = document.createElement("div");
     el.className = "msg " + (role === "user" ? "me" : "ai");
-    const av = '<div class="av">' + (role === "user" ? "🙂" : "🤖") + '</div>';
-    const bubble = document.createElement("div");
+    var bubble = document.createElement("div");
     bubble.className = "bubble";
     if(role === "user"){ bubble.textContent = text; }
     else { bubble.innerHTML = formatText(text); }
-    el.innerHTML = av;
+    el.innerHTML = '<div class="av">' + (role === "user" ? "🙂" : "🤖") + '</div>';
     el.appendChild(bubble);
     wrap.appendChild(el);
     scrollDown();
     return el;
   }
-
   function addTyping(){
-    const el = document.createElement("div");
+    var el = document.createElement("div");
     el.className = "msg ai typing";
     el.innerHTML = '<div class="av">🤖</div><div class="bubble"><span></span><span></span><span></span></div>';
-    wrap.appendChild(el);
-    scrollDown();
-    return el;
+    wrap.appendChild(el); scrollDown(); return el;
   }
-
   function addError(text){
-    const el = document.createElement("div");
-    el.className = "err";
-    el.textContent = text;
-    wrap.appendChild(el);
-    scrollDown();
+    var el = document.createElement("div");
+    el.className = "err"; el.textContent = text;
+    wrap.appendChild(el); scrollDown();
   }
-
   function chip(btn){
     input.value = btn.textContent.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g,"").trim();
     send();
   }
 
+  // --- overlay kontrole ---
+  function openAccess(){ document.getElementById("access").classList.add("show"); document.getElementById("access-input").focus(); }
+  function closeAccess(){ document.getElementById("access").classList.remove("show"); }
+  function closeUpsell(){ document.getElementById("upsell").classList.remove("show"); }
+  function showUpsell(){ trialEnded = true; document.getElementById("upsell").classList.add("show"); }
+
+  async function submitAccess(){
+    var code = document.getElementById("access-input").value.trim();
+    var fb = document.getElementById("access-fb");
+    if(!code){ fb.className="fb no"; fb.textContent="Bitte gib einen Code ein."; return; }
+    fb.className="fb"; fb.textContent="Prüfe…";
+    try{
+      var res = await fetch("/api/chat", {
+        method:"POST", headers:{"content-type":"application/json"},
+        body: JSON.stringify({ action:"validate", accessCode: code })
+      });
+      var data = await res.json();
+      if(data.valid){
+        accessCode = code; saveCode(code); setFullAccess();
+        fb.className="fb ok"; fb.textContent="✓ Freigeschaltet!";
+        setTimeout(function(){ closeAccess(); closeUpsell(); }, 700);
+      } else {
+        fb.className="fb no"; fb.textContent="Code ungültig ❌";
+      }
+    }catch(e){ fb.className="fb no"; fb.textContent="Fehler. Bitte erneut versuchen."; }
+  }
+
   async function send(){
-    const text = input.value.trim();
+    if(trialEnded && !privileged){ showUpsell(); return; }
+    var text = input.value.trim();
     if (!text) return;
-    if (chipsEl) chipsEl.remove();
-    input.value = "";
-    input.style.height = "auto";
-    sendBtn.disabled = true;
+    if (chipsEl) { chipsEl.remove(); chipsEl = null; }
+    input.value = ""; input.style.height = "auto"; sendBtn.disabled = true;
 
     addMessage("user", text);
     history.push({ role: "user", content: text });
-
-    const typing = addTyping();
+    var typing = addTyping();
 
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ messages: history })
+      var res = await fetch("/api/chat", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({ messages: history, accessCode: accessCode })
       });
-      const data = await res.json();
+      var data = await res.json();
       typing.remove();
 
-      if (!res.ok || data.error) {
+      if (res.status === 402 && data.code === "TRIAL_ENDED"){
+        showUpsell();
+      } else if (res.status === 429){
+        addError(data.error || "Zu viele Anfragen. Bitte kurz warten.");
+      } else if (!res.ok || data.error) {
         addError(data.error || "Es ist ein Fehler aufgetreten. Bitte versuche es später erneut.");
       } else {
         addMessage("assistant", data.reply);
         history.push({ role: "assistant", content: data.reply });
+        if (data.privileged) setFullAccess();
+        else setTrial(data.remaining);
       }
     } catch (e) {
       typing.remove();
       addError("Verbindungsfehler. Bitte prüfe deine Internetverbindung.");
     } finally {
       sendBtn.disabled = false;
-      input.focus();
+      if(!input.disabled) input.focus();
     }
   }
 
@@ -204,7 +301,23 @@
     input.style.height = "auto";
     input.style.height = Math.min(input.scrollHeight, 150) + "px";
   });
-  input.focus();
+  document.getElementById("access-input").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){ e.preventDefault(); submitAccess(); }
+  });
+
+  // Na učitavanju: ako postoji sačuvani kod, provjeri ga tiho
+  (async function init(){
+    accessCode = loadCode();
+    if(accessCode){
+      try{
+        var res = await fetch("/api/chat", { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ action:"validate", accessCode: accessCode }) });
+        var data = await res.json();
+        if(data.valid) setFullAccess();
+        else { accessCode = ""; saveCode(""); }
+      }catch(e){}
+    }
+    input.focus();
+  })();
 </script>
 </body>
 </html>
