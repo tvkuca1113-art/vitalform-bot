@@ -85,9 +85,9 @@
   .hc-avatar{width:46px;height:46px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.3rem;flex-shrink:0}
   .hc-head b{display:block;font-size:1.02rem}
   .hc-head small{color:var(--green-2);font-weight:700}
-  .chat{background:var(--soft);border-radius:14px;padding:13px 15px;margin-bottom:10px;font-size:.92rem;color:var(--ink-2);border:1px solid var(--line)}
-  .chat.me{background:var(--grad);color:#fff;border:none;margin-left:32px}
-  .chat.ai{margin-right:20px}
+  .hero-card .chat{background:var(--soft);border-radius:14px;padding:13px 15px;margin-bottom:10px;font-size:.92rem;color:var(--ink-2);border:1px solid var(--line)}
+  .hero-card .chat.me{background:var(--grad);color:#fff;border:none;margin-left:32px}
+  .hero-card .chat.ai{margin-right:20px;background:var(--soft);color:var(--ink-2)}
   .hero-float{position:absolute;background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:14px 18px;display:flex;align-items:center;gap:12px;z-index:3;font-weight:750;font-size:.9rem}
   .hero-float .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.15rem}
   .float-1{top:-26px;left:-28px}
@@ -282,7 +282,7 @@
       <div class="hero-card">
         <div class="badge" data-de="24/7 verfügbar" data-en="Available 24/7">24/7 verfügbar</div>
         <div class="hc-head">
-          <div class="hc-avatar">🤖</div>
+          <div class="hc-avatar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.2" stroke-linecap="round"/></svg></div>
           <div><b>VITALFORM KI-Coach</b><small data-de="● Online" data-en="● Online">● Online</small></div>
         </div>
         <div class="chat ai" data-de="Guten Morgen! Bereit für dein Frühstück? Ich habe dir ein Rezept mit 420 kcal vorbereitet. 🥣" data-en="Good morning! Ready for breakfast? I've prepared a 420 kcal recipe for you. 🥣">Guten Morgen! Bereit für dein Frühstück? Ich habe dir ein Rezept mit 420 kcal vorbereitet. 🥣</div>
@@ -369,7 +369,7 @@
       </ul>
     </div>
     <div class="ai-chat reveal">
-      <div class="tag">🤖 <span data-de="Live-Beispiel" data-en="Live example">Live-Beispiel</span></div>
+      <div class="tag"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="vertical-align:middle"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#a3e635" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.4" stroke-linecap="round"/></svg> <span data-de="Live-Beispiel" data-en="Live example">Live-Beispiel</span></div>
       <div class="row"><div class="bubble u" data-de="Ich war heute beim Italiener essen, ist das schlimm?" data-en="I ate at an Italian restaurant today, is that bad?">Ich war heute beim Italiener essen, ist das schlimm?</div></div>
       <div class="row"><div class="bubble a" data-de="Überhaupt nicht! Ein Essen ändert nichts. Ich passe deine restlichen Mahlzeiten heute leicht an – du bleibst voll im Plan. 👍" data-en="Not at all! One meal changes nothing. I'll slightly adjust your remaining meals today – you stay fully on track. 👍">Überhaupt nicht! Ein Essen ändert nichts. Ich passe deine restlichen Mahlzeiten heute leicht an – du bleibst voll im Plan. 👍</div></div>
       <div class="row"><div class="bubble u" data-de="Super, danke! Und morgen früh?" data-en="Great, thanks! And tomorrow morning?">Super, danke! Und morgen früh?</div></div>
@@ -452,7 +452,7 @@
     <div class="feat reveal"><div class="ic">🥗</div><div><h3 data-de="Alltagstaugliche Ernährung" data-en="Everyday nutrition">Alltagstaugliche Ernährung</h3><p data-de="Leckere Rezepte, die schnell gehen – kein Verzicht, keine teuren Zutaten." data-en="Tasty recipes that are quick – no deprivation, no expensive ingredients.">Leckere Rezepte, die schnell gehen – kein Verzicht, keine teuren Zutaten.</p></div></div>
     <div class="feat reveal"><div class="ic">🏋️</div><div><h3 data-de="Training für zu Hause & Gym" data-en="Training for home & gym">Training für zu Hause & Gym</h3><p data-de="Effektive Workouts ab 20 Minuten – mit oder ohne Geräte." data-en="Effective workouts from 20 minutes – with or without equipment.">Effektive Workouts ab 20 Minuten – mit oder ohne Geräte.</p></div></div>
     <div class="feat reveal"><div class="ic">📱</div><div><h3 data-de="Alles auf dem Handy" data-en="Everything on your phone">Alles auf dem Handy</h3><p data-de="Deine Pläne, Rezepte und Fortschritte immer griffbereit." data-en="Your plans, recipes and progress always at hand.">Deine Pläne, Rezepte und Fortschritte immer griffbereit.</p></div></div>
-    <div class="feat reveal"><div class="ic">🤖</div><div><h3 data-de="KI-Begleitung 24/7" data-en="AI support 24/7">KI-Begleitung 24/7</h3><p data-de="Dein Coach ist immer da – ohne Termin, ohne Wartezeit, ohne Urteil." data-en="Your coach is always there – no appointment, no waiting, no judgment.">Dein Coach ist immer da – ohne Termin, ohne Wartezeit, ohne Urteil.</p></div></div>
+    <div class="feat reveal"><div class="ic">💬</div><div><h3 data-de="KI-Begleitung 24/7" data-en="AI support 24/7">KI-Begleitung 24/7</h3><p data-de="Dein Coach ist immer da – ohne Termin, ohne Wartezeit, ohne Urteil." data-en="Your coach is always there – no appointment, no waiting, no judgment.">Dein Coach ist immer da – ohne Termin, ohne Wartezeit, ohne Urteil.</p></div></div>
   </div>
 </section>
 

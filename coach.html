@@ -30,10 +30,11 @@
   .h-txt small{color:var(--green-2);font-weight:700;font-size:.74rem;display:flex;align-items:center;gap:5px}
   .h-txt small .live{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.2)}
   .back-link{text-decoration:none;color:inherit;display:flex;align-items:center;gap:13px}
-  .h-actions{margin-left:auto}
+  .h-actions{margin-left:auto;display:flex;align-items:center;gap:8px}
   .key-btn{background:rgba(244,249,245,.9);border:1px solid var(--line);color:var(--ink-2);font-weight:650;font-size:.82rem;
     padding:9px 15px;border-radius:50px;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
   .key-btn:hover{border-color:var(--green);color:var(--green-2);transform:translateY(-1px)}
+  .key-btn.ic{padding:9px 10px}
 
   /* TRIAL BAR */
   .trialbar{text-align:center;font-size:.8rem;font-weight:650;padding:7px 14px;background:linear-gradient(90deg,#fffdf3,#fefce8);
@@ -136,6 +137,9 @@
       <span class="h-txt"><b>VITALFORM Coach</b><small><span class="live" id="live-dot"></span><span id="hstatus">Online · 24/7</span></small></span>
     </a>
     <div class="h-actions">
+      <button class="key-btn ic" onclick="newChat()" title="Neuer Chat" aria-label="Neuer Chat">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
       <button class="key-btn" id="access-btn" onclick="openAccess()">🔑 Zugang</button>
     </div>
   </header>
@@ -228,8 +232,12 @@
   var CHECK_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
   var REGEN_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg>';
 
-  function saveCode(c){ try{ sessionStorage.setItem("vf_code", c); }catch(e){} }
-  function loadCode(){ try{ return sessionStorage.getItem("vf_code") || ""; }catch(e){ return ""; } }
+  var WELCOME_HTML = wrap.innerHTML;
+  // Trajno pamćenje na uređaju (localStorage): pristupni kod + istorija chata
+  function saveCode(c){ try{ localStorage.setItem("vf_code", c); }catch(e){} }
+  function loadCode(){ try{ return localStorage.getItem("vf_code") || ""; }catch(e){ return ""; } }
+  function saveHistory(){ try{ localStorage.setItem("vf_history", JSON.stringify(chatHistory.slice(-60))); }catch(e){} }
+  function loadHistoryData(){ try{ var s=localStorage.getItem("vf_history"); return s?JSON.parse(s):[]; }catch(e){ return []; } }
   function scrollDown(){ chat.scrollTop = chat.scrollHeight; }
   function nowTime(){ var d=new Date(); return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2); }
   function setStatus(t){ hstatus.textContent = t; }
@@ -316,6 +324,23 @@
     var orig = btn.innerHTML;
     btn.innerHTML = CHECK_SVG; btn.classList.add("done");
     setTimeout(function(){ btn.innerHTML = orig; btn.classList.remove("done"); }, 1400);
+  }
+
+  // Prikaži sačuvanu AI poruku (bez streaminga) pri obnovi istorije
+  function renderAIStatic(text){
+    var shell = buildAIShell();
+    shell.el.setAttribute("data-text", text);
+    shell.bubble.innerHTML = formatText(text);
+  }
+  // Novi chat: obriši istoriju i vrati početni ekran
+  function newChat(){
+    if(isStreaming) return;
+    chatHistory = [];
+    try{ localStorage.removeItem("vf_history"); }catch(e){}
+    wrap.innerHTML = WELCOME_HTML;
+    chipsEl = document.getElementById("chips");
+    lastAIEl = null;
+    input.focus();
   }
 
   // Streaming (typewriter) reveal
@@ -410,6 +435,7 @@
       else{
         var reply = data.reply || "";
         chatHistory.push({ role:"assistant", content: reply });
+        saveHistory();
         var shell = buildAIShell();
         streamInto(shell, reply);
         if(data.privileged) setFullAccess(); else setTrial(data.remaining);
@@ -432,6 +458,7 @@
     input.value = ""; input.style.height = "auto";
     addUserMessage(text);
     chatHistory.push({ role:"user", content: text });
+    saveHistory();
     requestReply();
   }
 
@@ -455,6 +482,16 @@
         var data = await res.json();
         if(data.valid) setFullAccess(); else { accessCode=""; saveCode(""); }
       }catch(e){}
+    }
+    // Obnovi sačuvanu istoriju chata (isti uređaj/browser)
+    var saved = loadHistoryData();
+    if(saved && saved.length){
+      removeChips();
+      chatHistory = saved;
+      saved.forEach(function(m){
+        if(m.role === "user") addUserMessage(m.content);
+        else renderAIStatic(m.content);
+      });
     }
     input.focus();
   })();
