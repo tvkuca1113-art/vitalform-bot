@@ -1,0 +1,7 @@
+{
+  "name": "vitalform-ki-coach",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VITALFORM KI-Coach – AI chat coach powered by Claude API",
+  "type": "module"
+}
