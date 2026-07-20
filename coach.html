@@ -454,9 +454,30 @@
       if(data.valid){
         accessCode = code; saveCode(code); setFullAccess();
         fb.className="fb ok"; fb.textContent="✓ Freigeschaltet!";
-        setTimeout(function(){ closeAccess(); closeUpsell(); }, 700);
+        // Inhaber-Check (nur für dich sichtbar): ist das Trial-Limit dauerhaft gespeichert?
+        var st = await checkRedisStatus(code);
+        if(st === null){
+          setTimeout(function(){ closeAccess(); closeUpsell(); }, 700); // Mitglied -> kein Technik-Status
+        } else if(st === "ok"){
+          fb.className="fb ok"; fb.textContent="✓ Freigeschaltet! · Limit-Speicher (Redis): aktiv ✅";
+          setTimeout(function(){ closeAccess(); closeUpsell(); }, 1600);
+        } else if(st === "not_configured"){
+          fb.className="fb no"; fb.textContent="⚠️ Redis nicht verbunden – Trial-Limit ist NICHT dauerhaft. Upstash-Keys in Vercel eintragen.";
+        } else {
+          fb.className="fb no"; fb.textContent="⚠️ Redis-Status: " + st + " – Limit evtl. nicht dauerhaft.";
+        }
       } else { fb.className="fb no"; fb.textContent="Code ungültig ❌"; }
     }catch(e){ fb.className="fb no"; fb.textContent="Fehler. Bitte erneut versuchen."; }
+  }
+
+  // Inhaber-Diagnose: prüft, ob Upstash Redis verbunden ist (nur Inhaber; Mitglieder sehen nichts)
+  async function checkRedisStatus(code){
+    try{
+      var r = await fetch("/api/chat", { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ action:"diag", accessCode: code }) });
+      if(r.status === 403) return null; // kein Inhaber
+      var d = await r.json();
+      return (d && d.redis) ? d.redis : "unbekannt";
+    }catch(e){ return "fehler"; }
   }
 
   async function requestReply(img){

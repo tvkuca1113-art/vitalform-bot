@@ -226,6 +226,7 @@ export default async function handler(req, res) {
   const codes = [process.env.OWNER_ACCESS_CODE, process.env.MEMBER_ACCESS_CODE].filter(Boolean);
   const provided = (body.accessCode || "").toString();
   const privileged = provided.length > 0 && codes.indexOf(provided) !== -1;
+  const isOwner = provided.length > 0 && provided === process.env.OWNER_ACCESS_CODE;
 
   // Akcija "validate": provjeri kod BEZ poziva Claude API-ja (bez troška)
   if (body.action === "validate") {
@@ -234,7 +235,7 @@ export default async function handler(req, res) {
 
   // Akcija "diag" (samo vlasnik): potvrdi da je Redis stvarno povezan (persistentni limit)
   if (body.action === "diag") {
-    if (!privileged) return json(res, 403, { error: "Forbidden" });
+    if (!isOwner) return json(res, 403, { error: "Forbidden" });
     const redis = await redisPing();
     return json(res, 200, {
       redis: redis,
