@@ -121,23 +121,45 @@ const MAX_MESSAGES = 20;             // maks. poruka iz istorije
 
 // ---------- Rate-limit skladište: Upstash Redis (REST) ili in-memory ----------
 async function redisIncr(key, ttlSec) {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const base = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!url || !token) return null; // nije konfigurisan -> koristi in-memory
+  if (!base || !token) return null; // nije konfigurisan -> koristi in-memory
   try {
-    const r = await fetch(url, {
+    // VAŽNO: pipeline (više komandi odjednom) MORA ići na /pipeline endpoint.
+    // Ranije se slao na osnovni URL -> Upstash bi odbio, limit bi pao na in-memory
+    // i resetovao se na svaki "cold start" (~20-30 min). Ovo je bio glavni bug.
+    const r = await fetch(base.replace(/\/+$/, "") + "/pipeline", {
       method: "POST",
       headers: { Authorization: "Bearer " + token, "content-type": "application/json" },
       body: JSON.stringify([["INCR", key], ["EXPIRE", key, String(ttlSec), "NX"]])
     });
-    if (!r.ok) return null;
+    if (!r.ok) { console.error("redisIncr HTTP", r.status); return null; }
     const j = await r.json();
-    // pipeline vraća niz rezultata; prvi je INCR
+    // /pipeline vraća niz rezultata; prvi je INCR
     if (Array.isArray(j) && j[0] && typeof j[0].result !== "undefined") return j[0].result;
+    console.error("redisIncr unexpected response", JSON.stringify(j).slice(0, 160));
     return null;
   } catch (e) {
+    console.error("redisIncr error", e && e.message);
     return null;
   }
+}
+
+// PING za dijagnostiku (owner-only): potvrđuje da je Redis stvarno povezan
+async function redisPing() {
+  const base = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!base || !token) return "not_configured";
+  try {
+    const r = await fetch(base.replace(/\/+$/, ""), {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token, "content-type": "application/json" },
+      body: JSON.stringify(["PING"])
+    });
+    if (!r.ok) return "error_http_" + r.status;
+    const j = await r.json();
+    return (j && String(j.result).toUpperCase() === "PONG") ? "ok" : "error_response";
+  } catch (e) { return "error_exception"; }
 }
 
 const memStore = new Map();
@@ -208,6 +230,18 @@ export default async function handler(req, res) {
   // Akcija "validate": provjeri kod BEZ poziva Claude API-ja (bez troška)
   if (body.action === "validate") {
     return json(res, 200, { valid: privileged });
+  }
+
+  // Akcija "diag" (samo vlasnik): potvrdi da je Redis stvarno povezan (persistentni limit)
+  if (body.action === "diag") {
+    if (!privileged) return json(res, 403, { error: "Forbidden" });
+    const redis = await redisPing();
+    return json(res, 200, {
+      redis: redis,
+      trialLimit: FREE_TRIAL_LIMIT,
+      trialWindowHours: TRIAL_WINDOW / 3600,
+      model: process.env.CLAUDE_MODEL || "claude-haiku-4-5"
+    });
   }
 
   // Burst zaštita (protiv spama) – važi za sve
