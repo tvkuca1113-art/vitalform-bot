@@ -52,17 +52,30 @@
   .trust{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:.86rem;color:var(--ink-2);font-weight:600}
   .trust div{display:flex;align-items:center;gap:6px}
 
+  .stat-inputs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:8px}
+  .stat-inputs label{font-size:.85rem;font-weight:700;color:var(--ink-2);display:flex;flex-direction:column;gap:6px}
+  .stat-inputs input{padding:14px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:1.05rem;outline:none;font-family:inherit}
+  .stat-inputs input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(22,163,74,.1)}
   input[type=email]{width:100%;padding:16px 18px;border:1.5px solid var(--line);border-radius:14px;font-size:1rem;outline:none;margin-bottom:14px}
   input[type=email]:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(22,163,74,.1)}
   .fineprint{font-size:.76rem;color:var(--muted);margin-top:12px;text-align:center}
+  .fb{font-size:.85rem;font-weight:650;min-height:20px;margin:4px 0 10px;color:#b91c1c}
 
-  .result-badge{width:96px;height:96px;border-radius:26px;background:var(--grad);display:flex;align-items:center;justify-content:center;
-    font-size:3rem;margin:0 auto 18px;box-shadow:0 14px 30px rgba(22,163,74,.4)}
-  .result-type{text-align:center}
-  .tag{display:inline-block;background:var(--soft);border:1px solid var(--line);color:var(--green-2);font-weight:750;
-    font-size:.8rem;padding:6px 14px;border-radius:50px;margin-bottom:14px}
-  .rec{background:var(--soft);border-left:4px solid var(--green);border-radius:12px;padding:16px 18px;margin:18px 0;text-align:left}
+  /* RESULT */
+  .tag{display:inline-block;background:var(--soft);border:1px solid var(--line);color:var(--green-2);font-weight:750;font-size:.8rem;padding:6px 14px;border-radius:50px;margin-bottom:8px}
+  .proj{background:linear-gradient(160deg,#0c1512,#0b3a22);border-radius:22px;padding:26px 24px;color:#fff;margin-bottom:18px;text-align:center;box-shadow:0 16px 40px rgba(11,58,34,.35)}
+  .proj .big{font-size:2.6rem;font-weight:850;letter-spacing:-.02em;line-height:1}
+  .proj .big span{color:var(--lime)}
+  .proj .date{color:#bfe6d3;font-weight:700;margin-top:6px;font-size:1.02rem}
+  .graph{margin:18px 0 4px}
+  .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  .kpi{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:center}
+  .kpi .n{font-size:1.5rem;font-weight:850;color:var(--green-2);line-height:1}
+  .kpi .l{font-size:.8rem;color:var(--muted);font-weight:600;margin-top:5px}
+  .rec{background:var(--soft);border-left:4px solid var(--green);border-radius:12px;padding:16px 18px;margin:0 0 18px;text-align:left;font-size:.96rem;color:var(--ink-2)}
   .rec b{color:var(--ink)}
+  .result-badge{width:64px;height:64px;border-radius:18px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 12px;box-shadow:0 10px 24px rgba(22,163,74,.4)}
+  .center{text-align:center}
   .hidden{display:none !important}
 </style>
 </head>
@@ -76,33 +89,49 @@
     <!-- INTRO -->
     <div class="card" id="intro">
       <div class="step-label">Kostenloser Test · 60 Sekunden</div>
-      <h1>Welcher <span style="color:var(--green-2)">Abnehm-Typ</span> bist du?</h1>
-      <p class="lead">Beantworte 7 kurze Fragen und erhalte deinen persönlichen Typ – plus einen kostenlosen 7-Tage-Plan, der genau zu dir passt.</p>
+      <h1>Wann erreichst du dein <span style="color:var(--green-2)">Wunschgewicht?</span></h1>
+      <p class="lead">Beantworte ein paar kurze Fragen und erhalte deine persönliche Prognose – wann du dein Ziel erreichen kannst, plus dein tägliches Kalorienziel. Kostenlos.</p>
       <button class="btn" onclick="startQuiz()">Jetzt starten →</button>
       <div class="trust">
         <div>✅ 100% kostenlos</div>
-        <div>✅ Nur 60 Sekunden</div>
-        <div>✅ Sofortiges Ergebnis</div>
+        <div>✅ Persönliches Ergebnis</div>
+        <div>✅ In 60 Sekunden</div>
       </div>
     </div>
 
     <!-- QUESTIONS -->
     <div class="card hidden" id="question">
       <div class="progress"><div class="bar" id="bar"></div></div>
-      <div class="step-label" id="qcount">Frage 1 von 7</div>
+      <div class="step-label" id="qcount"></div>
       <h2 id="qtext"></h2>
       <div id="qoptions"></div>
     </div>
 
+    <!-- STATS -->
+    <div class="card hidden" id="statsscreen">
+      <div class="progress"><div class="bar" style="width:82%"></div></div>
+      <div class="step-label">Fast fertig</div>
+      <h2>Deine Angaben für deine persönliche Prognose</h2>
+      <div class="stat-inputs">
+        <label>Größe (cm)<input type="number" id="s-groesse" min="120" max="230" inputmode="numeric" placeholder="z. B. 170"></label>
+        <label>Alter (Jahre)<input type="number" id="s-alter" min="14" max="100" inputmode="numeric" placeholder="z. B. 45"></label>
+        <label>Aktuelles Gewicht (kg)<input type="number" id="s-gewicht" min="35" max="300" inputmode="decimal" placeholder="z. B. 80"></label>
+        <label>Wunschgewicht (kg)<input type="number" id="s-ziel" min="35" max="300" inputmode="decimal" placeholder="z. B. 72"></label>
+      </div>
+      <div class="fb" id="stats-fb"></div>
+      <button class="btn" onclick="submitStats()">Meine Prognose ansehen →</button>
+      <div class="fineprint">Deine Daten werden vertraulich behandelt und nur für dein Ergebnis genutzt.</div>
+    </div>
+
     <!-- EMAIL -->
     <div class="card hidden" id="emailscreen">
-      <div class="progress"><div class="bar" style="width:92%"></div></div>
-      <div class="step-label">Fast geschafft!</div>
+      <div class="progress"><div class="bar" style="width:94%"></div></div>
+      <div class="step-label">Letzter Schritt</div>
       <h2>Wohin dürfen wir dein Ergebnis schicken?</h2>
-      <p style="margin-bottom:20px">Trag deine E-Mail ein und erhalte sofort deinen Abnehm-Typ + deinen kostenlosen 7-Tage-Plan.</p>
+      <p style="margin-bottom:20px">Trag deine E-Mail ein und wir zeigen dir sofort deine persönliche Prognose + schicken dir deinen kostenlosen 7-Tage-Plan.</p>
       <form onsubmit="return submitEmail(event)">
         <input type="email" id="email" placeholder="deine@email.de" required>
-        <button class="btn" type="submit">Ergebnis anzeigen →</button>
+        <button class="btn" type="submit">Meine Prognose anzeigen →</button>
       </form>
       <div class="fineprint">Kein Spam. Jederzeit abbestellbar. Mit dem Absenden stimmst du der Datenschutzerklärung zu.</div>
     </div>
@@ -110,101 +139,172 @@
     <!-- RESULT -->
     <div class="card hidden" id="result">
       <div class="progress"><div class="bar" style="width:100%"></div></div>
-      <div class="result-type">
-        <div class="result-badge" id="r-icon">🔥</div>
-        <div class="tag">Dein Abnehm-Typ</div>
-        <h2 id="r-title" style="margin-bottom:10px"></h2>
-        <p id="r-desc"></p>
+      <div class="center">
+        <div class="tag">Deine persönliche Prognose</div>
+        <h2 id="r-head" style="margin-bottom:16px">Du kannst dein Ziel erreichen! 🎯</h2>
       </div>
+      <div class="proj" id="proj-card">
+        <div style="font-size:.85rem;color:#bfe6d3;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Dein Wunschgewicht</div>
+        <div class="big"><span id="r-target">72</span> kg</div>
+        <div class="date">erreichbar bis <b id="r-date">–</b></div>
+        <div class="graph" id="r-graph"></div>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><div class="n" id="r-kcal">–</div><div class="l">kcal / Tag (Ziel)</div></div>
+        <div class="kpi"><div class="n" id="r-protein">–</div><div class="l">g Eiweiß / Tag</div></div>
+      </div>
+      <div class="center"><div class="result-badge" id="r-icon">🔥</div><div class="tag" id="r-typtag">Dein Typ</div><h2 id="r-title" style="font-size:1.3rem;margin-bottom:8px"></h2></div>
       <div class="rec" id="r-rec"></div>
       <a class="btn" href="index.html#programme">Mein Programm starten →</a>
       <a class="btn alt" href="coach.html">KI-Coach kostenlos testen</a>
-      <div class="fineprint">Dein 7-Tage-Plan ist unterwegs in dein Postfach. 📩</div>
+      <div class="fineprint">Prognose ist eine Schätzung auf Basis deiner Angaben und kein Ersatz für ärztliche Beratung. Dein 7-Tage-Plan ist unterwegs. 📩</div>
     </div>
   </div>
 
 <script>
-  // E-Mail-Capture über eigene Serverless-Funktion (Brevo). Leer lassen = Demo.
   var LEAD_ENDPOINT = "/api/lead";
 
   var QUESTIONS = [
     { q:"Was ist dein Ziel?", key:"ziel", opts:["Abnehmen","Gewicht halten","Fitter & straffer werden","Gesünder essen"] },
     { q:"Dein Geschlecht?", key:"geschlecht", opts:["Weiblich","Männlich","Divers"] },
-    { q:"Deine Altersgruppe?", key:"alter", opts:["18–29","30–44","45–59","60+"] },
     { q:"Wie aktiv bist du im Alltag?", key:"aktiv", opts:["Kaum aktiv (viel sitzen)","Etwas aktiv","Ziemlich aktiv"] },
-    { q:"Was ist deine größte Herausforderung?", key:"challenge", opts:["Heißhunger & Snacking","Keine Zeit zum Kochen","Motivation & Durchhalten","Zu wenig Wissen, wo anfangen"] },
-    { q:"Wie oft kochst du selbst?", key:"kochen", opts:["Selten","Manchmal","Oft"] },
-    { q:"Wie viel möchtest du erreichen?", key:"ziel_kg", opts:["2–5 kg","5–10 kg","10–20 kg","Mehr als 20 kg"] }
+    { q:"Was ist deine größte Herausforderung?", key:"challenge", opts:["Heißhunger & Snacking","Keine Zeit zum Kochen","Motivation & Durchhalten","Zu wenig Wissen, wo anfangen"] }
   ];
 
   var TYPES = {
     "Heißhunger & Snacking": { icon:"🍫", title:"Der Genuss-Typ",
-      desc:"Du liebst gutes Essen – und das ist völlig okay. Deine Herausforderung sind Heißhunger und spontane Snacks.",
-      rec:"Dein Weg: sättigende, eiweißreiche Mahlzeiten, die Heißhunger stoppen, plus clevere Snack-Alternativen. Dein KI-Coach hilft dir in Heißhunger-Momenten sofort weiter – rund um die Uhr." },
+      rec:"Deine Hürde sind Heißhunger und spontane Snacks. Dein Coach hilft dir mit sättigenden, eiweißreichen Mahlzeiten und ist genau in diesen Momenten für dich da – rund um die Uhr." },
     "Keine Zeit zum Kochen": { icon:"⏱️", title:"Der Effizienz-Typ",
-      desc:"Beruf, Familie, Alltag – dir fehlt einfach die Zeit. Du brauchst kein kompliziertes System, sondern schnelle Lösungen.",
-      rec:"Dein Weg: 10-Minuten-Rezepte, Meal-Prep und einfache Einkaufslisten. Dein KI-Coach passt alles an deinen vollen Terminkalender an." },
+      rec:"Dir fehlt die Zeit, nicht der Wille. Dein Coach gibt dir 10-Minuten-Rezepte und passt alles an deinen vollen Terminkalender an." },
     "Motivation & Durchhalten": { icon:"🔥", title:"Der Motivations-Typ",
-      desc:"Du weißt oft, was zu tun ist – aber Durchhalten und dranbleiben ist die eigentliche Hürde.",
-      rec:"Dein Weg: kleine erreichbare Ziele, sichtbarer Fortschritt und tägliche Begleitung. Dein KI-Coach erinnert und motiviert dich jeden Tag, damit du nicht aufgibst." },
+      rec:"Durchhalten ist deine eigentliche Hürde – nicht das Wissen. Dein Coach begleitet dich täglich, erinnert und motiviert dich, damit du dranbleibst." },
     "Zu wenig Wissen, wo anfangen": { icon:"🧭", title:"Der Entdecker-Typ",
-      desc:"Zu viele widersprüchliche Infos – du weißt nicht, wo du anfangen sollst. Dir fehlt ein klarer Plan.",
-      rec:"Dein Weg: ein einfacher Schritt-für-Schritt-Plan ohne Fachchinesisch. Dein KI-Coach erklärt dir alles verständlich und beantwortet jede Frage sofort." }
+      rec:"Zu viele widersprüchliche Infos. Dein Coach gibt dir einen klaren Schritt-für-Schritt-Plan und erklärt dir alles verständlich." }
   };
 
+  var MONATE = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
   var answers = {};
+  var stats = {};
+  var results = {};
   var step = 0;
 
-  var elIntro = document.getElementById("intro");
-  var elQ = document.getElementById("question");
-  var elEmail = document.getElementById("emailscreen");
-  var elResult = document.getElementById("result");
+  var elIntro=document.getElementById("intro"), elQ=document.getElementById("question"),
+      elStats=document.getElementById("statsscreen"), elEmail=document.getElementById("emailscreen"), elResult=document.getElementById("result");
 
-  function show(el){ [elIntro,elQ,elEmail,elResult].forEach(function(e){ e.classList.add("hidden"); }); el.classList.remove("hidden"); window.scrollTo(0,0); }
-
-  function startQuiz(){ step = 0; renderQuestion(); show(elQ); }
+  function show(el){ [elIntro,elQ,elStats,elEmail,elResult].forEach(function(e){ e.classList.add("hidden"); }); el.classList.remove("hidden"); window.scrollTo(0,0); }
+  function startQuiz(){ step=0; renderQuestion(); show(elQ); }
 
   function renderQuestion(){
-    var Q = QUESTIONS[step];
-    document.getElementById("qcount").textContent = "Frage " + (step+1) + " von " + QUESTIONS.length;
+    var Q=QUESTIONS[step];
+    document.getElementById("qcount").textContent = "Frage "+(step+1)+" von "+QUESTIONS.length;
     document.getElementById("qtext").textContent = Q.q;
-    document.getElementById("bar").style.width = Math.round((step/QUESTIONS.length)*100) + "%";
-    var box = document.getElementById("qoptions");
-    box.innerHTML = "";
+    document.getElementById("bar").style.width = Math.round((step/QUESTIONS.length)*70)+"%";
+    var box=document.getElementById("qoptions"); box.innerHTML="";
     Q.opts.forEach(function(opt){
-      var b = document.createElement("button");
-      b.className = "opt";
-      b.innerHTML = '<span class="dot"></span><span>'+opt+'</span>';
-      b.addEventListener("click", function(){ selectAnswer(Q.key, opt); });
+      var b=document.createElement("button"); b.className="opt";
+      b.innerHTML='<span class="dot"></span><span>'+opt+'</span>';
+      b.addEventListener("click", function(){ answers[Q.key]=opt; if(step<QUESTIONS.length-1){step++;renderQuestion();}else{show(elStats);document.getElementById("s-groesse").focus();} });
       box.appendChild(b);
     });
   }
 
-  function selectAnswer(key, value){
-    answers[key] = value;
-    if(step < QUESTIONS.length - 1){ step++; renderQuestion(); }
-    else { show(elEmail); document.getElementById("email").focus(); }
+  function submitStats(){
+    var cm=parseFloat(document.getElementById("s-groesse").value);
+    var age=parseInt(document.getElementById("s-alter").value,10);
+    var kg=parseFloat(document.getElementById("s-gewicht").value);
+    var zg=parseFloat(document.getElementById("s-ziel").value);
+    var fb=document.getElementById("stats-fb");
+    if(!(cm>=120&&cm<=230)){ fb.textContent="Bitte gib eine gültige Größe ein (120–230 cm)."; return; }
+    if(!(age>=14&&age<=100)){ fb.textContent="Bitte gib ein gültiges Alter ein (14–100)."; return; }
+    if(!(kg>=35&&kg<=300)){ fb.textContent="Bitte gib ein gültiges Gewicht ein (35–300 kg)."; return; }
+    if(!(zg>=35&&zg<=300)){ fb.textContent="Bitte gib ein gültiges Wunschgewicht ein."; return; }
+    fb.textContent="";
+    stats={groesse:cm,alter:age,gewicht:kg,zielgewicht:zg};
+    show(elEmail); document.getElementById("email").focus();
+  }
+
+  function calc(){
+    var cm=stats.groesse, kg=stats.gewicht, zg=stats.zielgewicht, age=stats.alter, g=answers.geschlecht;
+    var bmrM=10*kg+6.25*cm-5*age+5, bmrF=10*kg+6.25*cm-5*age-161;
+    var bmr = g==="Männlich"?bmrM : g==="Weiblich"?bmrF : (bmrM+bmrF)/2;
+    var af = (answers.aktiv&&answers.aktiv.indexOf("Kaum")>=0)?1.3 : (answers.aktiv&&answers.aktiv.indexOf("Ziemlich")>=0)?1.6 : 1.45;
+    var tdee = bmr*af;
+    var kgToLose = Math.max(0, kg-zg);
+    var target = tdee;
+    if(kgToLose>1 || answers.ziel==="Abnehmen") target = tdee-500;
+    else if(answers.ziel&&answers.ziel.indexOf("Fitter")>=0) target = tdee-300;
+    var floor = g==="Männlich"?1500:1200;
+    if(target<floor) target=floor;
+    target = Math.round(target/50)*50;
+    var protein = Math.round(kg*1.8);
+    var weeks = kgToLose>0.5 ? Math.max(3, Math.round(kgToLose/0.6)) : 0;
+    var d = new Date(); d.setDate(d.getDate()+weeks*7);
+    var dateStr = d.getDate()+". "+MONATE[d.getMonth()]+" "+d.getFullYear();
+    return { kcal:target, protein:protein, kgToLose:kgToLose, weeks:weeks, currentW:kg, targetW:zg, dateStr:dateStr, weightLoss: kgToLose>0.5 };
+  }
+
+  function buildGraph(cur, tgt, weeks){
+    var W=420, H=150, pad=24, n=8;
+    var maxW=Math.max(cur,tgt), minW=Math.min(cur,tgt), rng=Math.max(2,maxW-minW);
+    var pts=[];
+    for(var i=0;i<n;i++){
+      var t=i/(n-1); var e=t*t*(3-2*t); // smoothstep
+      var w=cur-(cur-tgt)*e;
+      var x=pad+(W-2*pad)*t;
+      var y=pad+(H-2*pad)*((maxW-w)/rng);
+      // za mrsanje kriva pada -> y raste; invertuj da pocinje gore lijevo
+      y=pad+(H-2*pad)*((w-minW)/rng);
+      pts.push([x, H-y+pad*0 ]);
+    }
+    // izgradi putanju
+    var line=pts.map(function(p,i){return (i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1);}).join(" ");
+    var area=line+" L"+(W-pad)+" "+(H-pad)+" L"+pad+" "+(H-pad)+" Z";
+    var last=pts[pts.length-1], first=pts[0];
+    return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" preserveAspectRatio="xMidYMid meet">'
+      +'<defs><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a3e635" stop-opacity=".35"/><stop offset="1" stop-color="#a3e635" stop-opacity="0"/></linearGradient></defs>'
+      +'<path d="'+area+'" fill="url(#ga)"/>'
+      +'<path d="'+line+'" fill="none" stroke="#a3e635" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>'
+      +'<circle cx="'+first[0].toFixed(1)+'" cy="'+first[1].toFixed(1)+'" r="5" fill="#fff"/>'
+      +'<circle cx="'+last[0].toFixed(1)+'" cy="'+last[1].toFixed(1)+'" r="6" fill="#a3e635" stroke="#fff" stroke-width="2"/>'
+      +'<text x="'+pad+'" y="'+(H-6)+'" fill="#bfe6d3" font-size="12" font-family="sans-serif">heute · '+cur+' kg</text>'
+      +'<text x="'+(W-pad)+'" y="'+(pad-6)+'" fill="#fff" font-size="12" font-weight="700" text-anchor="end" font-family="sans-serif">'+tgt+' kg</text>'
+      +'</svg>';
   }
 
   async function submitEmail(e){
     e.preventDefault();
-    var email = document.getElementById("email").value.trim();
+    var email=document.getElementById("email").value.trim();
     if(!email) return false;
-    // optional: an dein E-Mail-Tool senden
+    results = calc();
+    var typ = (TYPES[answers.challenge]||TYPES["Motivation & Durchhalten"]).title;
     if(LEAD_ENDPOINT){
-      try{ await fetch(LEAD_ENDPOINT, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(Object.assign({email:email, source:"quiz"}, answers)) }); }catch(err){}
+      try{ await fetch(LEAD_ENDPOINT,{method:"POST",headers:{"content-type":"application/json"},
+        body:JSON.stringify({ email:email, source:"quiz", kcal:results.kcal, protein:results.protein, ziel:answers.ziel, typ:typ, zielgewicht:results.targetW, zieldatum:results.dateStr })}); }catch(err){}
     }
     showResult();
     return false;
   }
 
   function showResult(){
-    var t = TYPES[answers.challenge] || TYPES["Motivation & Durchhalten"];
-    document.getElementById("r-icon").textContent = t.icon;
-    document.getElementById("r-title").textContent = t.title;
-    document.getElementById("r-desc").textContent = t.desc;
-    var zielTxt = answers.ziel_kg ? (" Dein Ziel: " + answers.ziel_kg + ".") : "";
-    document.getElementById("r-rec").innerHTML = "<b>Deine Empfehlung:</b> " + t.rec + zielTxt;
+    var r=results;
+    var t=TYPES[answers.challenge]||TYPES["Motivation & Durchhalten"];
+    document.getElementById("r-kcal").textContent=r.kcal;
+    document.getElementById("r-protein").textContent=r.protein;
+    document.getElementById("r-icon").textContent=t.icon;
+    document.getElementById("r-title").textContent=t.title;
+    document.getElementById("r-rec").innerHTML="<b>Der Unterschied zwischen dir und diesem Ergebnis?</b> Ein Plan, der funktioniert – und jemand, der dich täglich begleitet. Genau das ist dein VITALFORM Coach. "+t.rec;
+
+    var proj=document.getElementById("proj-card");
+    if(r.weightLoss){
+      document.getElementById("r-head").innerHTML="Du kannst <span style='color:var(--green-2)'>"+r.kgToLose.toFixed(0)+" kg abnehmen</span> – hier ist wann.";
+      document.getElementById("r-target").textContent=r.targetW;
+      document.getElementById("r-date").textContent=r.dateStr;
+      document.getElementById("r-graph").innerHTML=buildGraph(r.currentW, r.targetW, r.weeks);
+      proj.style.display="";
+    } else {
+      document.getElementById("r-head").textContent="Dein persönlicher Plan für Form & Energie 💪";
+      proj.style.display="none";
+    }
     show(elResult);
   }
 </script>
