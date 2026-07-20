@@ -634,7 +634,6 @@
   <div class="wrap">
     <span class="back" onclick="showPage('home')">← <span data-de="Zurück zur Startseite" data-en="Back to home">Zurück zur Startseite</span></span>
     <h1>Impressum</h1>
-    <div class="legal-note" data-de="Vorlage – bitte deine echten Daten in den markierten Feldern eintragen. Ein Impressum ist in Deutschland gesetzlich vorgeschrieben (§ 5 DDG / § 18 MStV)." data-en="Template – please enter your real data in the highlighted fields. An imprint is legally required in Germany.">Vorlage – bitte deine echten Daten in den markierten Feldern eintragen. Ein Impressum ist in Deutschland gesetzlich vorgeschrieben (§ 5 DDG / § 18 MStV).</div>
     <h2>Angaben gemäß § 5 DDG</h2>
     <p><span class="ph">[Vollständiger Name / Firmenname]</span><br>
     <span class="ph">[Straße und Hausnummer]</span><br>
@@ -657,7 +656,6 @@
   <div class="wrap">
     <span class="back" onclick="showPage('home')">← <span data-de="Zurück zur Startseite" data-en="Back to home">Zurück zur Startseite</span></span>
     <h1>Datenschutzerklärung</h1>
-    <div class="legal-note" data-de="Vorlage nach DSGVO. Ergänze deine echten Daten und ggf. die von dir eingesetzten Dienste (Zahlungsanbieter, E-Mail-Tool, Analytics). Für eine rechtssichere Version empfehlen wir einen Generator (z. B. e-recht24) oder einen Anwalt." data-en="GDPR template. Add your real data and the services you use. For a legally solid version, use a generator or lawyer.">Vorlage nach DSGVO. Ergänze deine echten Daten und ggf. die von dir eingesetzten Dienste (Zahlungsanbieter, E-Mail-Tool, Analytics). Für eine rechtssichere Version empfehlen wir einen Generator (z. B. e-recht24) oder einen Anwalt.</div>
     <h2>1. Verantwortlicher</h2>
     <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:<br>
     <span class="ph">[Name]</span>, <span class="ph">[Adresse]</span>, <span class="ph">[E-Mail]</span>.</p>
@@ -680,7 +678,6 @@
   <div class="wrap">
     <span class="back" onclick="showPage('home')">← <span data-de="Zurück zur Startseite" data-en="Back to home">Zurück zur Startseite</span></span>
     <h1>Allgemeine Geschäftsbedingungen (AGB)</h1>
-    <div class="legal-note" data-de="Vorlage für den Verkauf digitaler Produkte an Verbraucher. Bitte anpassen und rechtlich prüfen lassen." data-en="Template for selling digital products to consumers. Please adapt and have it reviewed legally.">Vorlage für den Verkauf digitaler Produkte an Verbraucher. Bitte anpassen und rechtlich prüfen lassen.</div>
     <h2>§ 1 Geltungsbereich</h2>
     <p>Diese AGB gelten für alle Verträge über digitale Produkte und Abonnements, die zwischen <span class="ph">[Name/Firma]</span> („Anbieter") und dem Kunden über diese Website geschlossen werden.</p>
     <h2>§ 2 Vertragsgegenstand</h2>
@@ -704,7 +701,6 @@
   <div class="wrap">
     <span class="back" onclick="showPage('home')">← <span data-de="Zurück zur Startseite" data-en="Back to home">Zurück zur Startseite</span></span>
     <h1>Widerrufsbelehrung</h1>
-    <div class="legal-note" data-de="Muster für Verbraucher. Bitte deine Daten ergänzen." data-en="Template for consumers. Please add your data.">Muster für Verbraucher. Bitte deine Daten ergänzen.</div>
     <h2>Widerrufsrecht</h2>
     <p>Du hast das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsschlusses.</p>
     <p>Um dein Widerrufsrecht auszuüben, musst du uns (<span class="ph">[Name]</span>, <span class="ph">[Adresse]</span>, <span class="ph">[E-Mail]</span>) mittels einer eindeutigen Erklärung (z. B. per E-Mail) über deinen Entschluss informieren. Zur Wahrung der Frist reicht die rechtzeitige Absendung.</p>
@@ -753,7 +749,6 @@
         <a onclick="showPage('widerruf')" data-de="Widerruf" data-en="Withdrawal">Widerruf</a>
       </div>
     </div>
-    <div class="disclaimer" data-de="⚠️ Hinweis für den Betreiber: Diese Website ist startklar, aber die Rechtstexte sind Vorlagen. Trage deine echten Daten in die markierten Felder ein und lass Impressum, Datenschutz, AGB & Widerruf vor dem Live-Gang prüfen. Gesundheits- und Abnehmversprechen dürfen nicht irreführend sein (HWG/UWG), und Kundenbewertungen müssen echt sein." data-en="⚠️ Note for the operator: This site is ready to go, but the legal texts are templates. Enter your real data in the highlighted fields and have the imprint, privacy, terms & withdrawal reviewed before launch. Health/weight-loss claims must not be misleading, and reviews must be genuine.">⚠️ Hinweis für den Betreiber: Diese Website ist startklar, aber die Rechtstexte sind Vorlagen. Trage deine echten Daten in die markierten Felder ein und lass Impressum, Datenschutz, AGB & Widerruf vor dem Live-Gang prüfen. Gesundheits- und Abnehmversprechen dürfen nicht irreführend sein (HWG/UWG), und Kundenbewertungen müssen echt sein.</div>
     <div class="foot-bottom">
       <span>© 2026 VITALFORM. <span data-de="Alle Rechte vorbehalten." data-en="All rights reserved.">Alle Rechte vorbehalten.</span></span>
       <span data-de="Made in München 🥨" data-en="Made in Munich 🥨">Made in München 🥨</span>
@@ -872,8 +867,8 @@
     if(url && url.indexOf("http") === 0){ window.open(url, "_blank"); return; }
     var de = document.documentElement.lang !== "en";
     toast(de
-      ? "💳 Zahlung wird in Kürze aktiviert – trage deinen Zahlungslink im Code ein."
-      : "💳 Payment will be activated soon – add your payment link in the code.");
+      ? "💳 Die Bezahlung wird gerade eingerichtet und ist in Kürze verfügbar. Teste solange deinen KI-Coach kostenlos! 🚀"
+      : "💳 Payments are being set up and will be available shortly. Meanwhile, try your AI coach for free! 🚀");
   }
 </script>
 </body>
