@@ -256,6 +256,7 @@
   .trylink:hover{text-decoration:underline}
   .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#0c1512;color:#fff;padding:15px 24px;border-radius:12px;font-size:.94rem;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:.3s;z-index:200;max-width:90%;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hp-field{position:absolute!important;left:-9999px!important;top:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
   .reveal{opacity:0;transform:translateY(26px);transition:.7s cubic-bezier(.2,.8,.2,1)}
   .reveal.visible{opacity:1;transform:none}
   .hidden{display:none !important}
@@ -574,6 +575,7 @@
       <p data-de="Trag dich ein und erhalte sofort einen 7-Tage-Ernährungsplan mit Rezepten und Einkaufsliste – völlig gratis." data-en="Sign up and instantly get a 7-day nutrition plan with recipes and shopping list – completely free.">Trag dich ein und erhalte sofort einen 7-Tage-Ernährungsplan mit Rezepten und Einkaufsliste – völlig gratis.</p>
       <form class="lead-form" onsubmit="return leadSubmit(event)">
         <input type="email" required placeholder="Deine E-Mail-Adresse" id="lead-email">
+        <input type="text" id="lead-hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="btn" type="submit" data-de="Gratis erhalten" data-en="Get it free">Gratis erhalten</button>
       </form>
       <div class="lead-note" id="lead-msg" data-de="Kein Spam. Jederzeit abbestellbar. Mit dem Absenden stimmst du der Datenschutzerklärung zu." data-en="No spam. Unsubscribe anytime. By submitting you agree to the privacy policy.">Kein Spam. Jederzeit abbestellbar. Mit dem Absenden stimmst du der Datenschutzerklärung zu.</div>
@@ -782,7 +784,8 @@
     var msg=document.getElementById('lead-msg');
     msg.textContent = lang==='de' ? 'Wird gesendet…' : 'Sending…';
     try{
-      var r = await fetch('/api/lead', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ email: email, source: 'landing' }) });
+      var hp = (document.getElementById('lead-hp')||{}).value || '';
+      var r = await fetch('/api/lead', { method:'POST', headers:{'content-type':'application/json'}, body: JSON.stringify({ email: email, source: 'landing', hp: hp }) });
       var d = await r.json();
       if(r.ok && d.ok){
         msg.textContent = lang==='de' ? '✅ Geschafft! Check dein Postfach für deinen Gratis-Plan.' : '✅ Done! Check your inbox for your free plan.';

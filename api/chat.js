@@ -111,10 +111,10 @@ Du kannst Fotos von Mahlzeiten aus ALLEN Küchen der Welt erkennen und analysier
 Du bist Teil von VITALFORM, einem Online-Programm für nachhaltiges Abnehmen und gesunde Ernährung.`;
 
 // ---------- Konfiguracija (preko Vercel Environment Variables) ----------
-const FREE_TRIAL_LIMIT = parseInt(process.env.FREE_TRIAL_LIMIT || "5", 10); // besplatnih poruka / 24h
+const FREE_TRIAL_LIMIT = parseInt(process.env.FREE_TRIAL_LIMIT || "3", 10); // besplatnih poruka / 24h
 const TRIAL_WINDOW = 24 * 60 * 60;   // 24h
 const BURST_WINDOW = 60;             // 60s
-const BURST_MAX = 15;                // maks. poruka/min za probne korisnike
+const BURST_MAX = 10;                // maks. poruka/min za probne korisnike
 const BURST_MAX_PRIV = 60;           // maks. poruka/min za članove/vlasnika
 const MAX_INPUT_CHARS = 2000;        // maks. dužina jedne poruke
 const MAX_MESSAGES = 20;             // maks. poruka iz istorije

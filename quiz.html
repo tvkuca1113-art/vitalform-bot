@@ -76,6 +76,7 @@
   .rec b{color:var(--ink)}
   .result-badge{width:64px;height:64px;border-radius:18px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 12px;box-shadow:0 10px 24px rgba(22,163,74,.4)}
   .center{text-align:center}
+  .hp-field{position:absolute!important;left:-9999px!important;top:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
   .hidden{display:none !important}
 </style>
 </head>
@@ -131,6 +132,7 @@
       <p style="margin-bottom:20px">Trag deine E-Mail ein und wir zeigen dir sofort deine persönliche Prognose + schicken dir deinen kostenlosen 7-Tage-Plan.</p>
       <form onsubmit="return submitEmail(event)">
         <input type="email" id="email" placeholder="deine@email.de" required>
+        <input type="text" id="quiz-hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button class="btn" type="submit">Meine Prognose anzeigen →</button>
       </form>
       <div class="fineprint">Kein Spam. Jederzeit abbestellbar. Mit dem Absenden stimmst du der Datenschutzerklärung zu.</div>
@@ -278,8 +280,9 @@
     results = calc();
     var typ = (TYPES[answers.challenge]||TYPES["Motivation & Durchhalten"]).title;
     if(LEAD_ENDPOINT){
+      var hp = (document.getElementById("quiz-hp")||{}).value || "";
       try{ await fetch(LEAD_ENDPOINT,{method:"POST",headers:{"content-type":"application/json"},
-        body:JSON.stringify({ email:email, source:"quiz", kcal:results.kcal, protein:results.protein, ziel:answers.ziel, typ:typ, zielgewicht:results.targetW, zieldatum:results.dateStr })}); }catch(err){}
+        body:JSON.stringify({ email:email, source:"quiz", hp:hp, kcal:results.kcal, protein:results.protein, ziel:answers.ziel, typ:typ, zielgewicht:results.targetW, zieldatum:results.dateStr })}); }catch(err){}
     }
     showResult();
     return false;
