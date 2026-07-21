@@ -107,6 +107,9 @@
 
   /* chips */
   .chips{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 0 50px}
+  .chips.sugg{margin:10px 0 2px 50px}
+  .bubble .mdh{font-weight:800;font-size:1.04rem;margin:8px 0 2px;color:var(--ink)}
+  .bubble ol{margin:6px 0 6px 22px}
   .chip{background:rgba(255,255,255,.9);border:1.5px solid var(--line);color:var(--ink-2);padding:10px 16px;border-radius:50px;
     font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;backdrop-filter:blur(4px)}
   .chip:hover{border-color:var(--green);background:#fff;color:var(--green-2);transform:translateY(-2px);box-shadow:0 6px 16px rgba(22,163,74,.15)}
@@ -301,14 +304,23 @@
     var s = String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = s.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
     var blocks = s.split(/\n\s*\n/).map(function(block){
-      var lines = block.split(/\n/);
-      var isList = lines.every(function(l){ return /^\s*[-•]\s+/.test(l) || l.trim()===""; }) && /[-•]/.test(block);
-      if(isList){
-        var items = lines.filter(function(l){ return l.trim()!==""; })
-          .map(function(l){ return "<li>"+l.replace(/^\s*[-•]\s+/,"")+"</li>"; }).join("");
-        return "<ul>"+items+"</ul>";
+      var lines = block.split(/\n/).filter(function(l){ return l.trim()!==""; });
+      if(!lines.length) return "";
+      // Nummerierte Liste (1. 2. …)
+      if(lines.every(function(l){ return /^\s*\d+[.)]\s+/.test(l); })){
+        return "<ol>"+lines.map(function(l){ return "<li>"+l.replace(/^\s*\d+[.)]\s+/,"")+"</li>"; }).join("")+"</ol>";
       }
-      return "<p>"+block.replace(/\n/g,"<br>")+"</p>";
+      // Aufzählung (- •)
+      if(lines.every(function(l){ return /^\s*[-•]\s+/.test(l); })){
+        return "<ul>"+lines.map(function(l){ return "<li>"+l.replace(/^\s*[-•]\s+/,"")+"</li>"; }).join("")+"</ul>";
+      }
+      // Sonst: Überschriften (# …) als fette Zeile, Rest als Absatz
+      var html = lines.map(function(l){
+        var h = l.match(/^\s*#{1,3}\s+(.*)$/);
+        if(h){ return "<div class='mdh'>"+h[1]+"</div>"; }
+        return l;
+      }).join("<br>");
+      return "<p>"+html+"</p>";
     });
     return blocks.join("");
   }
@@ -384,7 +396,7 @@
   }
 
   // Streaming (typewriter) reveal
-  function streamInto(shell, fullText){
+  function streamInto(shell, fullText, suggestions){
     isStreaming = true; stopFlag = false;
     stopwrap.classList.add("show");
     setStatus("schreibt …");
@@ -409,6 +421,7 @@
       stopwrap.classList.remove("show");
       setStatus("Online · 24/7");
       shell.bubble.innerHTML = formatText(fullText);
+      renderSuggestions(shell.el, suggestions);
       scrollDown();
     }
     tick();
@@ -436,6 +449,29 @@
     send();
   }
   function removeChips(){ if(chipsEl){ chipsEl.remove(); chipsEl = null; } }
+  function removeSuggestions(){ document.querySelectorAll(".chips.sugg").forEach(function(e){ e.remove(); }); }
+  // Extrahiert [[VF: a | b | c]] am Ende der Antwort -> kontextuelle Folge-Buttons
+  function parseSuggestions(text){
+    var suggestions = [];
+    var clean = String(text).replace(/\[\[VF:\s*([^\]]*)\]\]/gi, function(_, inner){
+      suggestions = inner.split("|").map(function(s){ return s.trim(); }).filter(Boolean).slice(0, 3);
+      return "";
+    }).replace(/\n{3,}/g, "\n\n").trim();
+    return { clean: clean, suggestions: suggestions };
+  }
+  function renderSuggestions(afterEl, list){
+    if(!list || !list.length) return;
+    var box = document.createElement("div");
+    box.className = "chips sugg";
+    list.forEach(function(s){
+      var b = document.createElement("button");
+      b.className = "chip"; b.type = "button"; b.textContent = s;
+      b.addEventListener("click", function(){ if(isStreaming) return; input.value = s; send(); });
+      box.appendChild(b);
+    });
+    afterEl.insertAdjacentElement("afterend", box);
+    scrollDown();
+  }
 
   // Overlays
   function openAccess(){ document.getElementById("access").classList.add("show"); document.getElementById("access-input").focus(); }
@@ -504,10 +540,11 @@
       else if(!res.ok || data.error){ addError(data.error || "Es ist ein Fehler aufgetreten. Bitte versuche es erneut."); }
       else{
         var reply = data.reply || "";
-        chatHistory.push({ role:"assistant", content: reply });
+        var parsed = parseSuggestions(reply);
+        chatHistory.push({ role:"assistant", content: parsed.clean });
         saveHistory();
         var shell = buildAIShell();
-        streamInto(shell, reply);
+        streamInto(shell, parsed.clean, parsed.suggestions);
         if(data.privileged) setFullAccess(); else setTrial(data.remaining);
       }
     }catch(e){
@@ -525,7 +562,7 @@
     var text = input.value.trim();
     var img = pendingImage;
     if(!text && !img) return;
-    removeChips();
+    removeChips(); removeSuggestions();
     input.value = ""; input.style.height = "auto";
     var storedText = text || (img ? "Analysiere bitte dieses Essen: Kalorien und Makros?" : "");
     addUserMessage(text || (img ? "📷 Foto meiner Mahlzeit" : ""), img ? img.dataUrl : null);
