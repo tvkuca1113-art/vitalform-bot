@@ -240,7 +240,7 @@
     <div class="card">
       <div class="ic">🔑</div>
       <h3>Zugangscode eingeben</h3>
-      <p>Für Mitglieder und den Inhaber. Gib deinen Code ein, um vollen Zugang freizuschalten.</p>
+      <p>Hast du einen Zugangscode? Gib ihn hier ein, um vollen Zugang freizuschalten.</p>
       <div class="fb" id="access-fb"></div>
       <input type="password" id="access-input" placeholder="Dein Zugangscode" autocomplete="off">
       <button class="btn" onclick="submitAccess()">Freischalten</button>
@@ -490,7 +490,7 @@
       if(data.valid){
         accessCode = code; saveCode(code); setFullAccess();
         fb.className="fb ok"; fb.textContent="✓ Freigeschaltet!";
-        // Inhaber-Check (nur für dich sichtbar): ist das Trial-Limit dauerhaft gespeichert?
+        // interner Status-Check: ist das Trial-Limit dauerhaft gespeichert?
         var st = await checkRedisStatus(code);
         if(st === null){
           setTimeout(function(){ closeAccess(); closeUpsell(); }, 700); // Mitglied -> kein Technik-Status
@@ -506,11 +506,11 @@
     }catch(e){ fb.className="fb no"; fb.textContent="Fehler. Bitte erneut versuchen."; }
   }
 
-  // Inhaber-Diagnose: prüft, ob Upstash Redis verbunden ist (nur Inhaber; Mitglieder sehen nichts)
+  // interne Diagnose: prüft, ob Upstash Redis verbunden ist (Mitglieder sehen nichts)
   async function checkRedisStatus(code){
     try{
       var r = await fetch("/api/chat", { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ action:"diag", accessCode: code }) });
-      if(r.status === 403) return null; // kein Inhaber
+      if(r.status === 403) return null; // kein Voll-Zugang
       var d = await r.json();
       return (d && d.redis) ? d.redis : "unbekannt";
     }catch(e){ return "fehler"; }
