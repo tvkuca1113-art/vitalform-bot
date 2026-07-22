@@ -241,7 +241,7 @@ export default async function handler(req, res) {
       licenseStore: redisReady() ? "ok" : "not_configured",
       trialLimit: FREE_TRIAL_LIMIT,
       trialWindowHours: TRIAL_WINDOW / 3600,
-      model: process.env.CLAUDE_MODEL || "claude-sonnet-4-5"
+      model: process.env.CLAUDE_MODEL || "claude-sonnet-5"
     });
   }
 
@@ -322,7 +322,7 @@ export default async function handler(req, res) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: process.env.CLAUDE_MODEL || "claude-sonnet-4-5",
+        model: process.env.CLAUDE_MODEL || "claude-sonnet-5",
         max_tokens: 1024,
         system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
         messages: messages
