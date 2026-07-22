@@ -301,48 +301,6 @@
   @media(max-width:880px){.sticky-cta{display:flex}}
   /* LANG BADGE */
   .lang-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(163,230,53,.14);color:#eafaf1;border:1px solid rgba(163,230,53,.32);padding:9px 17px;border-radius:50px;font-weight:700;font-size:.86rem;margin-top:22px}
-  /* STATS */
-  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-  .stat{text-align:center}
-  .stat .num{font-size:clamp(2rem,4.2vw,2.9rem);font-weight:850;color:var(--lime);letter-spacing:-.02em;line-height:1}
-  .stat .lbl{color:#cfe6d8;font-weight:600;font-size:.9rem;margin-top:7px}
-  @media(max-width:640px){.stats-grid{grid-template-columns:repeat(2,1fr);gap:28px}}
-  /* COMPARISON */
-  .cmp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow)}
-  .cmp{width:100%;border-collapse:collapse;min-width:560px;background:#fff}
-  .cmp th,.cmp td{padding:15px 16px;text-align:center;border-bottom:1px solid var(--line);font-size:.94rem}
-  .cmp th{font-weight:800;color:var(--ink);background:var(--soft)}
-  .cmp td:first-child,.cmp th:first-child{text-align:left;font-weight:700;color:var(--ink-2)}
-  .cmp th.vf{color:#fff;background:var(--grad)}
-  .cmp td.vf{background:rgba(22,163,74,.07)}
-  .cmp .yes{color:var(--green);font-weight:850;font-size:1.1rem}
-  .cmp .no{color:#cbd5d0;font-weight:800}
-  .cmp .part{color:#c99700;font-size:.82rem;font-weight:750}
-  .cmp tr:last-child td{border-bottom:none}
-  /* ROADMAP */
-  .road-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
-  .road{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 26px;box-shadow:var(--shadow-sm);transition:.25s}
-  .road:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
-  .road .ph{display:inline-block;font-size:.75rem;font-weight:800;color:var(--green-2);text-transform:uppercase;letter-spacing:.07em;background:var(--soft);padding:6px 14px;border-radius:50px;margin-bottom:14px}
-  @media(max-width:880px){.road-grid{grid-template-columns:1fr}}
-  /* STICKY MOBILE CTA */
-  .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:11px 16px;display:none;gap:12px;align-items:center;box-shadow:0 -6px 24px rgba(12,60,35,.12);transform:translateY(110%);transition:transform .3s}
-  .sticky-cta.show{transform:translateY(0)}
-  .sticky-cta .txt{flex:1;font-weight:800;font-size:.94rem;line-height:1.15}
-  .sticky-cta .txt small{display:block;color:var(--muted);font-weight:600;font-size:.76rem;margin-top:2px}
-  .sticky-cta .btn{padding:12px 22px;font-size:.94rem;box-shadow:0 8px 18px rgba(22,163,74,.35)}
-  @media(max-width:880px){.sticky-cta{display:flex}}
-  /* LANG BADGE */
-  .lang-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(163,230,53,.14);color:#eafaf1;border:1px solid rgba(163,230,53,.32);padding:9px 17px;border-radius:50px;font-weight:700;font-size:.86rem;margin-top:22px}
-  .pay-badges{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px}
-  .pay-badge{height:40px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#fff;display:flex;align-items:center;font-weight:800;font-size:.9rem;color:#1c2b24;box-shadow:var(--shadow-sm);letter-spacing:.02em}
-  .pay-badge .pp{color:#003087}.pay-badge .pp2{color:#009cde}
-  .card-pay{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px}
-  .trylink{display:inline-block;margin-top:12px;color:var(--green-2);font-weight:750;font-size:.92rem;cursor:pointer;text-decoration:none}
-  .trylink:hover{text-decoration:underline}
-  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#0c1512;color:#fff;padding:15px 24px;border-radius:12px;font-size:.94rem;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:.3s;z-index:200;max-width:90%;text-align:center}
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .hp-field{position:absolute!important;left:-9999px!important;top:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
   .pay-badges{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px}
   .pay-badge{height:40px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#fff;display:flex;align-items:center;font-weight:800;font-size:.9rem;color:#1c2b24;box-shadow:var(--shadow-sm);letter-spacing:.02em}
   .pay-badge .pp{color:#003087}.pay-badge .pp2{color:#009cde}
@@ -565,32 +523,6 @@
   </div>
 </section>
 
-<!-- ROADMAP -->
-<section>
-  <div class="wrap center shead reveal">
-    <div class="eyebrow" data-de="Dein Fahrplan" data-en="Your roadmap">Dein Fahrplan</div>
-    <h2 data-de="Deine Transformation in 12 Wochen" data-en="Your transformation in 12 weeks">Deine Transformation in 12 Wochen</h2>
-    <p class="lead" data-de="Ein klarer Weg – Woche für Woche zu deiner besten Form." data-en="A clear path – week by week to your best shape.">Ein klarer Weg – Woche für Woche zu deiner besten Form.</p>
-  </div>
-  <div class="wrap road-grid">
-    <div class="road reveal">
-      <span class="ph" data-de="Woche 1–4" data-en="Week 1–4">Woche 1–4</span>
-      <h3 data-de="Grundlagen & erste Erfolge" data-en="Basics & first wins">Grundlagen & erste Erfolge</h3>
-      <p data-de="Dein Plan startet, du baust gesunde Gewohnheiten auf und siehst die ersten Kilos purzeln." data-en="Your plan starts, you build healthy habits and see the first kilos drop.">Dein Plan startet, du baust gesunde Gewohnheiten auf und siehst die ersten Kilos purzeln.</p>
-    </div>
-    <div class="road reveal">
-      <span class="ph" data-de="Woche 5–8" data-en="Week 5–8">Woche 5–8</span>
-      <h3 data-de="Sichtbare Veränderung" data-en="Visible change">Sichtbare Veränderung</h3>
-      <p data-de="Dein Coach passt den Plan an, dein Körper verändert sich sichtbar und du gewinnst neue Energie." data-en="Your coach adapts the plan, your body visibly changes and you gain new energy.">Dein Coach passt den Plan an, dein Körper verändert sich sichtbar und du gewinnst neue Energie.</p>
-    </div>
-    <div class="road reveal">
-      <span class="ph" data-de="Woche 9–12" data-en="Week 9–12">Woche 9–12</span>
-      <h3 data-de="Deine beste Form" data-en="Your best shape">Deine beste Form</h3>
-      <p data-de="Du festigst deinen neuen Lebensstil – nachhaltig, ohne Jo-Jo-Effekt, für langfristigen Erfolg." data-en="You lock in your new lifestyle – sustainable, no yo-yo, for lasting success.">Du festigst deinen neuen Lebensstil – nachhaltig, ohne Jo-Jo-Effekt, für langfristigen Erfolg.</p>
-    </div>
-  </div>
-</section>
-
 <!-- PRICING -->
 <section id="programme">
   <div class="wrap center shead reveal">
@@ -664,38 +596,6 @@
     <div class="feat reveal"><div class="ic">🏋️</div><div><h3 data-de="Training für zu Hause & Gym" data-en="Training for home & gym">Training für zu Hause & Gym</h3><p data-de="Effektive Workouts ab 20 Minuten – mit oder ohne Geräte." data-en="Effective workouts from 20 minutes – with or without equipment.">Effektive Workouts ab 20 Minuten – mit oder ohne Geräte.</p></div></div>
     <div class="feat reveal"><div class="ic">📱</div><div><h3 data-de="Alles auf dem Handy" data-en="Everything on your phone">Alles auf dem Handy</h3><p data-de="Deine Pläne, Rezepte und Fortschritte immer griffbereit." data-en="Your plans, recipes and progress always at hand.">Deine Pläne, Rezepte und Fortschritte immer griffbereit.</p></div></div>
     <div class="feat reveal"><div class="ic">💬</div><div><h3 data-de="KI-Begleitung 24/7" data-en="AI support 24/7">KI-Begleitung 24/7</h3><p data-de="Dein Coach ist immer da – ohne Termin, ohne Wartezeit, ohne Urteil." data-en="Your coach is always there – no appointment, no waiting, no judgment.">Dein Coach ist immer da – ohne Termin, ohne Wartezeit, ohne Urteil.</p></div></div>
-  </div>
-</section>
-
-<!-- COMPARISON -->
-<section>
-  <div class="wrap center shead reveal">
-    <div class="eyebrow" data-de="Der Vergleich" data-en="The comparison">Der Vergleich</div>
-    <h2 data-de="Warum VITALFORM?" data-en="Why VITALFORM?">Warum VITALFORM?</h2>
-    <p class="lead" data-de="Sieh selbst, wie VITALFORM im Vergleich abschneidet." data-en="See how VITALFORM stacks up.">Sieh selbst, wie VITALFORM im Vergleich abschneidet.</p>
-  </div>
-  <div class="wrap">
-    <div class="cmp-wrap reveal">
-      <table class="cmp">
-        <thead>
-          <tr>
-            <th></th>
-            <th class="vf">VITALFORM</th>
-            <th data-de="Klassische Diät" data-en="Classic diet">Klassische Diät</th>
-            <th data-de="Personal Trainer" data-en="Personal trainer">Personal Trainer</th>
-            <th data-de="Andere Apps" data-en="Other apps">Andere Apps</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td data-de="24/7 verfügbar" data-en="Available 24/7">24/7 verfügbar</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="part">teils</span></td></tr>
-          <tr><td data-de="Persönlich angepasst" data-en="Personalized">Persönlich angepasst</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="yes">✓</span></td><td><span class="part">teils</span></td></tr>
-          <tr><td data-de="Ernährung + Training" data-en="Nutrition + training">Ernährung + Training</td><td class="vf"><span class="yes">✓</span></td><td><span class="part">teils</span></td><td><span class="yes">✓</span></td><td><span class="part">teils</span></td></tr>
-          <tr><td data-de="Foto-Analyse der Mahlzeiten" data-en="Meal photo analysis">Foto-Analyse der Mahlzeiten</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="part">selten</span></td></tr>
-          <tr><td data-de="Spricht deine Sprache" data-en="Speaks your language">Spricht deine Sprache</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="part">teils</span></td><td><span class="no">✕</span></td></tr>
-          <tr><td data-de="Preis / Monat" data-en="Price / month">Preis / Monat</td><td class="vf" style="font-weight:800;color:var(--green-2)">ab 19,90€</td><td>–</td><td>200€+</td><td>10–30€</td></tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </section>
 
@@ -914,12 +814,6 @@
   <a onclick="goHome('#programme')" class="btn" data-de="Jetzt starten" data-en="Start now">Jetzt starten</a>
 </div>
 
-<!-- STICKY MOBILE CTA -->
-<div class="sticky-cta" id="stickyCta">
-  <div class="txt"><span data-de="Starte noch heute" data-en="Start today">Starte noch heute</span><small data-de="KI-Coach · ab 19,90€/Monat" data-en="AI coach · from 19.90€/mo">KI-Coach · ab 19,90€/Monat</small></div>
-  <a onclick="goHome('#programme')" class="btn" data-de="Jetzt starten" data-en="Start now">Jetzt starten</a>
-</div>
-
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
@@ -988,7 +882,6 @@
       if(r.ok && d.ok){
         msg.textContent = lang==='de' ? '✅ Geschafft! Check dein Postfach für deinen Gratis-Plan.' : '✅ Done! Check your inbox for your free plan.';
         document.getElementById('lead-email').value='';
-        if(window.vfTrack) vfTrack('Lead', { content_name: 'Gratis 7-Tage-Plan', source: 'landing' });
         if(window.vfTrack) vfTrack('Lead', { content_name: 'Gratis 7-Tage-Plan', source: 'landing' });
       } else {
         msg.textContent = (d && d.error) ? d.error : (lang==='de' ? 'Etwas ist schiefgelaufen. Bitte erneut versuchen.' : 'Something went wrong. Please try again.');
@@ -1104,7 +997,6 @@
       : "💳 Payments are being set up and will be available shortly. Meanwhile, try your AI coach for free! 🚀");
   }
 </script>
-<script src="/consent.js" defer></script>
 <script src="/consent.js" defer></script>
 </body>
 </html>

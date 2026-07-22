@@ -241,7 +241,7 @@ export default async function handler(req, res) {
       licenseStore: redisReady() ? "ok" : "not_configured",
       trialLimit: FREE_TRIAL_LIMIT,
       trialWindowHours: TRIAL_WINDOW / 3600,
-      model: process.env.CLAUDE_MODEL || "claude-sonnet-5"
+      model: process.env.CLAUDE_MODEL || "claude-sonnet-4-6"
     });
   }
 
@@ -312,27 +312,37 @@ export default async function handler(req, res) {
     remaining = Math.max(0, FREE_TRIAL_LIMIT - trialCount);
   }
 
-  // Poziv Claude API-ja
+  // Poziv Claude API-ja (sa sigurnim fallbackom da bot NIKAD ne stane zbog naziva modela)
   try {
-    const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01"
-      },
-      body: JSON.stringify({
-        model: process.env.CLAUDE_MODEL || "claude-sonnet-5",
-        max_tokens: 1024,
-        system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
-        messages: messages
-      })
-    });
+    const primaryModel = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
+    async function callClaude(model) {
+      const r = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01"
+        },
+        body: JSON.stringify({
+          model: model,
+          max_tokens: 1024,
+          system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
+          messages: messages
+        })
+      });
+      return { ok: r.ok, status: r.status, data: await r.json() };
+    }
 
-    const data = await anthropicRes.json();
-    if (!anthropicRes.ok) {
+    let resp = await callClaude(primaryModel);
+    // Ako model nije prihvaćen (npr. pogrešan/nepostojeći naziv) -> automatski fallback na Haiku
+    if (!resp.ok && (resp.status === 404 || resp.status === 400) && primaryModel !== "claude-haiku-4-5") {
+      console.error("chat: model '" + primaryModel + "' odbijen (" + resp.status + ") -> fallback claude-haiku-4-5");
+      resp = await callClaude("claude-haiku-4-5");
+    }
+    const data = resp.data;
+    if (!resp.ok) {
       const msg = (data && data.error && data.error.message) ? data.error.message : "Fehler beim KI-Coach.";
-      return json(res, anthropicRes.status, { error: msg });
+      return json(res, resp.status, { error: msg });
     }
 
     const reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : "";
