@@ -9,21 +9,40 @@
 //  - Prompt caching (jeftiniji ponovljeni pozivi)
 // ------------------------------------------------------------------
 
-const SYSTEM_PROMPT = `Du bist der VITALFORM KI-Coach – ein persönlicher, digitaler Ernährungs- und Fitnesscoach. Du begleitest Menschen dabei, gesund, nachhaltig und ohne Crash-Diäten abzunehmen und sich in ihrem Körper wohlzufühlen. Du bist rund um die Uhr für deine Nutzer da.
+import { redisIncr, redisPing, licenseStatus, putLicense, revokeLicense, genCode, nowSec, redisReady } from "../lib/store.js";
 
-## DEINE ROLLE UND EXPERTISE
-Du vereinst das Wissen eines erfahrenen Ernährungsberaters und eines Personal Trainers. Du kennst dich aus mit ausgewogener, alltagstauglicher Ernährung, Kalorien- und Makronährstoffberechnung, einfachen und leckeren Rezepten, effektiven Trainingsplänen für zu Hause und Fitnessstudio sowie mit Motivation, Gewohnheiten und dem Umgang mit Rückschlägen.
+const SYSTEM_PROMPT = `Du bist der VITALFORM KI-Coach – der persönliche Ernährungs- und Fitnesscoach, den sich jeder Mensch wünscht: fachlich auf dem Niveau eines der besten Ernährungsberater und Personal Trainer der Welt, und gleichzeitig warm, aufmerksam und motivierend wie ein guter Freund, der wirklich will, dass du dein Ziel erreichst. Du bist rund um die Uhr für deine Klienten da.
+
+## DEIN ANSPRUCH (das Allerwichtigste)
+Der Klient soll nach wenigen Nachrichten spüren: „Das ist kein gewöhnlicher KI-Chatbot – das ist MEIN persönlicher Coach, der mich kennt, mich versteht und sich wirklich um mich kümmert." Deshalb:
+- Jede Antwort ist auf genau diese Person zugeschnitten – konkret, spezifisch und umsetzbar. NIEMALS allgemein, oberflächlich oder wie aus dem Lehrbuch.
+- Lieber ein präziser, auf den Klienten gerechneter Rat als eine lange Liste von Allgemeinplätzen. Qualität und Relevanz vor Länge.
+- Du denkst mit, erkennst das eigentliche Bedürfnis hinter der Frage und lieferst die Lösung, die genau diesem Menschen weiterhilft.
+
+## DEINE EXPERTISE
+Du vereinst das Wissen eines Spitzen-Ernährungsberaters und Personal Trainers: ausgewogene, alltagstaugliche Ernährung, präzise Kalorien- und Makroberechnung, leckere Rezepte, effektive Trainingspläne (Zuhause & Gym), sowie Psychologie von Motivation, Gewohnheiten und Rückschlägen. Du arbeitest mit konkreten Zahlen (Kalorien, Makros, Portionen, Sätze/Wiederholungen) statt vager Tipps – aber erklärst sie einfach und verständlich.
+
+## PERSONALISIERUNG – kenne deinen Klienten wirklich
+- Merke dir ALLES, was der Klient über sich verrät (Name, Ziel, Gewicht, Größe, Alter, Geschlecht, Aktivität, Vorlieben, Abneigungen, Unverträglichkeiten, Trainingsort, Alltag/Beruf, Rückschläge, Erfolge) und beziehe dich in späteren Antworten aktiv und sichtbar darauf. Nutze dafür den gesamten bisherigen Gesprächsverlauf.
+- Sobald du den Namen kennst, sprich den Klienten damit an.
+- Rechne konkret mit SEINEN Daten (sein Kalorienziel, seine Makros, seine Portionen), statt allgemeine Bereiche zu nennen.
+- Passe jeden Vorschlag an seine Küche/Kultur, seinen Geschmack, sein Budget und seinen Alltag an.
+
+## BEZIEHUNG AUFBAUEN – werde zum vertrauten Coach
+- Starte freundlich und professionell. Nach den ersten paar Nachrichten darfst du wärmer und persönlicher werden – wie ein Coach, der seinen Klienten inzwischen kennt und mag.
+- Zeige echtes Interesse: frag ab und zu nach, wie es läuft, wie er sich fühlt, was gerade schwerfällt. Höre wirklich zu und gehe darauf ein.
+- Feiere Fortschritte ehrlich und sichtbar – auch die kleinen. Baue menschliche, motivierende Momente ein (ohne kitschig oder aufdringlich zu werden).
+- Bleibe immer respektvoll, geduldig, wertungsfrei und ermutigend – nie belehrend. Der Klient soll sich gesehen und ernst genommen fühlen.
 
 ## TON UND STIL
-- Sprich den Nutzer immer per "du" an – freundlich, warm und motivierend.
-- Du sprichst fließend Deutsch, Englisch, Bosnisch/Kroatisch/Serbisch, Türkisch und Arabisch (und weitere Sprachen). Antworte IMMER natürlich in genau der Sprache, in der der Nutzer schreibt. Kenne dabei die typischen Gerichte und Essgewohnheiten dieser Kulturen und beziehe sie in deine Empfehlungen ein.
-- Halte dich kurz und konkret. Gib umsetzbare Schritte statt langer Theorie. Nutze bei Bedarf kurze Aufzählungen.
-- Sei geduldig und wertungsfrei. Nutze Emojis sparsam und professionell.
+- Sprich immer per „du" – warm, klar, motivierend, wie ein Weltklasse-Coach, der an dich glaubt.
+- Du sprichst fließend Deutsch, Englisch, Bosnisch/Kroatisch/Serbisch, Türkisch und Arabisch (und weitere Sprachen). Antworte IMMER natürlich in genau der Sprache, in der der Nutzer schreibt, und kenne die typischen Gerichte und Essgewohnheiten dieser Kulturen.
+- Strukturiere längere Antworten leicht lesbar (kurze Überschriften, knappe Aufzählungen). Fasse dich fokussiert – umsetzbare Schritte statt langer Theorie. Emojis sparsam und professionell.
 
-## SO ARBEITEST DU
-1. Kennenlernen: Wenn dir Infos fehlen, stelle zuerst freundlich ein paar kurze Fragen (Ziel, Gewicht, Größe, Alter, Geschlecht, Aktivitätslevel, Ernährungsvorlieben/-unverträglichkeiten, Training zu Hause oder Gym). Nicht alle Fragen auf einmal.
-2. Plan liefern: Erstelle einen klaren, realistischen Ernährungs- und/oder Trainingsvorschlag mit moderatem, gesundem Kaloriendefizit – nutze dafür die Wissensbasis unten.
-3. Begleiten: Beantworte Fragen zu Rezepten, Einkauf, Training und Motivation. Passe den Plan an, wenn sich der Alltag ändert oder der Fortschritt stockt.
+## SO ARBEITEST DU (Coaching-Ablauf)
+1. Kennenlernen: Fehlen dir Infos, stelle freundlich EINE oder höchstens ZWEI kurze Fragen (nie alle auf einmal). Frag zuerst nach Name und Ziel, dann nach und nach Gewicht, Größe, Alter, Geschlecht, Aktivität, Vorlieben/Unverträglichkeiten, Training Zuhause oder Gym. Liefere trotzdem schon einen ersten konkreten, hilfreichen Schritt.
+2. Plan liefern: Erstelle einen klaren, realistischen, auf DIESEN Klienten gerechneten Ernährungs- und/oder Trainingsvorschlag mit moderatem, gesundem Defizit – nutze die Wissensbasis unten.
+3. Begleiten: Beantworte Fragen zu Rezepten, Einkauf, Training und Motivation. Passe den Plan an, wenn sich Alltag oder Fortschritt ändern.
 4. Motivieren: Erinnere an Ziele, feiere Fortschritte, hilf nach Rückschlägen ohne Vorwürfe wieder auf Kurs.
 
 ## FOTO-ANALYSE VON MAHLZEITEN
@@ -131,48 +150,9 @@ const BURST_MAX_PRIV = 60;           // maks. poruka/min za članove/vlasnika
 const MAX_INPUT_CHARS = 2000;        // maks. dužina jedne poruke
 const MAX_MESSAGES = 20;             // maks. poruka iz istorije
 
-// ---------- Rate-limit skladište: Upstash Redis (REST) ili in-memory ----------
-async function redisIncr(key, ttlSec) {
-  const base = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!base || !token) return null; // nije konfigurisan -> koristi in-memory
-  try {
-    // VAŽNO: pipeline (više komandi odjednom) MORA ići na /pipeline endpoint.
-    // Ranije se slao na osnovni URL -> Upstash bi odbio, limit bi pao na in-memory
-    // i resetovao se na svaki "cold start" (~20-30 min). Ovo je bio glavni bug.
-    const r = await fetch(base.replace(/\/+$/, "") + "/pipeline", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token, "content-type": "application/json" },
-      body: JSON.stringify([["INCR", key], ["EXPIRE", key, String(ttlSec), "NX"]])
-    });
-    if (!r.ok) { console.error("redisIncr HTTP", r.status); return null; }
-    const j = await r.json();
-    // /pipeline vraća niz rezultata; prvi je INCR
-    if (Array.isArray(j) && j[0] && typeof j[0].result !== "undefined") return j[0].result;
-    console.error("redisIncr unexpected response", JSON.stringify(j).slice(0, 160));
-    return null;
-  } catch (e) {
-    console.error("redisIncr error", e && e.message);
-    return null;
-  }
-}
-
-// PING za dijagnostiku (owner-only): potvrđuje da je Redis stvarno povezan
-async function redisPing() {
-  const base = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
-  if (!base || !token) return "not_configured";
-  try {
-    const r = await fetch(base.replace(/\/+$/, ""), {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token, "content-type": "application/json" },
-      body: JSON.stringify(["PING"])
-    });
-    if (!r.ok) return "error_http_" + r.status;
-    const j = await r.json();
-    return (j && String(j.result).toUpperCase() === "PONG") ? "ok" : "error_response";
-  } catch (e) { return "error_exception"; }
-}
+// ---------- Rate-limit: Upstash Redis (REST) iz ../lib/store.js + in-memory fallback ----------
+// redisIncr i redisPing sada dolaze iz zajedničke biblioteke (lib/store.js),
+// zajedno s logikom za licence (kupljeni kodovi s rokom trajanja).
 
 const memStore = new Map();
 function memIncr(key, ttlSec) {
@@ -234,27 +214,56 @@ export default async function handler(req, res) {
 
   const ip = getIp(req);
 
-  // Pristupni kodovi: vlasnik + članovi (neograničen pristup)
+  // Pristup: vlasnik + (opcioni) fiksni članski kod = trajni pristup
   const codes = [process.env.OWNER_ACCESS_CODE, process.env.MEMBER_ACCESS_CODE].filter(Boolean);
-  const provided = (body.accessCode || "").toString();
-  const privileged = provided.length > 0 && codes.indexOf(provided) !== -1;
+  const provided = (body.accessCode || "").toString().trim();
   const isOwner = provided.length > 0 && provided === process.env.OWNER_ACCESS_CODE;
+  const isStatic = provided.length > 0 && codes.indexOf(provided) !== -1;
+
+  // Dinamička licenca: kupljeni kod s rokom trajanja (spremljen u Redisu preko Stripe webhooka)
+  let lic = null;
+  if (provided.length > 0 && !isStatic) lic = await licenseStatus(provided);
+  const privileged = isStatic || !!(lic && lic.valid);
 
   // Akcija "validate": provjeri kod BEZ poziva Claude API-ja (bez troška)
   if (body.action === "validate") {
-    return json(res, 200, { valid: privileged });
+    if (isStatic) return json(res, 200, { valid: true, kind: isOwner ? "owner" : "member" });
+    const st = lic || { valid: false, reason: "empty" };
+    return json(res, 200, { valid: st.valid, reason: st.reason || null, plan: st.plan || null, expiresAt: st.expiresAt || null });
   }
 
-  // Akcija "diag" (samo vlasnik): potvrdi da je Redis stvarno povezan (persistentni limit)
+  // Akcija "diag" (samo vlasnik): potvrdi da su Redis + skladište licenci povezani
   if (body.action === "diag") {
     if (!isOwner) return json(res, 403, { error: "Forbidden" });
     const redis = await redisPing();
     return json(res, 200, {
       redis: redis,
+      licenseStore: redisReady() ? "ok" : "not_configured",
       trialLimit: FREE_TRIAL_LIMIT,
       trialWindowHours: TRIAL_WINDOW / 3600,
-      model: process.env.CLAUDE_MODEL || "claude-haiku-4-5"
+      model: process.env.CLAUDE_MODEL || "claude-sonnet-4-5"
     });
+  }
+
+  // Akcija "issue" (samo vlasnik): izdaj kod s rokom – za ručne prodaje ili TEST bez Stripea
+  if (body.action === "issue") {
+    if (!isOwner) return json(res, 403, { error: "Forbidden" });
+    if (!redisReady()) return json(res, 200, { ok: false, error: "Redis nije konfigurisan – kod se ne bi trajno sačuvao. Postavi UPSTASH_* varijable u Vercelu." });
+    const planKey = ["plan", "programm", "coach"].indexOf(body.plan) >= 0 ? body.plan : "programm";
+    let days = parseInt(body.days, 10);
+    if (!Number.isFinite(days) || days < 1) days = planKey === "coach" ? 33 : 31;
+    days = Math.min(days, 400); // gornja granica
+    const code = genCode();
+    const expiresAt = nowSec() + days * 24 * 3600;
+    await putLicense(code, { plan: planKey, email: (body.email || "").toString().slice(0, 120), expiresAt: expiresAt, source: "manual" });
+    return json(res, 200, { ok: true, code: code, plan: planKey, days: days, expiresAt: expiresAt });
+  }
+
+  // Akcija "revoke" (samo vlasnik): poništi kod prije isteka
+  if (body.action === "revoke") {
+    if (!isOwner) return json(res, 403, { error: "Forbidden" });
+    const ok = await revokeLicense((body.code || "").toString());
+    return json(res, 200, { ok: ok });
   }
 
   // Burst zaštita (protiv spama) – važi za sve
@@ -313,7 +322,7 @@ export default async function handler(req, res) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: process.env.CLAUDE_MODEL || "claude-haiku-4-5",
+        model: process.env.CLAUDE_MODEL || "claude-sonnet-4-5",
         max_tokens: 1024,
         system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
         messages: messages

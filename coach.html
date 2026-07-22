@@ -108,8 +108,18 @@
   /* chips */
   .chips{display:flex;flex-wrap:wrap;gap:10px;margin:4px 0 0 50px}
   .chips.sugg{margin:10px 0 2px 50px}
-  .bubble .mdh{font-weight:800;font-size:1.04rem;margin:8px 0 2px;color:var(--ink)}
+  .bubble .mdh{font-weight:800;font-size:1.04rem;margin:10px 0 3px;color:var(--ink);letter-spacing:-.01em}
+  .bubble .mdh:first-child{margin-top:0}
   .bubble ol{margin:6px 0 6px 22px}
+  .bubble ol li,.bubble ul li{margin:5px 0;padding-left:2px}
+  .bubble ul{list-style:none;margin:7px 0 3px;padding-left:2px}
+  .bubble ul li{position:relative;padding-left:20px}
+  .bubble ul li:before{content:"";position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(22,163,74,.12)}
+  /* Premium Wort-für-Wort Reveal – ersetzt den alten „Springen"-Typewriter */
+  .rv{opacity:0;display:inline-block;will-change:opacity,transform,filter;animation:rvIn .44s cubic-bezier(.2,.75,.3,1) both}
+  @keyframes rvIn{0%{opacity:0;transform:translateY(.34em) scale(.985);filter:blur(3px)}100%{opacity:1;transform:none;filter:none}}
+  .rv.instant{animation:none;opacity:1;filter:none;transform:none}
+  .endcaret{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:4px;vertical-align:middle;box-shadow:0 0 0 3px rgba(22,163,74,.18);animation:blinkc .85s step-end infinite}
   .chip{background:rgba(255,255,255,.9);border:1.5px solid var(--line);color:var(--ink-2);padding:10px 16px;border-radius:50px;
     font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;backdrop-filter:blur(4px)}
   .chip:hover{border-color:var(--green);background:#fff;color:var(--green-2);transform:translateY(-2px);box-shadow:0 6px 16px rgba(22,163,74,.15)}
@@ -188,7 +198,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.2" stroke-linecap="round"/></svg>
         </div>
         <div class="col">
-          <div class="bubble">Hallo und herzlich willkommen bei VITALFORM! 👋 Ich bin dein persönlicher KI-Coach für Ernährung und Training. Erzähl mir zuerst: Was ist dein Ziel – möchtest du <strong>abnehmen</strong>, dich <strong>gesünder ernähren</strong> oder <strong>fitter werden</strong>?</div>
+          <div class="bubble">Schön, dass du da bist! 👋 Ich bin dein persönlicher VITALFORM Coach – und ich helfe dir, dein Ziel wirklich zu erreichen, Schritt für Schritt und ganz auf dich zugeschnitten. Verrate mir zum Start deinen <strong>Namen</strong> und was du erreichen möchtest: <strong>abnehmen</strong>, <strong>gesünder essen</strong> oder <strong>fitter werden</strong>? 💪</div>
         </div>
       </div>
       <div class="chips" id="chips">
@@ -395,38 +405,58 @@
     input.focus();
   }
 
-  // Streaming (typewriter) reveal
+  // Premium Reveal: formatiert ZUERST das ganze HTML, blendet dann Wort für Wort
+  // sanft ein. Kein Roh-Markdown-Flackern und kein „Umspringen" am Ende mehr.
+  function wrapWordsForReveal(root){
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = []; while(walker.nextNode()) nodes.push(walker.currentNode);
+    var spans = [];
+    nodes.forEach(function(tn){
+      if(!tn.nodeValue || !tn.parentNode) return;
+      var parts = tn.nodeValue.split(/(\s+)/);
+      var frag = document.createDocumentFragment();
+      parts.forEach(function(p){
+        if(p === "") return;
+        if(/^\s+$/.test(p)){ frag.appendChild(document.createTextNode(p)); return; }
+        var s = document.createElement("span"); s.className = "rv"; s.textContent = p;
+        spans.push(s); frag.appendChild(s);
+      });
+      tn.parentNode.replaceChild(frag, tn);
+    });
+    return spans;
+  }
+  var currentFinish = null;
   function streamInto(shell, fullText, suggestions){
     isStreaming = true; stopFlag = false;
     stopwrap.classList.add("show");
     setStatus("schreibt …");
     shell.el.setAttribute("data-text", fullText);
-    var tokens = fullText.split(/(\s+)/);
-    var i = 0;
-    var caret = document.createElement("span"); caret.className = "caret";
-    shell.bubble.textContent = "";
-    shell.bubble.appendChild(caret);
-    function tick(){
-      if(stopFlag){ return finish(); }
-      var chunk = "";
-      for(var n=0; n<2 && i<tokens.length; n++){ chunk += tokens[i++]; }
-      if(chunk) caret.insertAdjacentText("beforebegin", chunk);
-      scrollDown();
-      if(i < tokens.length){ streamTimer = setTimeout(tick, 16); }
-      else { finish(); }
-    }
+    shell.bubble.innerHTML = formatText(fullText);
+    var spans = wrapWordsForReveal(shell.bubble);
+    var n = spans.length;
+    // Tempo skalieren: auch lange Antworten erscheinen flott (~1,4–2,4 s)
+    var per = n > 0 ? Math.min(38, Math.max(9, Math.round(1700 / n))) : 0;
+    spans.forEach(function(s, i){ s.style.animationDelay = (i * per) + "ms"; });
+    var caret = document.createElement("span"); caret.className = "endcaret";
+    if(n){ spans[n - 1].insertAdjacentElement("afterend", caret); } else { shell.bubble.appendChild(caret); }
+    scrollDown();
+    var total = Math.min(n * per + 480, 2600);
+    var scrTimer = setInterval(scrollDown, 220);
     function finish(){
       if(streamTimer){ clearTimeout(streamTimer); streamTimer = null; }
-      isStreaming = false;
+      clearInterval(scrTimer);
+      if(stopFlag){ for(var k=0;k<spans.length;k++) spans[k].classList.add("instant"); }
+      if(caret && caret.parentNode) caret.parentNode.removeChild(caret);
+      isStreaming = false; currentFinish = null;
       stopwrap.classList.remove("show");
       setStatus("Online · 24/7");
-      shell.bubble.innerHTML = formatText(fullText);
       renderSuggestions(shell.el, suggestions);
       scrollDown();
     }
-    tick();
+    currentFinish = finish;
+    streamTimer = setTimeout(finish, total);
   }
-  function stopStream(){ stopFlag = true; }
+  function stopStream(){ stopFlag = true; if(currentFinish) currentFinish(); }
 
   function addTyping(){
     var el = document.createElement("div");
@@ -479,6 +509,8 @@
   function closeUpsell(){ document.getElementById("upsell").classList.remove("show"); }
   function showUpsell(){ trialEnded = true; document.getElementById("upsell").classList.add("show"); }
 
+  function fmtDate(sec){ try{ return new Date(sec*1000).toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'}); }catch(e){ return ''; } }
+
   async function submitAccess(){
     var code = document.getElementById("access-input").value.trim();
     var fb = document.getElementById("access-fb");
@@ -489,20 +521,30 @@
       var data = await res.json();
       if(data.valid){
         accessCode = code; saveCode(code); setFullAccess();
-        fb.className="fb ok"; fb.textContent="✓ Freigeschaltet!";
-        // interner Status-Check: ist das Trial-Limit dauerhaft gespeichert?
-        var st = await checkRedisStatus(code);
-        if(st === null){
-          setTimeout(function(){ closeAccess(); closeUpsell(); }, 700); // Mitglied -> kein Technik-Status
-        } else if(st === "ok"){
-          fb.className="fb ok"; fb.textContent="✓ Freigeschaltet! · Limit-Speicher (Redis): aktiv ✅";
-          setTimeout(function(){ closeAccess(); closeUpsell(); }, 1600);
-        } else if(st === "not_configured"){
-          fb.className="fb no"; fb.textContent="⚠️ Redis nicht verbunden – Trial-Limit ist NICHT dauerhaft. Upstash-Keys in Vercel eintragen.";
+        if(data.kind === "owner"){
+          // Vlasnik: prikaži tehnički status skladišta
+          fb.className="fb ok"; fb.textContent="✓ Freigeschaltet!";
+          var st = await checkRedisStatus(code);
+          if(st === "ok"){ fb.className="fb ok"; fb.textContent="✓ Freigeschaltet! · Speicher (Redis): aktiv ✅"; setTimeout(function(){ closeAccess(); closeUpsell(); }, 1600); }
+          else if(st === "not_configured"){ fb.className="fb no"; fb.textContent="⚠️ Redis nicht verbunden – Limit/Codes NICHT dauerhaft. UPSTASH_* in Vercel setzen."; }
+          else if(st && st !== null){ fb.className="fb no"; fb.textContent="⚠️ Redis-Status: " + st; }
+          else { setTimeout(function(){ closeAccess(); closeUpsell(); }, 900); }
         } else {
-          fb.className="fb no"; fb.textContent="⚠️ Redis-Status: " + st + " – Limit evtl. nicht dauerhaft.";
+          // Kupac/član: prikaži datum isteka ako postoji
+          var until = data.expiresAt ? (" · aktiv bis " + fmtDate(data.expiresAt)) : "";
+          fb.className="fb ok"; fb.textContent="✓ Freigeschaltet!" + until;
+          setTimeout(function(){ closeAccess(); closeUpsell(); }, until ? 1900 : 700);
         }
-      } else { fb.className="fb no"; fb.textContent="Code ungültig ❌"; }
+      } else {
+        if(data.reason === "expired"){
+          fb.className="fb no";
+          fb.innerHTML="⌛ Dein Zugang ist abgelaufen. <a href='index.html#programme' style='color:#b91c1c;text-decoration:underline;font-weight:700'>Jetzt verlängern →</a>";
+        } else if(data.reason === "revoked"){
+          fb.className="fb no"; fb.textContent="Dieser Code ist nicht mehr gültig.";
+        } else {
+          fb.className="fb no"; fb.textContent="Code ungültig ❌";
+        }
+      }
     }catch(e){ fb.className="fb no"; fb.textContent="Fehler. Bitte erneut versuchen."; }
   }
 

@@ -120,6 +120,35 @@
   .float-2 .ic{background:#dcfce7}
   @media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:56px}.hero-float{display:none}}
 
+  /* ===== PREMIUM 3D HERO ===== */
+  .hero-visual{perspective:1500px}
+  .hero-cardlink{display:block;text-decoration:none;color:inherit;transform-style:preserve-3d;position:relative;z-index:2}
+  .hero-card{transform-style:preserve-3d;animation:heroIn 1.1s cubic-bezier(.2,.8,.25,1) both}
+  @keyframes heroIn{0%{opacity:0;transform:rotateY(-18deg) rotateX(9deg) translateY(34px)}100%{opacity:1;transform:rotateY(-9deg) rotateX(4deg)}}
+  .hero-card .hc-head{transform:translateZ(38px)}
+  .hero-card .chat{transform:translateZ(22px)}
+  .hero-card .chat.me{transform:translateZ(34px)}
+  .hero-card .badge{transform:translateZ(60px)}
+  .hero-float{transform:translateZ(66px)}
+  .hero-card .try-hint{position:absolute;left:0;right:0;bottom:0;transform:translateZ(30px);background:linear-gradient(180deg,rgba(11,58,34,0),rgba(11,58,34,.94));color:#fff;border-radius:0 0 26px 26px;padding:40px 18px 17px;text-align:center;font-weight:750;font-size:.9rem;opacity:0;transition:opacity .28s;pointer-events:none}
+  .hero-cardlink:hover .try-hint{opacity:1}
+  .hero-cardlink:hover .hero-card{box-shadow:0 44px 100px rgba(11,58,34,.30)}
+  .hero .aurora{position:absolute;inset:-14% -6% auto -6%;height:130%;z-index:0;pointer-events:none;filter:blur(50px);opacity:.6}
+  .hero .aurora span{position:absolute;border-radius:50%}
+  .hero .aurora .a1{width:440px;height:440px;background:radial-gradient(circle,rgba(163,230,53,.55),transparent 62%);top:-70px;right:4%;animation:auroraA 13s ease-in-out infinite}
+  .hero .aurora .a2{width:500px;height:500px;background:radial-gradient(circle,rgba(22,163,74,.42),transparent 62%);top:130px;left:-6%;animation:auroraB 16s ease-in-out infinite}
+  @keyframes auroraA{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-34px,44px) scale(1.13)}}
+  @keyframes auroraB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(44px,-32px) scale(1.1)}}
+  /* prominente LIVE-Test-CTA */
+  .btn.live{position:relative;background:var(--grad);color:#fff;box-shadow:0 14px 32px rgba(22,163,74,.44);overflow:visible;isolation:isolate}
+  .btn.live:before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#eaffb0;margin-right:9px;vertical-align:middle;animation:livePulse 1.6s infinite}
+  @keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(163,230,53,.7)}70%{box-shadow:0 0 0 10px rgba(163,230,53,0)}100%{box-shadow:0 0 0 0 rgba(163,230,53,0)}}
+  .btn.live:after{content:"";position:absolute;inset:-2px;border-radius:inherit;z-index:-1;background:linear-gradient(120deg,#a3e635,#16a34a,#a3e635);background-size:220% 100%;opacity:0;transition:opacity .3s;animation:liveSheen 3.2s linear infinite}
+  .btn.live:hover{transform:translateY(-2px);box-shadow:0 20px 40px rgba(22,163,74,.5)}
+  .btn.live:hover:after{opacity:.65}
+  @keyframes liveSheen{to{background-position:220% 0}}
+  @media(prefers-reduced-motion:reduce){.hero-card,.hero .aurora span,.btn.live:before,.btn.live:after{animation:none}}
+
   /* MARQUEE / BADGES */
   .badges{background:var(--ink);color:#dfeee6}
   .badges .wrap{display:flex;justify-content:space-around;flex-wrap:wrap;gap:22px;align-items:center}
@@ -272,6 +301,48 @@
   @media(max-width:880px){.sticky-cta{display:flex}}
   /* LANG BADGE */
   .lang-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(163,230,53,.14);color:#eafaf1;border:1px solid rgba(163,230,53,.32);padding:9px 17px;border-radius:50px;font-weight:700;font-size:.86rem;margin-top:22px}
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .stat{text-align:center}
+  .stat .num{font-size:clamp(2rem,4.2vw,2.9rem);font-weight:850;color:var(--lime);letter-spacing:-.02em;line-height:1}
+  .stat .lbl{color:#cfe6d8;font-weight:600;font-size:.9rem;margin-top:7px}
+  @media(max-width:640px){.stats-grid{grid-template-columns:repeat(2,1fr);gap:28px}}
+  /* COMPARISON */
+  .cmp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:20px;border:1px solid var(--line);box-shadow:var(--shadow)}
+  .cmp{width:100%;border-collapse:collapse;min-width:560px;background:#fff}
+  .cmp th,.cmp td{padding:15px 16px;text-align:center;border-bottom:1px solid var(--line);font-size:.94rem}
+  .cmp th{font-weight:800;color:var(--ink);background:var(--soft)}
+  .cmp td:first-child,.cmp th:first-child{text-align:left;font-weight:700;color:var(--ink-2)}
+  .cmp th.vf{color:#fff;background:var(--grad)}
+  .cmp td.vf{background:rgba(22,163,74,.07)}
+  .cmp .yes{color:var(--green);font-weight:850;font-size:1.1rem}
+  .cmp .no{color:#cbd5d0;font-weight:800}
+  .cmp .part{color:#c99700;font-size:.82rem;font-weight:750}
+  .cmp tr:last-child td{border-bottom:none}
+  /* ROADMAP */
+  .road-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:44px}
+  .road{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px 26px;box-shadow:var(--shadow-sm);transition:.25s}
+  .road:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+  .road .ph{display:inline-block;font-size:.75rem;font-weight:800;color:var(--green-2);text-transform:uppercase;letter-spacing:.07em;background:var(--soft);padding:6px 14px;border-radius:50px;margin-bottom:14px}
+  @media(max-width:880px){.road-grid{grid-template-columns:1fr}}
+  /* STICKY MOBILE CTA */
+  .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:11px 16px;display:none;gap:12px;align-items:center;box-shadow:0 -6px 24px rgba(12,60,35,.12);transform:translateY(110%);transition:transform .3s}
+  .sticky-cta.show{transform:translateY(0)}
+  .sticky-cta .txt{flex:1;font-weight:800;font-size:.94rem;line-height:1.15}
+  .sticky-cta .txt small{display:block;color:var(--muted);font-weight:600;font-size:.76rem;margin-top:2px}
+  .sticky-cta .btn{padding:12px 22px;font-size:.94rem;box-shadow:0 8px 18px rgba(22,163,74,.35)}
+  @media(max-width:880px){.sticky-cta{display:flex}}
+  /* LANG BADGE */
+  .lang-badge{display:inline-flex;align-items:center;gap:9px;background:rgba(163,230,53,.14);color:#eafaf1;border:1px solid rgba(163,230,53,.32);padding:9px 17px;border-radius:50px;font-weight:700;font-size:.86rem;margin-top:22px}
+  .pay-badges{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .pay-badge{height:40px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#fff;display:flex;align-items:center;font-weight:800;font-size:.9rem;color:#1c2b24;box-shadow:var(--shadow-sm);letter-spacing:.02em}
+  .pay-badge .pp{color:#003087}.pay-badge .pp2{color:#009cde}
+  .card-pay{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px}
+  .trylink{display:inline-block;margin-top:12px;color:var(--green-2);font-weight:750;font-size:.92rem;cursor:pointer;text-decoration:none}
+  .trylink:hover{text-decoration:underline}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);background:#0c1512;color:#fff;padding:15px 24px;border-radius:12px;font-size:.94rem;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:.3s;z-index:200;max-width:90%;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hp-field{position:absolute!important;left:-9999px!important;top:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
   .pay-badges{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px}
   .pay-badge{height:40px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#fff;display:flex;align-items:center;font-weight:800;font-size:.9rem;color:#1c2b24;box-shadow:var(--shadow-sm);letter-spacing:.02em}
   .pay-badge .pp{color:#003087}.pay-badge .pp2{color:#009cde}
@@ -344,14 +415,15 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="aurora"><span class="a1"></span><span class="a2"></span></div>
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow" data-de="KI-gestütztes Abnehm-Coaching" data-en="AI-powered weight-loss coaching">KI-gestütztes Abnehm-Coaching</div>
       <h1 data-de="Abnehmen mit deinem persönlichen <span class='hl'>KI-Coach</span> – in 12 Wochen zur besten Form." data-en="Lose weight with your personal <span class='hl'>AI coach</span> – your best shape in 12 weeks.">Abnehmen mit deinem persönlichen <span class="hl">KI-Coach</span> – in 12 Wochen zur besten Form.</h1>
       <p class="lead" data-de="Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn automatisch an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit." data-en="Your AI coach builds your nutrition and training plan, adjusts it automatically and answers your questions 24/7. No starving, no gym pressure, no waiting.">Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn automatisch an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit.</p>
       <div class="hero-cta">
-        <a onclick="goHome('#programme')" class="btn" data-de="Programm ansehen" data-en="View programs">Programm ansehen →</a>
-        <a href="coach.html" class="btn ghost" data-de="KI-Coach kostenlos testen" data-en="Try the AI coach free">KI-Coach kostenlos testen</a>
+        <a href="coach.html" class="btn live" data-de="Coach LIVE testen – gratis" data-en="Try the coach LIVE – free">Coach LIVE testen – gratis</a>
+        <a onclick="goHome('#programme')" class="btn ghost" data-de="Programme ansehen" data-en="View programs">Programme ansehen →</a>
       </div>
       <div class="trust">
         <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#dcfce7"/><path d="M7 12l3.5 3.5L17 8.5" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-de="100% online" data-en="100% online">100% online</span></div>
@@ -362,7 +434,8 @@
     <div class="hero-visual">
       <div class="hero-float float-1"><span class="ic">🔥</span><span data-de="Plan aktiv" data-en="Plan active">Plan aktiv</span></div>
       <div class="hero-float float-2"><span class="ic">⚡</span><span data-de="Woche 4: volle Energie" data-en="Week 4: full energy">Woche 4: volle Energie</span></div>
-      <div class="hero-card">
+      <a href="coach.html" class="hero-cardlink" aria-label="KI-Coach live testen">
+      <div class="hero-card" id="heroCard">
         <div class="badge" data-de="24/7 verfügbar" data-en="Available 24/7">24/7 verfügbar</div>
         <div class="hc-head">
           <div class="hc-avatar"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.2" stroke-linecap="round"/></svg></div>
@@ -371,7 +444,9 @@
         <div class="chat ai" data-de="Guten Morgen! Bereit für dein Frühstück? Ich habe dir ein Rezept mit 420 kcal vorbereitet. 🥣" data-en="Good morning! Ready for breakfast? I've prepared a 420 kcal recipe for you. 🥣">Guten Morgen! Bereit für dein Frühstück? Ich habe dir ein Rezept mit 420 kcal vorbereitet. 🥣</div>
         <div class="chat me" data-de="Ich habe heute wenig Zeit zum Kochen 😅" data-en="I don't have much time to cook today 😅">Ich habe heute wenig Zeit zum Kochen 😅</div>
         <div class="chat ai" data-de="Kein Problem – hier ist eine 10-Minuten-Alternative mit den gleichen Makros. 💪" data-en="No problem – here's a 10-minute alternative with the same macros. 💪">Kein Problem – hier ist eine 10-Minuten-Alternative mit den gleichen Makros. 💪</div>
+        <div class="try-hint" data-de="👉 Klick & chatte selbst – gratis" data-en="👉 Click & chat yourself – free">👉 Klick &amp; chatte selbst – gratis</div>
       </div>
+      </a>
     </div>
   </div>
 </section>
@@ -450,7 +525,7 @@
         <li><span class="tick">✓</span><span data-de="Erstellt & personalisiert deinen Plan in Sekunden" data-en="Builds & personalizes your plan in seconds">Erstellt & personalisiert deinen Plan in Sekunden</span></li>
         <li><span class="tick">✓</span><span data-de="Beantwortet jede Frage zu Ernährung, Rezepten & Training" data-en="Answers every question on nutrition, recipes & training">Beantwortet jede Frage zu Ernährung, Rezepten & Training</span></li>
         <li><span class="tick">✓</span><span data-de="Passt den Plan an, wenn sich dein Alltag ändert" data-en="Adjusts the plan when your routine changes">Passt den Plan an, wenn sich dein Alltag ändert</span></li>
-        <li><span class="tick">✓</span><span data-de="Motiviert dich mit Erinnerungen & Fortschritts-Updates" data-en="Motivates you with reminders & progress updates">Motiviert dich mit Erinnerungen & Fortschritts-Updates</span></li>
+        <li><span class="tick">✓</span><span data-de="Motiviert dich im Chat und feiert deine Fortschritte" data-en="Motivates you in chat and celebrates your progress">Motiviert dich im Chat und feiert deine Fortschritte</span></li>
       </ul>
       <div class="lang-badge">🌍 <span data-de="Spricht Deutsch, English, Bosanski, Türkçe &amp; العربية" data-en="Speaks German, English, Bosnian, Turkish &amp; Arabic">Spricht Deutsch, English, Bosanski, Türkçe &amp; العربية</span></div>
     </div>
@@ -460,6 +535,32 @@
       <div class="row"><div class="bubble a" data-de="Überhaupt nicht! Ein Essen ändert nichts. Ich passe deine restlichen Mahlzeiten heute leicht an – du bleibst voll im Plan. 👍" data-en="Not at all! One meal changes nothing. I'll slightly adjust your remaining meals today – you stay fully on track. 👍">Überhaupt nicht! Ein Essen ändert nichts. Ich passe deine restlichen Mahlzeiten heute leicht an – du bleibst voll im Plan. 👍</div></div>
       <div class="row"><div class="bubble u" data-de="Super, danke! Und morgen früh?" data-en="Great, thanks! And tomorrow morning?">Super, danke! Und morgen früh?</div></div>
       <div class="row"><div class="bubble a" data-de="Morgen starten wir mit einem proteinreichen Frühstück – hält dich lange satt. Ich schick dir das Rezept um 7 Uhr. ⏰" data-en="Tomorrow we start with a high-protein breakfast – keeps you full for long. I'll send the recipe at 7 am. ⏰">Morgen starten wir mit einem proteinreichen Frühstück – hält dich lange satt. Ich schick dir das Rezept um 7 Uhr. ⏰</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section>
+  <div class="wrap center shead reveal">
+    <div class="eyebrow" data-de="Dein Fahrplan" data-en="Your roadmap">Dein Fahrplan</div>
+    <h2 data-de="Deine Transformation in 12 Wochen" data-en="Your transformation in 12 weeks">Deine Transformation in 12 Wochen</h2>
+    <p class="lead" data-de="Ein klarer Weg – Woche für Woche zu deiner besten Form." data-en="A clear path – week by week to your best shape.">Ein klarer Weg – Woche für Woche zu deiner besten Form.</p>
+  </div>
+  <div class="wrap road-grid">
+    <div class="road reveal">
+      <span class="ph" data-de="Woche 1–4" data-en="Week 1–4">Woche 1–4</span>
+      <h3 data-de="Grundlagen & erste Erfolge" data-en="Basics & first wins">Grundlagen & erste Erfolge</h3>
+      <p data-de="Dein Plan startet, du baust gesunde Gewohnheiten auf und siehst die ersten Kilos purzeln." data-en="Your plan starts, you build healthy habits and see the first kilos drop.">Dein Plan startet, du baust gesunde Gewohnheiten auf und siehst die ersten Kilos purzeln.</p>
+    </div>
+    <div class="road reveal">
+      <span class="ph" data-de="Woche 5–8" data-en="Week 5–8">Woche 5–8</span>
+      <h3 data-de="Sichtbare Veränderung" data-en="Visible change">Sichtbare Veränderung</h3>
+      <p data-de="Dein Coach passt den Plan an, dein Körper verändert sich sichtbar und du gewinnst neue Energie." data-en="Your coach adapts the plan, your body visibly changes and you gain new energy.">Dein Coach passt den Plan an, dein Körper verändert sich sichtbar und du gewinnst neue Energie.</p>
+    </div>
+    <div class="road reveal">
+      <span class="ph" data-de="Woche 9–12" data-en="Week 9–12">Woche 9–12</span>
+      <h3 data-de="Deine beste Form" data-en="Your best shape">Deine beste Form</h3>
+      <p data-de="Du festigst deinen neuen Lebensstil – nachhaltig, ohne Jo-Jo-Effekt, für langfristigen Erfolg." data-en="You lock in your new lifestyle – sustainable, no yo-yo, for lasting success.">Du festigst deinen neuen Lebensstil – nachhaltig, ohne Jo-Jo-Effekt, für langfristigen Erfolg.</p>
     </div>
   </div>
 </section>
@@ -501,7 +602,7 @@
     <div class="price reveal">
       <h3 data-de="Ernährungsplan" data-en="Nutrition plan">Ernährungsplan</h3>
       <div class="sub" data-de="Der einfache Einstieg" data-en="The easy start">Der einfache Einstieg</div>
-      <div class="amt">47€ <small data-de="einmalig" data-en="one-time">einmalig</small></div>
+      <div class="amt">39€ <small data-de="einmalig" data-en="one-time">einmalig</small></div>
       <ul>
         <li data-de="4-Wochen-Ernährungsplan" data-en="4-week nutrition plan">4-Wochen-Ernährungsplan</li>
         <li data-de="Über 40 einfache Rezepte" data-en="40+ easy recipes">Über 40 einfache Rezepte</li>
@@ -515,14 +616,12 @@
       <div class="tag" data-de="★ Bestseller" data-en="★ Bestseller">★ Bestseller</div>
       <h3 data-de="12-Wochen-Programm" data-en="12-week program">12-Wochen-Programm</h3>
       <div class="sub" data-de="Das komplette System" data-en="The complete system">Das komplette System</div>
-      <div><span class="old">197€</span></div>
       <div class="amt">97€ <small data-de="einmalig" data-en="one-time">einmalig</small></div>
       <ul>
         <li data-de="Personalisierter Ernährungsplan" data-en="Personalized nutrition plan">Personalisierter Ernährungsplan</li>
         <li data-de="12-Wochen-Trainingsplan (Home & Gym)" data-en="12-week training plan (home & gym)">12-Wochen-Trainingsplan (Home & Gym)</li>
         <li data-de="Rezepte, Einkaufslisten & Tracker" data-en="Recipes, shopping lists & tracker">Rezepte, Einkaufslisten & Tracker</li>
         <li data-de="1 Monat KI-Coach inklusive" data-en="1 month AI coach included">1 Monat KI-Coach inklusive</li>
-        <li data-de="Zugang zur Community" data-en="Community access">Zugang zur Community</li>
       </ul>
       <a onclick="buyNow('programm')" class="btn" style="cursor:pointer" data-de="Jetzt kaufen" data-en="Buy now">Jetzt kaufen</a>
       <div class="card-pay">Apple&nbsp;Pay · PayPal · Kreditkarte</div>
@@ -530,12 +629,12 @@
     <div class="price reveal">
       <h3 data-de="VITALFORM KI-Coach" data-en="VITALFORM AI Coach">VITALFORM KI-Coach</h3>
       <div class="sub" data-de="Dein Coach rund um die Uhr" data-en="Your coach around the clock">Dein Coach rund um die Uhr</div>
-      <div class="amt">29€ <small data-de="/ Monat" data-en="/ month">/ Monat</small></div>
+      <div class="amt">19,90€ <small data-de="/ Monat" data-en="/ month">/ Monat</small></div>
       <ul>
         <li data-de="Persönlicher KI-Coach im Chat, 24/7" data-en="Personal AI coach in chat, 24/7">Persönlicher KI-Coach im Chat, 24/7</li>
         <li data-de="Plan passt sich automatisch an dich an" data-en="Plan adapts to you automatically">Plan passt sich automatisch an dich an</li>
         <li data-de="Antworten auf alle Ernährungs- & Trainingsfragen" data-en="Answers to all nutrition & training questions">Antworten auf alle Ernährungs- & Trainingsfragen</li>
-        <li data-de="Motivation & Erinnerungen" data-en="Motivation & reminders">Motivation & Erinnerungen</li>
+        <li data-de="Motivation im Chat" data-en="Motivation in chat">Motivation im Chat</li>
         <li data-de="Jederzeit kündbar" data-en="Cancel anytime">Jederzeit kündbar</li>
       </ul>
       <a onclick="buyNow('coach')" class="btn ghost" style="cursor:pointer" data-de="Abo starten" data-en="Start subscription">Abo starten</a>
@@ -593,7 +692,39 @@
           <tr><td data-de="Ernährung + Training" data-en="Nutrition + training">Ernährung + Training</td><td class="vf"><span class="yes">✓</span></td><td><span class="part">teils</span></td><td><span class="yes">✓</span></td><td><span class="part">teils</span></td></tr>
           <tr><td data-de="Foto-Analyse der Mahlzeiten" data-en="Meal photo analysis">Foto-Analyse der Mahlzeiten</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="part">selten</span></td></tr>
           <tr><td data-de="Spricht deine Sprache" data-en="Speaks your language">Spricht deine Sprache</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="part">teils</span></td><td><span class="no">✕</span></td></tr>
-          <tr><td data-de="Preis / Monat" data-en="Price / month">Preis / Monat</td><td class="vf" style="font-weight:800;color:var(--green-2)">ab 29€</td><td>–</td><td>200€+</td><td>10–30€</td></tr>
+          <tr><td data-de="Preis / Monat" data-en="Price / month">Preis / Monat</td><td class="vf" style="font-weight:800;color:var(--green-2)">ab 19,90€</td><td>–</td><td>200€+</td><td>10–30€</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section>
+  <div class="wrap center shead reveal">
+    <div class="eyebrow" data-de="Der Vergleich" data-en="The comparison">Der Vergleich</div>
+    <h2 data-de="Warum VITALFORM?" data-en="Why VITALFORM?">Warum VITALFORM?</h2>
+    <p class="lead" data-de="Sieh selbst, wie VITALFORM im Vergleich abschneidet." data-en="See how VITALFORM stacks up.">Sieh selbst, wie VITALFORM im Vergleich abschneidet.</p>
+  </div>
+  <div class="wrap">
+    <div class="cmp-wrap reveal">
+      <table class="cmp">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="vf">VITALFORM</th>
+            <th data-de="Klassische Diät" data-en="Classic diet">Klassische Diät</th>
+            <th data-de="Personal Trainer" data-en="Personal trainer">Personal Trainer</th>
+            <th data-de="Andere Apps" data-en="Other apps">Andere Apps</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td data-de="24/7 verfügbar" data-en="Available 24/7">24/7 verfügbar</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="part">teils</span></td></tr>
+          <tr><td data-de="Persönlich angepasst" data-en="Personalized">Persönlich angepasst</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="yes">✓</span></td><td><span class="part">teils</span></td></tr>
+          <tr><td data-de="Ernährung + Training" data-en="Nutrition + training">Ernährung + Training</td><td class="vf"><span class="yes">✓</span></td><td><span class="part">teils</span></td><td><span class="yes">✓</span></td><td><span class="part">teils</span></td></tr>
+          <tr><td data-de="Foto-Analyse der Mahlzeiten" data-en="Meal photo analysis">Foto-Analyse der Mahlzeiten</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td><td><span class="part">selten</span></td></tr>
+          <tr><td data-de="Spricht deine Sprache" data-en="Speaks your language">Spricht deine Sprache</td><td class="vf"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="part">teils</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td data-de="Preis / Monat" data-en="Price / month">Preis / Monat</td><td class="vf" style="font-weight:800;color:var(--green-2)">ab 19,90€</td><td>–</td><td>200€+</td><td>10–30€</td></tr>
         </tbody>
       </table>
     </div>
@@ -779,7 +910,13 @@
 
 <!-- STICKY MOBILE CTA -->
 <div class="sticky-cta" id="stickyCta">
-  <div class="txt"><span data-de="Starte noch heute" data-en="Start today">Starte noch heute</span><small data-de="KI-Coach · ab 29€/Monat" data-en="AI coach · from 29€/mo">KI-Coach · ab 29€/Monat</small></div>
+  <div class="txt"><span data-de="Starte noch heute" data-en="Start today">Starte noch heute</span><small data-de="KI-Coach · ab 19,90€/Monat" data-en="AI coach · from 19.90€/mo">KI-Coach · ab 19,90€/Monat</small></div>
+  <a onclick="goHome('#programme')" class="btn" data-de="Jetzt starten" data-en="Start now">Jetzt starten</a>
+</div>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="txt"><span data-de="Starte noch heute" data-en="Start today">Starte noch heute</span><small data-de="KI-Coach · ab 19,90€/Monat" data-en="AI coach · from 19.90€/mo">KI-Coach · ab 19,90€/Monat</small></div>
   <a onclick="goHome('#programme')" class="btn" data-de="Jetzt starten" data-en="Start now">Jetzt starten</a>
 </div>
 
@@ -852,6 +989,7 @@
         msg.textContent = lang==='de' ? '✅ Geschafft! Check dein Postfach für deinen Gratis-Plan.' : '✅ Done! Check your inbox for your free plan.';
         document.getElementById('lead-email').value='';
         if(window.vfTrack) vfTrack('Lead', { content_name: 'Gratis 7-Tage-Plan', source: 'landing' });
+        if(window.vfTrack) vfTrack('Lead', { content_name: 'Gratis 7-Tage-Plan', source: 'landing' });
       } else {
         msg.textContent = (d && d.error) ? d.error : (lang==='de' ? 'Etwas ist schiefgelaufen. Bitte erneut versuchen.' : 'Something went wrong. Please try again.');
       }
@@ -909,6 +1047,29 @@
       stickyCta.classList.add('show');
     } else { stickyCta.classList.remove('show'); }
   }, {passive:true});
+
+  // 3D-Parallax-Tilt für die Hero-Coach-Karte (interaktiver Wow-Effekt)
+  (function(){
+    try{
+      if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var vis = document.querySelector('.hero-visual'), card = document.getElementById('heroCard');
+      if(!vis || !card) return;
+      var rest = 'rotateY(-9deg) rotateX(4deg)', raf = null;
+      vis.addEventListener('mousemove', function(e){
+        var r = vis.getBoundingClientRect();
+        var px = (e.clientX - r.left)/r.width - .5, py = (e.clientY - r.top)/r.height - .5;
+        if(raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(function(){
+          card.style.transition = 'transform .1s linear';
+          card.style.transform = 'rotateY('+(-9 + px*18).toFixed(2)+'deg) rotateX('+(4 - py*15).toFixed(2)+'deg)';
+        });
+      });
+      vis.addEventListener('mouseleave', function(){
+        card.style.transition = 'transform .55s cubic-bezier(.2,.7,.3,1)';
+        card.style.transform = rest;
+      });
+    }catch(e){}
+  })();
 </script>
 
 <div class="toast" id="toast"></div>
@@ -918,9 +1079,9 @@
   // Stripe Payment Link zeigt Apple Pay, Google Pay & Kreditkarte automatisch an.
   // Solange leer, zeigt der Button einen Hinweis (Test/Platzhalter).
   const PAYMENT_LINKS = {
-    plan: "",      // 47€  – Ernährungsplan (einmalig)
-    programm: "",  // 97€  – 12-Wochen-Programm (einmalig)
-    coach: ""      // 29€  – KI-Coach (Abo / Monat)
+    plan: "",      // 39€     – Ernährungsplan (einmalig)
+    programm: "",  // 97€     – 12-Wochen-Programm (einmalig)
+    coach: ""      // 19,90€  – KI-Coach (Abo / Monat)
   };
 
   function toast(msg){
@@ -931,13 +1092,19 @@
   }
   function buyNow(key){
     var url = PAYMENT_LINKS[key];
-    if(url && url.indexOf("http") === 0){ window.open(url, "_blank"); return; }
+    if(url && url.indexOf("http") === 0){
+      // client_reference_id -> Webhook erkennt zuverlässig, welches Programm gekauft wurde
+      var sep = url.indexOf("?") >= 0 ? "&" : "?";
+      window.open(url + sep + "client_reference_id=" + encodeURIComponent(key), "_blank");
+      return;
+    }
     var de = document.documentElement.lang !== "en";
     toast(de
       ? "💳 Die Bezahlung wird gerade eingerichtet und ist in Kürze verfügbar. Teste solange deinen KI-Coach kostenlos! 🚀"
       : "💳 Payments are being set up and will be available shortly. Meanwhile, try your AI coach for free! 🚀");
   }
 </script>
+<script src="/consent.js" defer></script>
 <script src="/consent.js" defer></script>
 </body>
 </html>

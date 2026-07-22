@@ -33,6 +33,50 @@ function isDuplicate(res) {
   return res.data && (res.data.code === "duplicate_parameter" || (res.data.message && /exist/i.test(res.data.message)));
 }
 
+// Automatski „7-Tage-Plan" email (ispunjenje obećanja s kvize/forme) preko Brevo transakcijskog maila.
+async function sendPlanEmail(apiKey, email) {
+  if (!apiKey || !email) return false;
+  const from = process.env.MAIL_FROM || "info@vitalform.fit";
+  const site = (process.env.SITE_URL || "https://vitalform.fit").replace(/\/+$/, "");
+  const pdf = site + "/downloads/vitalform-7-tage-plan.pdf";
+  const row = (d, f, m, s, a) => `<tr><td style="padding:7px 9px;border-bottom:1px solid #eef4f0;font-weight:700;color:#0f7a37">${d}</td><td style="padding:7px 9px;border-bottom:1px solid #eef4f0;font-size:13px">${f}</td><td style="padding:7px 9px;border-bottom:1px solid #eef4f0;font-size:13px">${m}</td><td style="padding:7px 9px;border-bottom:1px solid #eef4f0;font-size:13px">${a}</td></tr>`;
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:0 auto;color:#0c1512">
+    <div style="background:linear-gradient(135deg,#1bb356,#0b8a4f);padding:26px;border-radius:16px 16px 0 0;text-align:center">
+      <div style="font-size:22px;font-weight:800;color:#fff">VITAL<span style="color:#a3e635">FORM</span></div>
+    </div>
+    <div style="border:1px solid #e7efe9;border-top:none;border-radius:0 0 16px 16px;padding:28px 26px">
+      <h1 style="font-size:21px;margin:0 0 10px">Dein 7-Tage-Plan ist da! 🥗</h1>
+      <p style="color:#5c6b63;line-height:1.6;margin:0 0 16px">Wie versprochen – dein kostenloser Start. Proteinreich, sättigend und ohne Verzicht. Hier ist ein Vorgeschmack, den kompletten Plan mit Rezepten &amp; Einkaufsliste bekommst du als PDF:</p>
+      <div style="text-align:center;margin:0 0 18px"><a href="${pdf}" style="display:inline-block;background:linear-gradient(135deg,#1bb356,#0b8a4f);color:#fff;text-decoration:none;padding:13px 26px;border-radius:50px;font-weight:700">📄 Kompletten 7-Tage-Plan öffnen</a></div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #e7efe9;border-radius:10px;overflow:hidden">
+        <tr style="background:#0c1512;color:#fff"><th style="padding:7px 9px;text-align:left;font-size:12px">Tag</th><th style="padding:7px 9px;text-align:left;font-size:12px">Frühstück</th><th style="padding:7px 9px;text-align:left;font-size:12px">Mittag</th><th style="padding:7px 9px;text-align:left;font-size:12px">Abend</th></tr>
+        ${row("1", "Overnight Oats", "Hähnchen-Reis-Bowl", "", "Lachs + Süßkartoffel")}
+        ${row("2", "Rührei + Vollkorn", "Putenpfanne", "", "Linsen-Dal")}
+        ${row("3", "Magerquark-Bowl", "One-Pan Hähnchen", "", "Vollkorn-Bolognese")}
+      </table>
+      <p style="color:#8a978f;font-size:13px;margin:14px 0 0">…und 4 weitere Tage im PDF. 💪</p>
+      <div style="background:#f4f9f5;border:1px solid #e7efe9;border-radius:12px;padding:16px;margin:20px 0 0">
+        <p style="margin:0;font-size:14px;color:#1c2b24"><b>Bereit für mehr?</b> Im VITALFORM-Programm bekommst du deinen persönlichen Plan + KI-Coach rund um die Uhr. <a href="${site}" style="color:#0f7a37;font-weight:700">Jetzt ansehen →</a></p>
+      </div>
+      <p style="color:#8a978f;font-size:12px;line-height:1.6;margin:18px 0 0;border-top:1px solid #e7efe9;padding-top:14px">Du erhältst diese E-Mail, weil du deinen kostenlosen 7-Tage-Plan angefordert hast. VITALFORM · vitalform.fit</p>
+    </div>
+  </div>`;
+  try {
+    const r = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": apiKey, "content-type": "application/json", accept: "application/json" },
+      body: JSON.stringify({ sender: { name: "VITALFORM", email: from }, to: [{ email: email }], subject: "Dein kostenloser 7-Tage-Plan 🥗", htmlContent: html })
+    });
+    if (r.status < 200 || r.status >= 300) console.error("plan email HTTP", r.status);
+    return r.status >= 200 && r.status < 300;
+  } catch (e) { console.error("plan email error", e && e.message); return false; }
+}
+
+async function okWithPlan(res, existed, apiKey, email) {
+  await sendPlanEmail(apiKey, email); // best-effort; ne ruši hvatanje leada ako mail padne
+  return res.status(200).json({ ok: true, existed: existed });
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -77,13 +121,13 @@ export default async function handler(req, res) {
 
   try {
     let r = await brevoAddContact(apiKey, withAttrs);
-    if (isSuccess(r) || isDuplicate(r)) return res.status(200).json({ ok: true, existed: isDuplicate(r) });
+    if (isSuccess(r) || isDuplicate(r)) return await okWithPlan(res, isDuplicate(r), apiKey, email);
 
     // Fallback: ako atributi ne postoje u Brevu, ponovo bez atributa da hvatanje nikad ne pukne
     if (withAttrs.attributes) {
       console.error("lead: retry ohne Attribute", r.status, r.data && (r.data.message || r.data.code));
       r = await brevoAddContact(apiKey, base);
-      if (isSuccess(r) || isDuplicate(r)) return res.status(200).json({ ok: true, existed: isDuplicate(r) });
+      if (isSuccess(r) || isDuplicate(r)) return await okWithPlan(res, isDuplicate(r), apiKey, email);
     }
 
     console.error("lead: Brevo error", r.status, r.data && (r.data.message || r.data.code));
