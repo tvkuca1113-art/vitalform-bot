@@ -112,6 +112,12 @@
   .center{text-align:center}
   .hp-field{position:absolute!important;left:-9999px!important;top:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
   .hidden{display:none !important}
+  /* Barrierefreiheit (WCAG 2.2) */
+  :focus-visible{outline:3px solid #0f7a37;outline-offset:2px;border-radius:8px}
+  .btn:focus-visible,.opt:focus-visible,.q-opt:focus-visible{outline:3px solid #0b4d24;outline-offset:3px}
+  @media(prefers-reduced-motion:reduce){
+    *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
 </style>
 </head>
 <body>
@@ -190,7 +196,7 @@
         <div class="kpi"><div class="n" id="r-protein">–</div><div class="l">g Eiweiß / Tag</div></div>
       </div>
       <div class="center"><div class="result-badge" id="r-icon">🔥</div><div class="tag" id="r-typtag">Dein Typ</div><h2 id="r-title" style="font-size:1.3rem;margin-bottom:8px"></h2></div>
-      <div class="ai-analysis" id="aiBox" style="display:none">
+      <div class="ai-analysis" id="aiBox" style="display:none" aria-live="polite">
         <div class="aa-head">
           <span class="aa-av"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.2" stroke-linecap="round"/></svg></span>
           <div><b data-de="Deine persönliche Analyse" data-en="Your personal analysis">Deine persönliche Analyse</b><small id="aa-status" data-de="Dein Coach analysiert dich …" data-en="Your coach is analyzing you …">Dein Coach analysiert dich …</small></div>

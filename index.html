@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VITALFORM – KI-gestütztes Abnehmen & gesunde Ernährung</title>
-<meta name="description" content="Abnehmen mit deinem persönlichen KI-Coach. Dein Ernährungs- & Trainingsplan wird automatisch erstellt und angepasst – 24/7 im Chat. Ohne Hungern, ohne Fitnessstudio-Zwang. Jetzt kostenlos testen.">
+<meta name="description" content="Abnehmen mit deinem persönlichen KI-Coach. Dein Ernährungs- & Trainingsplan wird erstellt und im Chat laufend an dich angepasst – 24/7. Ohne Hungern, ohne Fitnessstudio-Zwang. Jetzt kostenlos testen.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://vitalform.fit/">
 <meta name="theme-color" content="#16a34a">
@@ -18,7 +18,7 @@
 <meta property="og:locale:alternate" content="en_US">
 <meta property="og:url" content="https://vitalform.fit/">
 <meta property="og:title" content="VITALFORM – Abnehmen mit deinem persönlichen KI-Coach">
-<meta property="og:description" content="Dein Ernährungs- & Trainingsplan, automatisch angepasst und 24/7 im Chat. Ohne Hungern, ohne Fitnessstudio-Zwang. Jetzt kostenlos testen.">
+<meta property="og:description" content="Dein Ernährungs- & Trainingsplan, im Chat laufend an dich angepasst – 24/7. Ohne Hungern, ohne Fitnessstudio-Zwang. Jetzt kostenlos testen.">
 <meta property="og:image" content="https://vitalform.fit/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -26,8 +26,73 @@
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="VITALFORM – Abnehmen mit deinem persönlichen KI-Coach">
-<meta name="twitter:description" content="Dein Ernährungs- & Trainingsplan, automatisch angepasst und 24/7 im Chat. Jetzt kostenlos testen.">
+<meta name="twitter:description" content="Dein Ernährungs- & Trainingsplan, im Chat laufend an dich angepasst – 24/7. Jetzt kostenlos testen.">
 <meta name="twitter:image" content="https://vitalform.fit/og-image.png">
+<!-- Strukturierte Daten (nur belegbare Angaben – keine erfundenen Bewertungen) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://vitalform.fit/#organization",
+      "name": "VITALFORM",
+      "url": "https://vitalform.fit/",
+      "email": "info@vitalform.fit",
+      "logo": "https://vitalform.fit/apple-touch-icon.png",
+      "description": "KI-gestützte Online-Programme für nachhaltiges Abnehmen und gesunde Ernährung.",
+      "areaServed": "DE"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://vitalform.fit/#website",
+      "url": "https://vitalform.fit/",
+      "name": "VITALFORM",
+      "inLanguage": "de-DE",
+      "publisher": { "@id": "https://vitalform.fit/#organization" }
+    },
+    {
+      "@type": "Product",
+      "name": "VITALFORM 12-Wochen-Programm",
+      "description": "Personalisierter Ernährungs- und Trainingsplan mit Rezepten, Einkaufslisten, Tracker und 1 Monat KI-Coach.",
+      "brand": { "@id": "https://vitalform.fit/#organization" },
+      "offers": {
+        "@type": "Offer",
+        "price": "97.00",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://vitalform.fit/#programme"
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "VITALFORM Ernährungsplan",
+      "description": "4-Wochen-Ernährungsplan mit über 40 Rezepten, Einkaufslisten und Kalorien- & Makro-Guide.",
+      "brand": { "@id": "https://vitalform.fit/#organization" },
+      "offers": {
+        "@type": "Offer",
+        "price": "39.00",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://vitalform.fit/#programme"
+      }
+    },
+    {
+      "@type": "Product",
+      "name": "VITALFORM KI-Coach",
+      "description": "Persönlicher KI-Coach im Chat rund um die Uhr, monatlich kündbar.",
+      "brand": { "@id": "https://vitalform.fit/#organization" },
+      "offers": {
+        "@type": "Offer",
+        "price": "19.90",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": "https://vitalform.fit/#programme"
+      }
+    }
+  ]
+}
+</script>
 <style>
   :root{
     --green:#16a34a;
@@ -364,9 +429,48 @@
     .hero-float,.price.featured .tag,.hc-head small{animation:none}
     .nav-links a:after,.logo .mark,.btn{transition:none}
   }
+  /* ===== Garantie-Rechtshinweis ===== */
+  .g-legal{margin-top:12px;font-size:.82rem;line-height:1.55;color:var(--muted);opacity:.95}
+  .g-card .g-legal a{color:var(--green-2)}
+  /* ===== Für wen / für wen nicht ===== */
+  .fw-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
+  .fw-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px;box-shadow:var(--shadow)}
+  .fw-card.yes{border-top:4px solid var(--green)}
+  .fw-card.no{border-top:4px solid #e6b800;background:#fffdf5}
+  .fw-card h3{font-size:1.12rem;margin:0 0 14px;display:flex;align-items:center;gap:9px;color:var(--ink)}
+  .fw-card .fw-ic{font-size:1.15rem}
+  .fw-card ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+  .fw-card li{position:relative;padding-left:24px;color:var(--ink-2);line-height:1.5;font-size:.96rem}
+  .fw-card.yes li:before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:800}
+  .fw-card.no li:before{content:"–";position:absolute;left:0;color:#c99700;font-weight:800}
+  @media(max-width:760px){.fw-grid{grid-template-columns:1fr}}
+  /* ===== Checkout-Transparenz ===== */
+  .checkout-info{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;text-align:left}
+  .checkout-info>div{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:16px 17px}
+  .checkout-info b{display:block;color:var(--ink);font-size:.9rem;margin-bottom:6px}
+  .checkout-info span{display:block;color:var(--muted);font-size:.85rem;line-height:1.5}
+  .checkout-info .ci-links{margin-top:9px}
+  .checkout-info .ci-links a{color:var(--green-2);font-weight:700;cursor:pointer;text-decoration:none}
+  .checkout-info .ci-links a:hover{text-decoration:underline}
+  @media(max-width:760px){.checkout-info{grid-template-columns:1fr}}
+  /* ===== Methode-Seite ===== */
+  .method-intro{font-size:1.02rem;line-height:1.7;color:var(--ink-2);max-width:760px;margin:0 0 10px}
+  #page-methode h2{margin-top:30px}
+  /* ===== Barrierefreiheit (WCAG 2.2) ===== */
+  a,button,.chip,.btn,input,textarea,select,[onclick]{ }
+  :focus-visible{outline:3px solid #0f7a37;outline-offset:2px;border-radius:6px}
+  .btn:focus-visible,.btn.live:focus-visible{outline:3px solid #0b4d24;outline-offset:3px}
+  .skip-link{position:absolute;left:12px;top:-60px;z-index:1000;background:var(--green-2);color:#fff;padding:10px 16px;border-radius:0 0 10px 10px;font-weight:700;text-decoration:none;transition:top .18s}
+  .skip-link:focus{top:0}
+  footer a{min-height:40px;display:inline-flex;align-items:center}
+  @media(prefers-reduced-motion:reduce){
+    *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+    .reveal{opacity:1!important;transform:none!important}
+  }
 </style>
 </head>
 <body>
+<a href="#page-home" class="skip-link" data-de="Zum Inhalt springen" data-en="Skip to content">Zum Inhalt springen</a>
 
 <header>
   <div class="wrap">
@@ -405,7 +509,7 @@
     <div>
       <div class="eyebrow" data-de="KI-gestütztes Abnehm-Coaching" data-en="AI-powered weight-loss coaching">KI-gestütztes Abnehm-Coaching</div>
       <h1 data-de="Abnehmen mit deinem persönlichen <span class='hl'>KI-Coach</span> – in 12 Wochen zur besten Form." data-en="Lose weight with your personal <span class='hl'>AI coach</span> – your best shape in 12 weeks.">Abnehmen mit deinem persönlichen <span class="hl">KI-Coach</span> – in 12 Wochen zur besten Form.</h1>
-      <p class="lead" data-de="Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn automatisch an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit." data-en="Your AI coach builds your nutrition and training plan, adjusts it automatically and answers your questions 24/7. No starving, no gym pressure, no waiting.">Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn automatisch an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit.</p>
+      <p class="lead" data-de="Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn im Chat laufend an dich an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit." data-en="Your AI coach builds your nutrition and training plan, adapts it to you continuously in the chat and answers your questions 24/7. No starving, no gym pressure, no waiting.">Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn im Chat laufend an dich an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit.</p>
       <div class="hero-cta">
         <a href="coach.html" class="btn live" data-de="Coach LIVE testen – gratis" data-en="Try the coach LIVE – free">Coach LIVE testen – gratis</a>
         <a onclick="goHome('#programme')" class="btn ghost" data-de="Programme ansehen" data-en="View programs">Programme ansehen →</a>
@@ -525,7 +629,7 @@
     <div class="step reveal">
       <div class="num">3</div>
       <h3 data-de="Dranbleiben & abnehmen" data-en="Stay on track & lose weight">Dranbleiben & abnehmen</h3>
-      <p data-de="Dein Coach begleitet dich täglich, passt den Plan automatisch an und hält dich motiviert bis zum Ziel." data-en="Your coach guides you daily, adjusts the plan automatically and keeps you motivated to your goal.">Dein Coach begleitet dich täglich, passt den Plan automatisch an und hält dich motiviert bis zum Ziel.</p>
+      <p data-de="Dein Coach begleitet dich täglich, passt den Plan im Chat an, wenn sich dein Alltag ändert, und hält dich motiviert bis zum Ziel." data-en="Your coach guides you daily, adapts the plan in the chat when your routine changes and keeps you motivated to your goal.">Dein Coach begleitet dich täglich, passt den Plan im Chat an, wenn sich dein Alltag ändert, und hält dich motiviert bis zum Ziel.</p>
     </div>
   </div>
 </section>
@@ -582,6 +686,35 @@
 </section>
 
 <!-- PRICING -->
+<!-- FÜR WEN / FÜR WEN NICHT -->
+<section id="fuer-wen">
+  <div class="wrap center shead reveal">
+    <div class="eyebrow" data-de="Ehrlich gesagt" data-en="Honestly">Ehrlich gesagt</div>
+    <h2 data-de="Für wen VITALFORM ist – und für wen nicht" data-en="Who VITALFORM is for – and who it isn't">Für wen VITALFORM ist – und für wen nicht</h2>
+    <p class="lead" data-de="Wir versprechen dir lieber ehrlich das Richtige als allen alles. So weißt du sofort, ob wir zu dir passen." data-en="We'd rather honestly promise the right thing than everything to everyone. So you know right away if we're a fit.">Wir versprechen dir lieber ehrlich das Richtige als allen alles. So weißt du sofort, ob wir zu dir passen.</p>
+  </div>
+  <div class="wrap fw-grid">
+    <div class="fw-card yes reveal">
+      <h3><span class="fw-ic">✅</span> <span data-de="VITALFORM passt zu dir, wenn du…" data-en="VITALFORM fits you if you…">VITALFORM passt zu dir, wenn du…</span></h3>
+      <ul>
+        <li data-de="nachhaltig abnehmen willst – ohne Crash-Diät und ohne Hungern." data-en="want to lose weight sustainably – no crash diet, no starving.">nachhaltig abnehmen willst – ohne Crash-Diät und ohne Hungern.</li>
+        <li data-de="einen klaren, alltagstauglichen Plan und tägliche Begleitung suchst." data-en="want a clear, everyday-friendly plan and daily guidance.">einen klaren, alltagstauglichen Plan und tägliche Begleitung suchst.</li>
+        <li data-de="Fragen zu Ernährung &amp; Training sofort beantwortet haben möchtest." data-en="want your nutrition & training questions answered instantly.">Fragen zu Ernährung &amp; Training sofort beantwortet haben möchtest.</li>
+        <li data-de="grundsätzlich gesund bist und selbstständig umsetzen kannst." data-en="are generally healthy and can act on your own.">grundsätzlich gesund bist und selbstständig umsetzen kannst.</li>
+      </ul>
+    </div>
+    <div class="fw-card no reveal">
+      <h3><span class="fw-ic">⚠️</span> <span data-de="VITALFORM ist nicht das Richtige, wenn du…" data-en="VITALFORM isn't right if you…">VITALFORM ist nicht das Richtige, wenn du…</span></h3>
+      <ul>
+        <li data-de="eine medizinische Behandlung oder Diagnose brauchst – das leistet ein KI-Coach nicht." data-en="need medical treatment or diagnosis – an AI coach can't do that.">eine medizinische Behandlung oder Diagnose brauchst – das leistet ein KI-Coach nicht.</li>
+        <li data-de="eine Essstörung hast oder vermutest – dann ist professionelle Hilfe der richtige Weg." data-en="have or suspect an eating disorder – professional help is the right path.">eine Essstörung hast oder vermutest – dann ist professionelle Hilfe der richtige Weg.</li>
+        <li data-de="schwanger bist oder stillst bzw. relevante Vorerkrankungen hast – bitte zuerst ärztlich abklären." data-en="are pregnant/breastfeeding or have relevant conditions – please clarify with a doctor first.">schwanger bist oder stillst bzw. relevante Vorerkrankungen hast – bitte zuerst ärztlich abklären.</li>
+        <li data-de="unter 18 bist – unser Angebot richtet sich an Erwachsene." data-en="are under 18 – our offer is for adults.">unter 18 bist – unser Angebot richtet sich an Erwachsene.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <section id="programme">
   <div class="wrap center shead reveal">
     <div class="eyebrow" data-de="Wähle dein Programm" data-en="Choose your program">Wähle dein Programm</div>
@@ -622,7 +755,7 @@
       <div class="amt">19,90€ <small data-de="/ Monat" data-en="/ month">/ Monat</small></div>
       <ul>
         <li data-de="Persönlicher KI-Coach im Chat, 24/7" data-en="Personal AI coach in chat, 24/7">Persönlicher KI-Coach im Chat, 24/7</li>
-        <li data-de="Plan passt sich automatisch an dich an" data-en="Plan adapts to you automatically">Plan passt sich automatisch an dich an</li>
+        <li data-de="Plan wird im Chat laufend an dich angepasst" data-en="Plan continuously adapted to you in the chat">Plan wird im Chat laufend an dich angepasst</li>
         <li data-de="Antworten auf alle Ernährungs- & Trainingsfragen" data-en="Answers to all nutrition & training questions">Antworten auf alle Ernährungs- & Trainingsfragen</li>
         <li data-de="Motivation im Chat" data-en="Motivation in chat">Motivation im Chat</li>
         <li data-de="Jederzeit kündbar" data-en="Cancel anytime">Jederzeit kündbar</li>
@@ -631,8 +764,25 @@
       <a href="coach.html" class="trylink" data-de="oder kostenlos testen →" data-en="or try for free →">oder kostenlos testen →</a>
     </div>
   </div>
-  <div class="wrap center" style="margin-top:30px">
-    <p data-de="💳 Sichere Zahlung · 14 Tage Geld-zurück-Garantie auf digitale Programme (sofern nicht bereits vollständig genutzt)." data-en="💳 Secure payment · 14-day money-back guarantee on digital programs (unless already fully used).">💳 Sichere Zahlung · 14 Tage Geld-zurück-Garantie auf digitale Programme (sofern nicht bereits vollständig genutzt).</p>
+  <div class="wrap">
+    <div class="checkout-info reveal">
+      <div>
+        <b data-de="Einmalkäufe (Ernährungsplan · 12-Wochen-Programm)" data-en="One-time purchases (Nutrition plan · 12-week program)">Einmalkäufe (Ernährungsplan · 12-Wochen-Programm)</b>
+        <span data-de="Einmalige Zahlung, kein Abo. Sofort digital verfügbar. Zugang und Materialien bleiben dauerhaft nutzbar." data-en="One-time payment, no subscription. Available digitally right away. Access and materials stay usable permanently.">Einmalige Zahlung, kein Abo. Sofort digital verfügbar. Zugang und Materialien bleiben dauerhaft nutzbar.</span>
+      </div>
+      <div>
+        <b data-de="KI-Coach-Abo (19,90 €/Monat)" data-en="AI-Coach subscription (€19.90/mo)">KI-Coach-Abo (19,90 €/Monat)</b>
+        <span data-de="Verlängert sich monatlich, keine Mindestlaufzeit. Nächste Abbuchung jeweils 1 Monat nach Start. Jederzeit kündbar über „Verträge kündigen" – nach der Kündigung bleibt der Zugang bis zum Ende des bezahlten Monats." data-en="Renews monthly, no minimum term. Next charge one month after start. Cancel anytime via “Cancel contracts” – access stays until the end of the paid month.">Verlängert sich monatlich, keine Mindestlaufzeit. Nächste Abbuchung jeweils 1 Monat nach Start. Jederzeit kündbar über „Verträge kündigen" – nach der Kündigung bleibt der Zugang bis zum Ende des bezahlten Monats.</span>
+      </div>
+      <div>
+        <b data-de="Preise, Zahlung &amp; deine Rechte" data-en="Prices, payment & your rights">Preise, Zahlung &amp; deine Rechte</b>
+        <span data-de="Alle Preise sind Endpreise (Steuer gemäß AGB). Sichere Zahlung; Bestätigung und Zugangscode kommen per E-Mail." data-en="All prices are final prices (tax per terms). Secure payment; confirmation and access code arrive by email.">Alle Preise sind Endpreise (Steuer gemäß <a onclick="showPage('agb')" style="cursor:pointer;text-decoration:underline;color:inherit">AGB</a>). Sichere Zahlung; Bestätigung und Zugangscode kommen per E-Mail.</span>
+        <span class="ci-links"><a onclick="showPage('widerruf')" style="cursor:pointer">Widerrufsrecht</a> · <a href="kuendigung.html">Abo kündigen</a> · <a onclick="showPage('agb')" style="cursor:pointer">AGB</a></span>
+      </div>
+    </div>
+  </div>
+  <div class="wrap center" style="margin-top:22px">
+    <p data-de="💳 Sichere Zahlung · Freiwillige 14-Tage-Geld-zurück-Garantie auf digitale Programme (sofern nicht bereits vollständig genutzt) – zusätzlich zu deinem gesetzlichen Widerrufsrecht." data-en="💳 Secure payment · Voluntary 14-day money-back guarantee on digital programs (unless already fully used) – on top of your statutory right of withdrawal.">💳 Sichere Zahlung · Freiwillige 14-Tage-Geld-zurück-Garantie auf digitale Programme (sofern nicht bereits vollständig genutzt) – zusätzlich zu deinem gesetzlichen Widerrufsrecht.</p>
     <div class="pay-badges">
       <span class="pay-badge">Apple&nbsp;Pay</span>
       <span class="pay-badge"><span class="pp">Pay</span><span class="pp2">Pal</span></span>
@@ -695,9 +845,10 @@
     <div class="g-card reveal">
       <div class="g-seal"><b>14</b><small data-de="TAGE" data-en="DAYS">TAGE</small></div>
       <div>
-        <div class="eyebrow" data-de="Ohne Risiko" data-en="No risk">Ohne Risiko</div>
-        <h2 style="font-size:1.8rem" data-de="Teste VITALFORM 14 Tage lang" data-en="Try VITALFORM for 14 days">Teste VITALFORM 14 Tage lang</h2>
-        <p data-de="Wir sind überzeugt von unserem System. Wenn du innerhalb von 14 Tagen nicht zufrieden bist, erhältst du dein Geld zurück – gemäß unseren AGB und deinem gesetzlichen Widerrufsrecht." data-en="We stand behind our system. If you're not satisfied within 14 days, you get your money back – in line with our terms and your statutory right of withdrawal.">Wir sind überzeugt von unserem System. Wenn du innerhalb von 14 Tagen nicht zufrieden bist, erhältst du dein Geld zurück – gemäß unseren AGB und deinem gesetzlichen Widerrufsrecht.</p>
+        <div class="eyebrow" data-de="Freiwillige VITALFORM-Garantie" data-en="Voluntary VITALFORM guarantee">Freiwillige VITALFORM-Garantie</div>
+        <h2 style="font-size:1.8rem" data-de="14 Tage Geld-zurück – freiwillig, zusätzlich zum Gesetz" data-en="14-day money-back – voluntary, on top of the law">14 Tage Geld-zurück – freiwillig, zusätzlich zum Gesetz</h2>
+        <p data-de="Wir sind überzeugt von unserem System. Zusätzlich zu deinen gesetzlichen Rechten geben wir dir eine freiwillige 14-Tage-Geld-zurück-Garantie: Bist du innerhalb von 14 Tagen nach dem Kauf nicht zufrieden, schreib uns an info@vitalform.fit und wir erstatten dir den Kaufpreis für digitale Programme zurück (sofern nicht bereits vollständig heruntergeladen bzw. genutzt)." data-en="We stand behind our system. On top of your statutory rights, we voluntarily offer a 14-day money-back guarantee: if you're not satisfied within 14 days of purchase, email us at info@vitalform.fit and we'll refund the purchase price for digital programs (unless already fully downloaded or used).">Wir sind überzeugt von unserem System. Zusätzlich zu deinen gesetzlichen Rechten geben wir dir eine freiwillige 14-Tage-Geld-zurück-Garantie: Bist du innerhalb von 14 Tagen nach dem Kauf nicht zufrieden, schreib uns an info@vitalform.fit und wir erstatten dir den Kaufpreis für digitale Programme zurück (sofern nicht bereits vollständig heruntergeladen bzw. genutzt).</p>
+        <p class="g-legal" data-de="Davon unberührt bleibt dein gesetzliches Widerrufsrecht (14 Tage). Wichtig: Bei digitalen Inhalten kann dieses gesetzliche Widerrufsrecht vorzeitig erlöschen, wenn du dem sofortigen Start ausdrücklich zustimmst. Unsere freiwillige Garantie oben gilt unabhängig davon. Details in der Widerrufsbelehrung und den AGB." data-en="Your statutory right of withdrawal (14 days) remains unaffected. Note: for digital content this statutory right can expire early if you expressly agree to immediate start. Our voluntary guarantee above applies regardless. Details in the withdrawal policy and terms.">Davon unberührt bleibt dein gesetzliches Widerrufsrecht (14 Tage). Wichtig: Bei digitalen Inhalten kann dieses gesetzliche Widerrufsrecht vorzeitig erlöschen, wenn du dem sofortigen Start ausdrücklich zustimmst. Unsere freiwillige Garantie oben gilt unabhängig davon. Details in der <a onclick="showPage('widerruf')" style="color:inherit;text-decoration:underline;cursor:pointer">Widerrufsbelehrung</a> und den <a onclick="showPage('agb')" style="color:inherit;text-decoration:underline;cursor:pointer">AGB</a>.</p>
       </div>
     </div>
   </div>
@@ -786,8 +937,8 @@
     <span class="ph">【POPUNITI: USt-IdNr. – oder diesen Abschnitt löschen, falls Kleinunternehmer gem. § 19 UStG】</span></p>
     <h2>Redaktionell verantwortlich (§ 18 Abs. 2 MStV)</h2>
     <p><span class="ph">【POPUNITI: Vor- und Nachname】</span>, Anschrift wie oben.</p>
-    <h2>EU-Streitschlichtung</h2>
-    <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr. Unsere E-Mail-Adresse findest du oben. Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+    <h2>Verbraucherstreitbeilegung / Universalschlichtungsstelle</h2>
+    <p>Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen (§ 36 VSBG).</p>
     <h2>Gesundheitshinweis</h2>
     <p>Die Inhalte von VITALFORM dienen der allgemeinen Information zu Ernährung, Bewegung und Lebensstil und ersetzen keine ärztliche, therapeutische oder ernährungsmedizinische Beratung. Bei Beschwerden oder Vorerkrankungen wende dich bitte an eine Ärztin oder einen Arzt.</p>
   </div>
@@ -811,7 +962,10 @@
     <h2>6. Newsletter & kostenloser 7-Tage-Plan</h2>
     <p>Trägst du dich für den kostenlosen 7-Tage-Plan bzw. Newsletter ein, verarbeiten wir deine E-Mail-Adresse, um dir den Plan sowie E-Mails mit Tipps und Angeboten zu senden (Einwilligung, Art. 6 Abs. 1 lit. a DSGVO). Wir nutzen das Double-Opt-In-Verfahren (Bestätigungs-E-Mail nach Anmeldung). Widerruf jederzeit über den Abmeldelink in jeder E-Mail. Versanddienst: Brevo (Sendinblue GmbH, Köpenicker Str. 126, 10179 Berlin; Server in der EU), Auftragsverarbeitung gem. Art. 28 DSGVO.</p>
     <h2>7. KI-Coach (Chat)</h2>
-    <p>Bei Nutzung des KI-Coach werden deine Chat-Nachrichten (und optional hochgeladene Bilder) verarbeitet, um Antworten zu generieren. Die KI-Verarbeitung erfolgt über Anthropic PBC (San Francisco, USA); dabei werden Inhalte in die USA übermittelt (EU-US Data Privacy Framework bzw. Standardvertragsklauseln). Bitte gib im Chat keine nicht erforderlichen sensiblen Gesundheitsdaten an. Rechtsgrundlage: Art. 6 Abs. 1 lit. b bzw. f DSGVO.</p>
+    <p><b>Was verarbeitet wird:</b> Bei Nutzung des KI-Coach werden deine Chat-Nachrichten und optional von dir hochgeladene Fotos verarbeitet, um Antworten zu generieren. In den Kontext der Antwort fließt der bisherige Gesprächsverlauf ein, den du selbst eingibst – wir legen kein separates Gesundheitsprofil an.</p>
+    <p><b>Wer verarbeitet:</b> Die KI-Verarbeitung erfolgt über Anthropic PBC (San Francisco, USA) als Auftragsverarbeiter; dabei werden Inhalte in die USA übermittelt (EU-US Data Privacy Framework bzw. Standardvertragsklauseln, Art. 46 DSGVO). Deine Chat-Inhalte werden <b>nicht zum Training von KI-Modellen</b> verwendet.</p>
+    <p><b>Speicherung &amp; Löschung:</b> Dein Gesprächsverlauf wird lokal in deinem Browser gespeichert (damit der Chat erhalten bleibt) – du kannst ihn jederzeit über „Neuer Chat" bzw. das Leeren deines Browserspeichers löschen. Auf dem Server verarbeiten wir die Nachrichten nur vorübergehend zur Erstellung der Antwort; es findet keine dauerhafte inhaltliche Speicherung auf unserem Server statt. Meldest du eine Antwort über die „Melden"-Funktion, speichern wir diese Antwort befristet zur Qualitätsprüfung.</p>
+    <p><b>Wichtig:</b> Der KI-Coach ist ein KI-System und kann Fehler machen. Er ersetzt keine ärztliche, therapeutische oder ernährungsmedizinische Beratung. Gib im Chat bitte keine nicht erforderlichen sensiblen Daten an. Wenn du einen Menschen erreichen möchtest, schreib uns an info@vitalform.fit. Rechtsgrundlage: Art. 6 Abs. 1 lit. b bzw. f DSGVO.</p>
     <h2>8. Zahlungsabwicklung</h2>
     <p>Zur Abwicklung von Käufen nutzen wir <span class="ph">【POPUNITI: Zahlungsdienstleister – z. B. Stripe, PayPal】</span>. Dabei werden die erforderlichen Daten (z. B. Name, E-Mail, Zahlungsdaten) an den Anbieter übermittelt und dort eigenverantwortlich verarbeitet (Vertragserfüllung, Art. 6 Abs. 1 lit. b DSGVO). Es gelten zusätzlich die Datenschutzbestimmungen des Anbieters.</p>
     <h2>9. Meta-Pixel (Facebook & Instagram)</h2>
@@ -835,8 +989,9 @@
     <p>Die Darstellung der Produkte stellt kein bindendes Angebot dar. Mit Anklicken des Buttons „zahlungspflichtig bestellen" gibt der Kunde ein verbindliches Angebot ab. Der Vertrag kommt mit unserer Bestätigung bzw. der Bereitstellung des Produkts zustande.</p>
     <h2>§ 4 Preise und Zahlung</h2>
     <p>Es gelten die zum Zeitpunkt der Bestellung angegebenen Preise. <span class="ph">【POPUNITI: Falls Kleinunternehmer gem. § 19 UStG: „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet." – sonst: „inkl. gesetzlicher USt."】</span> Die Zahlung erfolgt über die angebotenen Zahlungsmethoden.</p>
-    <h2>§ 5 Abonnement (KI-Coach)</h2>
-    <p>Das KI-Coach-Abo verlängert sich monatlich, sofern es nicht bis zum Ende des laufenden Abrechnungszeitraums gekündigt wird. Die Kündigung ist jederzeit über <span class="ph">【POPUNITI: Kündigungsweg – z. B. E-Mail an info@vitalform.fit】</span> möglich.</p>
+    <h2>§ 5 Abonnement (KI-Coach) &amp; Kündigung</h2>
+    <p>Das KI-Coach-Abo verlängert sich monatlich, sofern es nicht bis zum Ende des laufenden Abrechnungszeitraums gekündigt wird. Nach einer Kündigung bleibt der Zugang bis zum Ende des bereits bezahlten Zeitraums bestehen und verlängert sich danach nicht mehr.</p>
+    <p>Du kannst dein Abo jederzeit und ohne Angabe von Gründen kündigen – am einfachsten online über unseren Kündigungsbutton „<a href="kuendigung.html" style="color:inherit;text-decoration:underline">Verträge hier kündigen</a>" (§ 312k BGB), erreichbar im Seitenfuß. Alternativ genügt eine formlose Erklärung per E-Mail an info@vitalform.fit. Den Eingang deiner Kündigung bestätigen wir dir unverzüglich in Textform (E-Mail).</p>
     <h2>§ 6 Widerrufsrecht</h2>
     <p>Verbrauchern steht ein gesetzliches Widerrufsrecht zu (siehe Widerrufsbelehrung). Bei digitalen Inhalten erlischt das Widerrufsrecht, wenn der Kunde ausdrücklich zustimmt, dass mit der Ausführung vor Ablauf der Widerrufsfrist begonnen wird, und er seine Kenntnis vom Erlöschen bestätigt hat.</p>
     <h2>§ 7 Haftung / Gesundheitshinweis</h2>
@@ -866,6 +1021,45 @@
   </div>
 </div>
 
+<!-- UNSERE METHODE -->
+<div class="legal-page" id="page-methode">
+  <div class="wrap">
+    <span class="back" onclick="showPage('home')">← <span data-de="Zurück zur Startseite" data-en="Back to home">Zurück zur Startseite</span></span>
+    <h1>Unsere Methode</h1>
+    <p class="method-intro">Damit du weißt, worauf du dich verlässt: Hier erklären wir offen, wie VITALFORM arbeitet – wie Empfehlungen entstehen, wo ihre Grenzen liegen und was ein Mensch prüft. VITALFORM ist ein Lifestyle- und Informationsangebot und ausdrücklich keine medizinische Behandlung.</p>
+
+    <h2>1. Wie dein Ausgangsziel und ein realistischer Rahmen bestimmt werden</h2>
+    <p>Aus deinen Angaben (Ziel, Größe, Gewicht, Alter, Geschlecht, Aktivität) schätzt der Coach deinen ungefähren Kalorienbedarf und schlägt ein moderates Defizit vor. Wir arbeiten mit realistischen Spannen statt exakter Versprechen: üblich sind rund 0,3–0,7 kg pro Woche. Wir nennen dir bewusst keinen garantierten Kilo-Wert zu einem festen Datum – dein Fortschritt hängt von vielen Faktoren ab.</p>
+
+    <h2>2. Wie Kalorien-, Protein- und Trainingsziele entstehen</h2>
+    <p>Die Empfehlungen folgen etablierten Grundlagen der Ernährungs- und Trainingswissenschaft (z. B. Grundumsatz × Aktivitätsfaktor, Protein ca. 1,6–2,2 g pro kg Körpergewicht, moderates Defizit). Aus Sicherheitsgründen setzen wir keine gefährlich niedrigen Kalorienziele an (Richtwert nicht unter ca. 1.200 kcal bei Frauen bzw. 1.500 kcal bei Männern ohne ärztliche Begleitung).</p>
+
+    <h2>3. Woher Rezepte und Nährwerte kommen</h2>
+    <p>Rezepte und Nährwertangaben beruhen auf allgemein anerkanntem Ernährungswissen und kuratierten Vorschlägen. Nährwerte sind gute Schätzungen, keine laborgenauen Messungen – Portionsgröße und Zubereitung beeinflussen die Werte. Beispiel-Fotos von Gerichten stammen aus einer offenen Rezept-Datenbank und dienen der Veranschaulichung.</p>
+
+    <h2>4. Wie Übungen ausgewählt und gesteigert werden</h2>
+    <p>Trainingsübungen werden nach deinem Ziel und deiner Ausstattung (zu Hause oder Gym) ausgewählt und Schritt für Schritt gesteigert (progressive Belastung, z. B. mehr Wiederholungen oder Sätze). Übungs-Demobilder stammen aus einer frei lizenzierten Übungs-Datenbank.</p>
+
+    <h2>5. Wann sich dein Plan ändert – und wann nicht</h2>
+    <p>Dein Plan wird im Chat angepasst, wenn sich dein Alltag, deine Vorlieben oder dein Fortschritt ändern – auf deine Angaben hin. Es gibt keine unsichtbare Automatik, die eigenmächtig alles umstellt. Einzelne Tage oder eine einzelne Waage-Zahl sind kein Grund für eine Umstellung; wir schauen auf den Verlauf über die Zeit.</p>
+
+    <h2>6. Wie wir mit Foto-Schätzungen und Unsicherheit umgehen</h2>
+    <p>Bei der Foto-Analyse einer Mahlzeit nennt der Coach einen geschätzten Bereich für Kalorien und Makros (z. B. „ca. 550–700 kcal"), benennt die erkannten Komponenten und fragt bei versteckten Kalorien (Öl, Saucen, Portionsgröße) nach. Das ist eine Schätzung, keine genaue Messung – du kannst die Angaben jederzeit korrigieren.</p>
+
+    <h2>7. Wie riskante Situationen erkannt werden</h2>
+    <p>Der Coach folgt festen Sicherheitsregeln. Bei Anzeichen einer Essstörung, bei Schwangerschaft/Stillzeit, Verletzungen, akuten Beschwerden oder dem Wunsch nach extremen Diäten stoppt er das übliche Coaching, gibt keine riskanten Anweisungen und ermutigt behutsam, ärztliche oder professionelle Hilfe zu suchen.</p>
+
+    <h2>8. Welche Teile ein Mensch prüft</h2>
+    <p>Gemeldete Antworten und unsere Wissensbasis werden von uns manuell gesichtet und verbessert. Für medizinische, therapeutische oder ernährungsmedizinische Fragen verweisen wir bewusst an qualifizierte Fachpersonen – diese Beratung ersetzt der KI-Coach nicht. <span class="ph">【POPUNITI: Falls fachliche Prüfung durch qualifizierte Ernährungs-/Trainingsfachkraft erfolgt – hier Name/Qualifikation ergänzen】</span></p>
+
+    <h2>9. Wie du ein Problem meldest</h2>
+    <p>Unter jeder Antwort des KI-Coach findest du eine „Melden"-Funktion. Damit kannst du eine problematische oder falsche Antwort mit einem Klick an uns weiterleiten. Alternativ erreichst du uns jederzeit unter info@vitalform.fit.</p>
+
+    <h2>10. Wie wir Qualität messen</h2>
+    <p>Wir beobachten, welche Antworten gemeldet werden, prüfen wiederkehrende Themen und aktualisieren die Wissensbasis sowie die Sicherheitsregeln des Coaches entsprechend. Ziel ist, dass Empfehlungen korrekt, sicher, nachvollziehbar und wirklich hilfreich sind.</p>
+  </div>
+</div>
+
 <!-- STICKY MOBILE CTA -->
 <div class="sticky-cta" id="stickyCta">
   <div class="txt"><span data-de="Starte noch heute" data-en="Start today">Starte noch heute</span><small data-de="KI-Coach · ab 19,90€/Monat" data-en="AI coach · from 19.90€/mo">KI-Coach · ab 19,90€/Monat</small></div>
@@ -891,6 +1085,7 @@
       </div>
       <div>
         <h4 data-de="Unternehmen" data-en="Company">Unternehmen</h4>
+        <a onclick="showPage('methode')" data-de="Unsere Methode" data-en="Our method">Unsere Methode</a>
         <a onclick="goHome('#ki-coach')" data-de="Über den KI-Coach" data-en="About the AI coach">Über den KI-Coach</a>
         <a onclick="goHome('#faq')" data-de="FAQ" data-en="FAQ">FAQ</a>
         <a onclick="goHome('#lead')" data-de="Gratis 7-Tage-Plan" data-en="Free 7-day plan">Gratis 7-Tage-Plan</a>
@@ -901,6 +1096,7 @@
         <a onclick="showPage('datenschutz')" data-de="Datenschutz" data-en="Privacy">Datenschutz</a>
         <a onclick="showPage('agb')">AGB</a>
         <a onclick="showPage('widerruf')" data-de="Widerruf" data-en="Withdrawal">Widerruf</a>
+        <a href="kuendigung.html" data-de="Verträge kündigen" data-en="Cancel contracts">Verträge kündigen</a>
         <a onclick="vfOpenConsent()" data-de="Cookie-Einstellungen" data-en="Cookie settings">Cookie-Einstellungen</a>
       </div>
     </div>

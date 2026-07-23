@@ -172,6 +172,13 @@
   .card .close{margin-top:6px;color:var(--muted);font-size:.85rem;cursor:pointer;background:none;border:none}
   .card .fb{font-size:.85rem;font-weight:650;min-height:20px;margin-bottom:6px}
   .card .fb.ok{color:var(--green-2)}.card .fb.no{color:#b91c1c}
+  /* Barrierefreiheit (WCAG 2.2) */
+  :focus-visible{outline:3px solid #0f7a37;outline-offset:2px;border-radius:8px}
+  .send:focus-visible,.attach:focus-visible,.key-btn:focus-visible,.chip:focus-visible,.stopbtn:focus-visible{outline:3px solid #0b4d24;outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){
+    *,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+    #live-dot,.live{animation:none!important}
+  }
 </style>
 </head>
 <body>
@@ -225,13 +232,13 @@
       <button class="attach" id="attach" title="Foto deiner Mahlzeit senden" onclick="document.getElementById('photo').click()" aria-label="Foto senden">
         <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
       </button>
-      <textarea id="input" rows="1" placeholder="Schreibe oder sende ein Foto deiner Mahlzeit…"></textarea>
-      <button class="send" id="send" title="Senden">
+      <textarea id="input" rows="1" placeholder="Schreibe oder sende ein Foto deiner Mahlzeit…" aria-label="Nachricht an den KI-Coach schreiben"></textarea>
+      <button class="send" id="send" title="Senden" aria-label="Nachricht senden">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 12l16-8-6 16-3-6-7-2z" fill="#fff"/></svg>
       </button>
     </div>
     <input type="file" id="photo" accept="image/*" style="display:none">
-    <div class="disclaimer">VITALFORM KI-Coach ist ein KI-Assistent und ersetzt keine ärztliche Beratung.</div>
+    <div class="disclaimer">🤖 KI-Coach · kann Fehler machen · keine ärztliche Beratung. Unpassende Antwort? Tippe auf ⚑ „Melden". Einen Menschen erreichst du unter info@vitalform.fit.</div>
   </div>
 
   <!-- Upsell -->
@@ -284,6 +291,7 @@
   var COPY_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
   var CHECK_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
   var REGEN_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></svg>';
+  var FLAG_SVG = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4M4 4h13l-2 4 2 4H4"/></svg>';
 
   var WELCOME_HTML = wrap.innerHTML;
   // Trajno pamćenje na uređaju (localStorage): pristupni kod + istorija chata
@@ -408,8 +416,9 @@
     meta.className = "meta";
     meta.innerHTML =
       '<span class="controls">'+
-        '<button class="ctrl" title="Kopieren" onclick="copyMsg(this)">'+COPY_SVG+'</button>'+
-        '<button class="ctrl" title="Neu generieren" onclick="regenerate()">'+REGEN_SVG+'</button>'+
+        '<button class="ctrl" title="Kopieren" aria-label="Antwort kopieren" onclick="copyMsg(this)">'+COPY_SVG+'</button>'+
+        '<button class="ctrl" title="Neu generieren" aria-label="Antwort neu generieren" onclick="regenerate()">'+REGEN_SVG+'</button>'+
+        '<button class="ctrl" title="Antwort melden" aria-label="Antwort melden" onclick="reportMsg(this)">'+FLAG_SVG+'</button>'+
       '</span>'+
       '<span class="time">'+nowTime()+'</span>';
     col.appendChild(meta);
@@ -427,6 +436,20 @@
     var orig = btn.innerHTML;
     btn.innerHTML = CHECK_SVG; btn.classList.add("done");
     setTimeout(function(){ btn.innerHTML = orig; btn.classList.remove("done"); }, 1400);
+  }
+
+  // Jedan klik: prijavi problematičan AI odgovor timu (za kontrolu kvaliteta)
+  async function reportMsg(btn){
+    if(btn.getAttribute("data-done")==="1") return;
+    var el = btn.closest(".msg");
+    var txt = el ? (el.getAttribute("data-text") || "") : "";
+    if(!txt){ return; }
+    btn.setAttribute("data-done","1");
+    var orig = btn.innerHTML;
+    btn.innerHTML = CHECK_SVG; btn.classList.add("done"); btn.title = "Gemeldet – danke!"; btn.setAttribute("aria-label","Gemeldet, danke");
+    try{
+      await fetch("/api/chat", { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ action:"report", report:{ text: txt } }) });
+    }catch(e){ /* best-effort */ }
   }
 
   // Prikaži sačuvanu AI poruku (bez streaminga) pri obnovi istorije
