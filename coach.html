@@ -311,9 +311,39 @@
     }
   }
 
+  // Kurirana biblioteka medija: bot šalje [[IMG:key]] -> ovdje se mapira na PROVJEREN link (nema izmišljanja)
+  var VF_MEDIA = {
+    // Übungs-Demos (free-exercise-db, Public Domain, via jsDelivr CDN)
+    "kniebeuge":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Barbell_Squat/0.jpg",alt:"Kniebeuge – Ausführung"},
+    "ausfallschritt":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Barbell_Lunge/0.jpg",alt:"Ausfallschritt – Ausführung"},
+    "glute-bridge":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Barbell_Glute_Bridge/0.jpg",alt:"Glute Bridge – Ausführung"},
+    "bankdruecken":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Barbell_Bench_Press_-_Medium_Grip/0.jpg",alt:"Bankdrücken – Ausführung"},
+    "situp":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/3_4_Sit-Up/0.jpg",alt:"Sit-Up – Ausführung"},
+    "dips":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Bench_Dips/0.jpg",alt:"Trizeps-Dips – Ausführung"},
+    "hip-raise":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Bent-Knee_Hip_Raise/0.jpg",alt:"Beinheben – Ausführung"},
+    "air-bike":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Air_Bike/0.jpg",alt:"Bauch-Radfahren – Ausführung"},
+    "heel-touch":{url:"https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/Alternate_Heel_Touchers/0.jpg",alt:"Seitliche Bauchmuskeln – Ausführung"},
+    // Rezept-/Gericht-Fotos (TheMealDB)
+    "porridge":{url:"https://www.themealdb.com/images/media/meals/sng9bm1765320170.jpg",alt:"Porridge / Overnight Oats"},
+    "shakshuka":{url:"https://www.themealdb.com/images/media/meals/30s7vf1763741844.jpg",alt:"Shakshuka"},
+    "omelette":{url:"https://www.themealdb.com/images/media/meals/hqaejl1695738653.jpg",alt:"Omelett mit Ei"},
+    "haehnchen-bowl":{url:"https://www.themealdb.com/images/media/meals/qxytrx1511304021.jpg",alt:"Hähnchen-Bowl"},
+    "lachs":{url:"https://www.themealdb.com/images/media/meals/xxyupu1468262513.jpg",alt:"Lachs-Gericht"},
+    "salat":{url:"https://www.themealdb.com/images/media/meals/1549542994.jpg",alt:"Protein-Salat"},
+    "curry":{url:"https://www.themealdb.com/images/media/meals/vwrpps1503068729.jpg",alt:"Curry"}
+  };
+  function mediaTag(key){
+    var m = VF_MEDIA[String(key).toLowerCase()];
+    if(!m) return "";
+    if(m.type === "video") return "<video class='chat-media' src='"+m.url+"' controls playsinline></video>";
+    return "<img class='chat-media' src='"+m.url+"' alt='"+m.alt+"' loading='lazy' onerror=\"this.style.display='none'\">";
+  }
+
   function formatText(t){
     var s = String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = s.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+    // Kurirana biblioteka: [[IMG:key]] -> provjerena slika/video
+    s = s.replace(/\[\[IMG:([a-z0-9_-]+)\]\]/gi, function(_, key){ return mediaTag(key); });
     // Slike/videi: markdown ![alt](url) + goli linkovi na sliku/video (bot ih može poslati)
     s = s.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, function(_, alt, url){
       return "<img class='chat-media' src='"+url+"' alt='"+String(alt).replace(/['"<>]/g,"")+"' loading='lazy' onerror=\"this.style.display='none'\">";
@@ -577,8 +607,9 @@
   function escapeHtmlLite(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
   // Živi prikaz teksta dok stiže: bold radi odmah, [[VF: ...]] rep se sakriva, kursor na kraju
   function renderStreaming(bubble, text){
-    var cut = text.indexOf("[[");
-    var vis = cut >= 0 ? text.slice(0, cut) : text;
+    var t = text.replace(/\[\[IMG:[a-z0-9_-]+\]\]/gi, "");   // slike se prikažu na kraju
+    var cut = t.indexOf("[[");                                // preostali [[ = VF prijedlozi na kraju
+    var vis = cut >= 0 ? t.slice(0, cut) : t;
     var html = escapeHtmlLite(vis).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
     bubble.innerHTML = html + '<span class="endcaret"></span>';
   }
