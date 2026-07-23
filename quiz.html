@@ -97,6 +97,17 @@
   .kpi .l{font-size:.8rem;color:var(--muted);font-weight:600;margin-top:5px}
   .rec{background:var(--soft);border-left:4px solid var(--green);border-radius:12px;padding:16px 18px;margin:0 0 18px;text-align:left;font-size:.96rem;color:var(--ink-2)}
   .rec b{color:var(--ink)}
+  .ai-analysis{background:linear-gradient(160deg,#f4f9f5,#eafaf0);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:0 0 18px;text-align:left;box-shadow:0 8px 24px rgba(12,60,35,.06)}
+  .aa-head{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+  .aa-av{width:34px;height:34px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 5px 13px rgba(22,163,74,.4)}
+  .aa-head b{font-size:1rem;display:block;color:var(--ink)}
+  .aa-head small{color:var(--green-2);font-weight:700;font-size:.78rem}
+  .aa-body{font-size:.98rem;line-height:1.62;color:var(--ink-2)}
+  .aa-body p{margin:0 0 10px}.aa-body p:last-child{margin-bottom:0}
+  .aa-body ul{margin:8px 0;padding-left:18px}.aa-body li{margin:4px 0}
+  .aa-body strong{color:var(--ink);font-weight:750}
+  .aa-caret{display:inline-block;width:7px;height:14px;background:var(--green);border-radius:2px;vertical-align:text-bottom;animation:aablink .8s step-end infinite;margin-left:2px}
+  @keyframes aablink{0%,100%{opacity:1}50%{opacity:0}}
   .result-badge{width:64px;height:64px;border-radius:18px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 12px;box-shadow:0 10px 24px rgba(22,163,74,.4)}
   .center{text-align:center}
   .hp-field{position:absolute!important;left:-9999px!important;top:-9999px!important;width:1px;height:1px;opacity:0;pointer-events:none}
@@ -179,6 +190,13 @@
         <div class="kpi"><div class="n" id="r-protein">–</div><div class="l">g Eiweiß / Tag</div></div>
       </div>
       <div class="center"><div class="result-badge" id="r-icon">🔥</div><div class="tag" id="r-typtag">Dein Typ</div><h2 id="r-title" style="font-size:1.3rem;margin-bottom:8px"></h2></div>
+      <div class="ai-analysis" id="aiBox" style="display:none">
+        <div class="aa-head">
+          <span class="aa-av"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3c0 5-6 6-6 11a6 6 0 0 0 12 0c0-2-1-3.5-2-5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21V11" stroke="#a3e635" stroke-width="2.2" stroke-linecap="round"/></svg></span>
+          <div><b data-de="Deine persönliche Analyse" data-en="Your personal analysis">Deine persönliche Analyse</b><small id="aa-status" data-de="Dein Coach analysiert dich …" data-en="Your coach is analyzing you …">Dein Coach analysiert dich …</small></div>
+        </div>
+        <div class="aa-body" id="aa-body"></div>
+      </div>
       <div class="rec" id="r-rec"></div>
       <a class="btn" href="index.html#programme">Mein Programm starten →</a>
       <a class="btn alt" href="coach.html">KI-Coach kostenlos testen</a>
@@ -333,6 +351,40 @@
       proj.style.display="none";
     }
     show(elResult);
+    streamAnalysis(t.title); // KI-Coach schreibt live eine persönliche Auswertung
+  }
+
+  function fmtAnalysis(t){
+    var s=String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    s=s.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+    return s.split(/\n\s*\n/).map(function(p){
+      var lines=p.split(/\n/).filter(function(l){return l.trim()!=="";});
+      if(!lines.length) return "";
+      if(lines.every(function(l){return /^\s*[-•]\s+/.test(l);})) return "<ul>"+lines.map(function(l){return "<li>"+l.replace(/^\s*[-•]\s+/,"")+"</li>";}).join("")+"</ul>";
+      return "<p>"+lines.join("<br>")+"</p>";
+    }).join("");
+  }
+
+  // Persönliche KI-Auswertung live streamen (fällt auf statischen Text zurück, wenn KI nicht verfügbar)
+  async function streamAnalysis(typTitle){
+    var box=document.getElementById("aiBox"), body=document.getElementById("aa-body"), status=document.getElementById("aa-status"), rec=document.getElementById("r-rec");
+    var lang=document.documentElement.lang==="en"?"en":"de";
+    var payload={ lang:lang, hp:(document.getElementById("quiz-hp")||{}).value||"",
+      answers:answers, stats:stats,
+      computed:{ kcal:results.kcal, protein:results.protein, kgToLose: Math.round(results.kgToLose), weeks:results.weeks, typ:typTitle } };
+    try{
+      var res=await fetch("/api/quiz",{ method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify(payload) });
+      if(!res.ok || !res.body) throw new Error("no-ai");
+      if(rec) rec.style.display="none";       // statischer Fallback aus
+      box.style.display="";
+      var reader=res.body.getReader(), dec=new TextDecoder(), full="";
+      while(true){ var c=await reader.read(); if(c.done) break; full+=dec.decode(c.value,{stream:true}); body.innerHTML=fmtAnalysis(full)+'<span class="aa-caret"></span>'; box.scrollIntoView({behavior:"smooth",block:"nearest"}); }
+      if(!full.trim()) throw new Error("empty");
+      body.innerHTML=fmtAnalysis(full);
+      if(status) status.textContent="✓ "+(lang==="en"?"analyzed just for you":"nur für dich erstellt");
+    }catch(e){
+      if(box) box.style.display="none";        // Fallback: statischer Text bleibt sichtbar
+    }
   }
 </script>
 <script src="/consent.js" defer></script>

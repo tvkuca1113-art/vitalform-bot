@@ -149,6 +149,33 @@
   @keyframes liveSheen{to{background-position:220% 0}}
   @media(prefers-reduced-motion:reduce){.hero-card,.hero .aurora span,.btn.live:before,.btn.live:after{animation:none}}
 
+  /* ===== ABNEHM-TYP TEST PROMO ===== */
+  .quiz-promo{padding:60px 0;background:radial-gradient(900px 500px at 15% 0%,rgba(163,230,53,.16),transparent 60%),linear-gradient(180deg,#f4fbf4,#eafaf0);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .qp-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .qp-text .eyebrow{background:#fff;border:1px solid var(--line);color:var(--green-2);box-shadow:0 4px 14px rgba(22,163,74,.1)}
+  .qp-text h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:850;letter-spacing:-.02em;line-height:1.1;margin:14px 0 14px}
+  .qp-text .lead{font-size:1.06rem;color:var(--ink-2);margin-bottom:20px;max-width:560px}
+  .qp-list{list-style:none;margin:0 0 26px;display:grid;gap:11px}
+  .qp-list li{display:flex;align-items:flex-start;gap:11px;font-weight:650;color:var(--ink);font-size:1rem}
+  .qp-list li:before{content:"✓";flex-shrink:0;width:24px;height:24px;border-radius:50%;background:var(--grad);color:#fff;font-weight:800;font-size:.8rem;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(22,163,74,.35)}
+  .qp-trust{margin-top:16px;font-size:.9rem;font-weight:650;color:var(--ink-2);display:flex;gap:16px;flex-wrap:wrap}
+  .qp-visual{perspective:1400px}
+  .qp-card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 70px rgba(12,60,35,.16);padding:28px;transform:rotate(1.4deg);animation:qpFloat 5s ease-in-out infinite}
+  @keyframes qpFloat{0%,100%{transform:rotate(1.4deg) translateY(0)}50%{transform:rotate(1.4deg) translateY(-10px)}}
+  .qp-card .qp-tag{display:inline-block;background:var(--soft);border:1px solid var(--line);color:var(--green-2);font-weight:750;font-size:.74rem;padding:5px 13px;border-radius:50px;text-transform:uppercase;letter-spacing:.05em}
+  .qp-big{background:linear-gradient(160deg,#0c1512,#0b3a22);border-radius:18px;padding:22px;color:#fff;text-align:center;margin:14px 0 14px;box-shadow:0 14px 34px rgba(11,58,34,.3)}
+  .qp-big .n{font-size:2.9rem;font-weight:850;letter-spacing:-.02em;line-height:1;display:block}
+  .qp-big .n span{color:var(--lime)}
+  .qp-big small{color:#bfe6d3;font-weight:700;font-size:.92rem;display:block;margin-top:6px}
+  .qp-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+  .qp-kpis div{background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:13px;text-align:center}
+  .qp-kpis b{display:block;font-size:1.35rem;font-weight:850;color:var(--green-2)}
+  .qp-kpis span{font-size:.78rem;color:var(--muted);font-weight:600}
+  .qp-type{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:700;color:var(--ink);font-size:.96rem}
+  .qp-hint{text-align:center;font-size:.78rem;color:var(--muted);margin-top:12px;font-style:italic}
+  @media(max-width:880px){.qp-grid{grid-template-columns:1fr;gap:34px}.qp-visual{order:-1}}
+  @media(prefers-reduced-motion:reduce){.qp-card{animation:none}}
+
   /* MARQUEE / BADGES */
   .badges{background:var(--ink);color:#dfeee6}
   .badges .wrap{display:flex;justify-content:space-around;flex-wrap:wrap;gap:22px;align-items:center}
@@ -410,6 +437,37 @@
 </section>
 
 <!-- STATS -->
+<!-- ABNEHM-TYP TEST (prominent) -->
+<section class="quiz-promo">
+  <div class="wrap qp-grid">
+    <div class="qp-text reveal">
+      <div class="eyebrow" data-de="🎯 Kostenloser 3-Minuten-Test" data-en="🎯 Free 3-minute test">🎯 Kostenloser 3-Minuten-Test</div>
+      <h2 data-de="Welcher <span class='hl'>Abnehm-Typ</span> bist du?" data-en="What's your <span class='hl'>weight-loss type</span>?">Welcher <span class="hl">Abnehm-Typ</span> bist du?</h2>
+      <p class="lead" data-de="Jeder Mensch nimmt anders ab – deshalb scheitern Standard-Diäten. Finde in 3 Minuten deinen persönlichen Abnehm-Typ heraus und erhalte sofort eine maßgeschneiderte Auswertung: genau die Strategie, die zu DIR passt." data-en="Everyone loses weight differently – that's why standard diets fail. In 3 minutes, discover your personal weight-loss type and get an instant tailored analysis: exactly the strategy that fits YOU.">Jeder Mensch nimmt anders ab – deshalb scheitern Standard-Diäten. Finde in 3 Minuten deinen persönlichen Abnehm-Typ heraus und erhalte sofort eine maßgeschneiderte Auswertung: genau die Strategie, die zu DIR passt.</p>
+      <ul class="qp-list">
+        <li data-de="Dein persönlicher Abnehm-Typ + was ihn ausmacht" data-en="Your personal weight-loss type + what defines it">Dein persönlicher Abnehm-Typ + was ihn ausmacht</li>
+        <li data-de="Deine individuelle Kalorien- & Protein-Empfehlung" data-en="Your individual calorie & protein target">Deine individuelle Kalorien- & Protein-Empfehlung</li>
+        <li data-de="Prognose: wann du realistisch dein Wunschgewicht erreichst" data-en="Forecast: when you realistically reach your goal weight">Prognose: wann du realistisch dein Wunschgewicht erreichst</li>
+        <li data-de="Kostenloser 7-Tage-Plan als Starthilfe – gratis dazu" data-en="Free 7-day starter plan – included">Kostenloser 7-Tage-Plan als Starthilfe – gratis dazu</li>
+      </ul>
+      <a href="quiz.html" class="btn live" data-de="Test jetzt starten – gratis" data-en="Start the test now – free">Test jetzt starten – gratis</a>
+      <div class="qp-trust"><span data-de="✅ 100% kostenlos" data-en="✅ 100% free">✅ 100% kostenlos</span><span data-de="✅ Kein Risiko" data-en="✅ No risk">✅ Kein Risiko</span><span data-de="✅ In 3 Minuten" data-en="✅ In 3 minutes">✅ In 3 Minuten</span></div>
+    </div>
+    <div class="qp-visual reveal">
+      <div class="qp-card">
+        <span class="qp-tag" data-de="Deine persönliche Prognose" data-en="Your personal forecast">Deine persönliche Prognose</span>
+        <div class="qp-big"><span class="n">−<span>6</span> kg</span><small data-de="erreichbar bis 12. Oktober" data-en="reachable by October 12">erreichbar bis 12. Oktober</small></div>
+        <div class="qp-kpis">
+          <div><b>1.800</b><span data-de="kcal / Tag" data-en="kcal / day">kcal / Tag</span></div>
+          <div><b>135 g</b><span data-de="Protein / Tag" data-en="protein / day">Protein / Tag</span></div>
+        </div>
+        <div class="qp-type">🔥 <span data-de="Dein Typ: <b>Der Motivations-Typ</b>" data-en="Your type: <b>The Motivation Type</b>">Dein Typ: <b>Der Motivations-Typ</b></span></div>
+        <div class="qp-hint" data-de="Beispiel-Ergebnis – deins erstellen wir in 3 Minuten." data-en="Example result – we'll create yours in 3 minutes.">Beispiel-Ergebnis – deins erstellen wir in 3 Minuten.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="badges" style="padding:46px 0">
   <div style="max-width:1160px;margin:0 auto;padding:0 24px">
     <div class="stats-grid">
