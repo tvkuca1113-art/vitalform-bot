@@ -37,6 +37,7 @@ Du vereinst das Wissen eines Spitzen-Ernährungsberaters und Personal Trainers: 
 ## TON UND STIL
 - Sprich immer per „du" – warm, klar, motivierend, wie ein Weltklasse-Coach, der an dich glaubt.
 - Du sprichst fließend Deutsch, Englisch, Bosnisch/Kroatisch/Serbisch, Türkisch und Arabisch (und weitere Sprachen). Antworte IMMER natürlich in genau der Sprache, in der der Nutzer schreibt, und kenne die typischen Gerichte und Essgewohnheiten dieser Kulturen.
+- Achte auf EINWANDFREIE Rechtschreibung in JEDER Sprache. Bei Bosnisch/Kroatisch/Serbisch schreibe korrekt mit „j" (z. B. „kalorije"/„kalorijama", NICHT „kaloriyama"; „trening", „bjelančevine") und in sauberer Ijekavica. Keine Buchstaben-Verwechslungen zwischen Sprachen.
 - Strukturiere längere Antworten leicht lesbar (kurze Überschriften, knappe Aufzählungen). Fasse dich fokussiert – umsetzbare Schritte statt langer Theorie. Emojis sparsam und professionell.
 
 ## SO ARBEITEST DU (Coaching-Ablauf)
@@ -137,6 +138,7 @@ Du bist Teil von VITALFORM, einem Online-Programm für nachhaltiges Abnehmen und
 ## FOLGEVORSCHLÄGE (WICHTIG – IMMER AM ENDE JEDER ANTWORT)
 Beende JEDE Antwort mit genau einer Zeile in exakt diesem Format – als allerletzte Zeile, ohne weitere Zeichen danach:
 [[VF: Vorschlag 1 | Vorschlag 2 | Vorschlag 3]]
+- WICHTIG: Das Präfix „VF:" MUSS enthalten sein und die Zeile MUSS mit [[ beginnen und mit ]] enden. Ohne das exakte Format werden keine Buttons angezeigt, sondern hässlicher Rohtext.
 - 2–3 sehr kurze Vorschläge (je max. ca. 4 Wörter), formuliert aus Sicht des Nutzers als nächster sinnvoller Schritt (Beispiele: „Einkaufsliste dazu", „Vegetarische Variante", „Weniger Kohlenhydrate", „Trainingsplan dazu").
 - Immer in der Sprache des Nutzers und passend zum Gesprächskontext.
 - Diese Zeile wird dem Nutzer als anklickbare Buttons angezeigt, nicht als Text.`;
@@ -312,11 +314,11 @@ export default async function handler(req, res) {
     remaining = Math.max(0, FREE_TRIAL_LIMIT - trialCount);
   }
 
-  // Poziv Claude API-ja (sa sigurnim fallbackom da bot NIKAD ne stane zbog naziva modela)
+  // STREAMING odgovor: tokeni stižu uživo -> tekst se "odmotava", bez osjećaja čekanja.
   try {
     const primaryModel = process.env.CLAUDE_MODEL || "claude-sonnet-4-6";
-    async function callClaude(model) {
-      const r = await fetch("https://api.anthropic.com/v1/messages", {
+    function streamClaude(model) {
+      return fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -326,28 +328,63 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           model: model,
           max_tokens: 1024,
+          stream: true,
           system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
           messages: messages
         })
       });
-      return { ok: r.ok, status: r.status, data: await r.json() };
     }
 
-    let resp = await callClaude(primaryModel);
-    // Ako model nije prihvaćen (npr. pogrešan/nepostojeći naziv) -> automatski fallback na Haiku
-    if (!resp.ok && (resp.status === 404 || resp.status === 400) && primaryModel !== "claude-haiku-4-5") {
-      console.error("chat: model '" + primaryModel + "' odbijen (" + resp.status + ") -> fallback claude-haiku-4-5");
-      resp = await callClaude("claude-haiku-4-5");
+    let r = await streamClaude(primaryModel);
+    // Ako model nije prihvaćen (pogrešan naziv) -> automatski fallback na Haiku PRIJE nego stream počne
+    if (!r.ok && (r.status === 404 || r.status === 400) && primaryModel !== "claude-haiku-4-5") {
+      console.error("chat: model '" + primaryModel + "' odbijen (" + r.status + ") -> fallback claude-haiku-4-5");
+      r = await streamClaude("claude-haiku-4-5");
     }
-    const data = resp.data;
-    if (!resp.ok) {
-      const msg = (data && data.error && data.error.message) ? data.error.message : "Fehler beim KI-Coach.";
-      return json(res, resp.status, { error: msg });
+    if (!r.ok || !r.body) {
+      const e = await r.json().catch(function () { return {}; });
+      const msg = (e && e.error && e.error.message) ? e.error.message : "Fehler beim KI-Coach.";
+      return json(res, r.status || 500, { error: msg });
     }
 
-    const reply = (data.content && data.content[0] && data.content[0].text) ? data.content[0].text : "";
-    return json(res, 200, { reply: reply, remaining: remaining, privileged: privileged });
+    // Meta (trial/pristup) ide u headere; tijelo je čist tekst koji teče uživo.
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Cache-Control", "no-cache, no-transform");
+    res.setHeader("X-Accel-Buffering", "no");
+    res.setHeader("X-Privileged", privileged ? "1" : "0");
+    if (remaining !== null) res.setHeader("X-Trial-Remaining", String(remaining));
+
+    const reader = r.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = "";
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      buf += decoder.decode(chunk.value, { stream: true });
+      let idx;
+      while ((idx = buf.indexOf("\n\n")) >= 0) {
+        const block = buf.slice(0, idx); buf = buf.slice(idx + 2);
+        const parts = block.split("\n");
+        for (let li = 0; li < parts.length; li++) {
+          const line = parts[li];
+          if (line.indexOf("data:") === 0) {
+            const payload = line.slice(5).trim();
+            if (!payload || payload === "[DONE]") continue;
+            try {
+              const ev = JSON.parse(payload);
+              if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta" && ev.delta.text) {
+                res.write(ev.delta.text);
+              }
+            } catch (e) { /* nepotpun JSON – ignoriši */ }
+          }
+        }
+      }
+    }
+    return res.end();
   } catch (err) {
-    return json(res, 500, { error: "Serverska greška. Pokušaj ponovo." });
+    console.error("chat stream error", err && err.message);
+    if (!res.headersSent) return json(res, 500, { error: "Serverska greška. Pokušaj ponovo." });
+    try { return res.end(); } catch (e) { }
   }
 }

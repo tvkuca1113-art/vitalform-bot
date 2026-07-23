@@ -153,6 +153,7 @@
   .preview .pv-x{margin-left:auto;background:var(--soft);border:none;color:var(--muted);cursor:pointer;font-size:1rem;width:28px;height:28px;border-radius:50%;flex-shrink:0}
   .preview .pv-x:hover{background:#fde8e8;color:#b91c1c}
   .bubble .food-img{display:block;max-width:230px;width:100%;border-radius:12px;margin-bottom:8px}
+  .bubble .chat-media{display:block;max-width:100%;width:auto;max-height:340px;border-radius:12px;margin:9px 0;border:1px solid var(--line);background:var(--soft)}
 
   /* OVERLAY */
   .overlay{position:fixed;inset:0;background:rgba(8,20,14,.55);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
@@ -313,6 +314,16 @@
   function formatText(t){
     var s = String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     s = s.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+    // Slike/videi: markdown ![alt](url) + goli linkovi na sliku/video (bot ih može poslati)
+    s = s.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, function(_, alt, url){
+      return "<img class='chat-media' src='"+url+"' alt='"+String(alt).replace(/['"<>]/g,"")+"' loading='lazy' onerror=\"this.style.display='none'\">";
+    });
+    s = s.replace(/(^|\s)(https?:\/\/[^\s<]+\.(?:mp4|webm))(?=\s|$)/gi, function(_, pre, url){
+      return pre+"<video class='chat-media' src='"+url+"' controls playsinline></video>";
+    });
+    s = s.replace(/(^|\s)(https?:\/\/[^\s<]+\.(?:png|jpe?g|gif|webp))(?=\s|$)/gi, function(_, pre, url){
+      return pre+"<img class='chat-media' src='"+url+"' loading='lazy' onerror=\"this.style.display='none'\">";
+    });
     var blocks = s.split(/\n\s*\n/).map(function(block){
       var lines = block.split(/\n/).filter(function(l){ return l.trim()!==""; });
       if(!lines.length) return "";
@@ -483,9 +494,14 @@
   // Extrahiert [[VF: a | b | c]] am Ende der Antwort -> kontextuelle Folge-Buttons
   function parseSuggestions(text){
     var suggestions = [];
-    var clean = String(text).replace(/\[\[VF:\s*([^\]]*)\]\]/gi, function(_, inner){
-      suggestions = inner.split("|").map(function(s){ return s.trim(); }).filter(Boolean).slice(0, 3);
-      return "";
+    // Hvata [[VF: a | b | c]] ALI i [[a | b | c]] (ako bot zaboravi "VF:") -> nema sirovog teksta
+    var clean = String(text).replace(/\[\[\s*(?:VF:\s*)?([^\[\]]*?)\s*\]\]/gi, function(m, inner){
+      var parts = inner.split("|").map(function(s){ return s.trim(); }).filter(Boolean);
+      if(/VF:/i.test(m) || parts.length >= 2){
+        suggestions = parts.slice(0, 3);
+        return "";
+      }
+      return m; // nije marker za prijedloge -> ostavi kako jeste
     }).replace(/\n{3,}/g, "\n\n").trim();
     return { clean: clean, suggestions: suggestions };
   }
@@ -558,6 +574,15 @@
     }catch(e){ return "fehler"; }
   }
 
+  function escapeHtmlLite(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  // Živi prikaz teksta dok stiže: bold radi odmah, [[VF: ...]] rep se sakriva, kursor na kraju
+  function renderStreaming(bubble, text){
+    var cut = text.indexOf("[[");
+    var vis = cut >= 0 ? text.slice(0, cut) : text;
+    var html = escapeHtmlLite(vis).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
+    bubble.innerHTML = html + '<span class="endcaret"></span>';
+  }
+
   async function requestReply(img){
     sendBtn.disabled = true;
     var typing = addTyping();
@@ -575,22 +600,42 @@
         method:"POST", headers:{"content-type":"application/json"},
         body: JSON.stringify({ messages: payloadMsgs, accessCode: accessCode })
       });
-      var data = await res.json();
+      // Greške stižu kao JSON (prije streama)
+      if(res.status === 402){ typing.remove(); var d=await res.json().catch(function(){return{};}); if(d.code==="TRIAL_ENDED") showUpsell(); else addError(d.error||"Fehler."); setStatus("Online · 24/7"); return; }
+      if(res.status === 429){ typing.remove(); var d2=await res.json().catch(function(){return{};}); addError(d2.error||"Zu viele Anfragen. Bitte kurz warten."); setStatus("Online · 24/7"); return; }
+      if(!res.ok || !res.body){ typing.remove(); var d3=await res.json().catch(function(){return{};}); addError((d3&&d3.error)||"Es ist ein Fehler aufgetreten. Bitte versuche es erneut."); setStatus("Online · 24/7"); return; }
+
+      var priv = res.headers.get("X-Privileged") === "1";
+      var remainingH = res.headers.get("X-Trial-Remaining");
       typing.remove();
-      if(res.status === 402 && data.code === "TRIAL_ENDED"){ showUpsell(); setStatus("Online · 24/7"); }
-      else if(res.status === 429){ addError(data.error || "Zu viele Anfragen. Bitte kurz warten."); }
-      else if(!res.ok || data.error){ addError(data.error || "Es ist ein Fehler aufgetreten. Bitte versuche es erneut."); }
-      else{
-        var reply = data.reply || "";
-        var parsed = parseSuggestions(reply);
-        chatHistory.push({ role:"assistant", content: parsed.clean });
-        saveHistory();
-        var shell = buildAIShell();
-        streamInto(shell, parsed.clean, parsed.suggestions);
-        if(data.privileged) setFullAccess(); else setTrial(data.remaining);
+
+      var shell = buildAIShell();
+      isStreaming = true; stopFlag = false;
+      stopwrap.classList.add("show"); setStatus("schreibt …");
+      var reader = res.body.getReader();
+      var dec = new TextDecoder();
+      var full = "";
+      while(true){
+        if(stopFlag){ try{ reader.cancel(); }catch(e){} break; }
+        var chk = await reader.read();
+        if(chk.done) break;
+        full += dec.decode(chk.value, { stream:true });
+        renderStreaming(shell.bubble, full);
+        scrollDown();
       }
+      // Kraj streama: pun format (liste, naslovi, slike) + prijedlozi kao dugmad
+      var parsed = parseSuggestions(full);
+      chatHistory.push({ role:"assistant", content: parsed.clean });
+      saveHistory();
+      shell.el.setAttribute("data-text", parsed.clean);
+      shell.bubble.innerHTML = formatText(parsed.clean);
+      renderSuggestions(shell.el, parsed.suggestions);
+      isStreaming = false; stopwrap.classList.remove("show"); setStatus("Online · 24/7");
+      if(priv) setFullAccess(); else if(remainingH !== null) setTrial(parseInt(remainingH, 10));
+      scrollDown();
     }catch(e){
-      typing.remove();
+      try{ typing.remove(); }catch(_){}
+      isStreaming = false; stopwrap.classList.remove("show"); setStatus("Online · 24/7");
       addError("Verbindungsfehler. Bitte prüfe deine Internetverbindung.");
     }finally{
       sendBtn.disabled = false;
