@@ -496,6 +496,19 @@
   .wn-table .part{color:#c99700;font-size:.82rem;font-weight:750}
   .wn-close{max-width:640px;margin:26px auto 0;text-align:center;font-size:1.12rem;font-weight:750;color:var(--ink);line-height:1.5}
   .wn-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  /* ===== Hero Sprach-Wedge ===== */
+  .hero-langs{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(22,163,74,.1),rgba(163,230,53,.14));border:1px solid rgba(22,163,74,.25);border-radius:50px;padding:9px 18px;margin:0 0 22px;font-size:.95rem;color:var(--ink-2);line-height:1.35}
+  .hero-langs b{color:var(--green-2);font-weight:800}
+  .hero-langs .hl-globe{font-size:1.1rem}
+  @media(max-width:600px){.hero-langs{font-size:.86rem;padding:8px 14px}}
+  /* ===== Trust-Leiste unter CTAs ===== */
+  .cta-trust{display:flex;gap:8px 18px;justify-content:center;flex-wrap:wrap;margin:16px 0 0;font-size:.86rem;color:var(--muted);font-weight:600}
+  .cta-trust span{display:inline-flex;align-items:center;gap:6px}
+  .cta-trust b{color:var(--green-2);font-weight:800}
+  /* ===== Preis-Anker ===== */
+  .price-anchor{max-width:620px;margin:22px auto 0;text-align:center;font-size:1rem;color:var(--ink-2);background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 20px;line-height:1.5}
+  .price-anchor b{color:var(--green-2)}
+  .price-anchor .strike{color:var(--muted);text-decoration:line-through;font-weight:600}
 </style>
 </head>
 <body>
@@ -537,11 +550,12 @@
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow" data-de="KI-gestütztes Abnehm-Coaching" data-en="AI-powered weight-loss coaching">KI-gestütztes Abnehm-Coaching</div>
-      <h1 data-de="Abnehmen mit deinem persönlichen <span class='hl'>KI-Coach</span> – in 12 Wochen zu nachhaltigen Gewohnheiten." data-en="Lose weight with your personal <span class='hl'>AI coach</span> – build lasting habits in 12 weeks.">Abnehmen mit deinem persönlichen <span class="hl">KI-Coach</span> – in 12 Wochen zu nachhaltigen Gewohnheiten.</h1>
-      <p class="lead" data-de="Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn im Chat laufend an dich an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit." data-en="Your AI coach builds your nutrition and training plan, adapts it to you continuously in the chat and answers your questions 24/7. No starving, no gym pressure, no waiting.">Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn im Chat laufend an dich an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit.</p>
+      <h1 data-de="Schluss mit Diäten, die nach 3 Wochen scheitern. Dein KI-Coach bleibt dran – <span class='hl'>jeden Tag, in deiner Sprache</span>." data-en="Done with diets that fail after 3 weeks. Your AI coach keeps you going – <span class='hl'>every day, in your language</span>.">Schluss mit Diäten, die nach 3 Wochen scheitern. Dein KI-Coach bleibt dran – <span class="hl">jeden Tag, in deiner Sprache</span>.</h1>
+      <p class="lead" data-de="Kein Wissen fehlt dir – dir fehlt jemand, der dranbleibt. Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn im Chat laufend an dich an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit." data-en="You're not missing knowledge – you're missing someone who keeps you going. Your AI coach builds your nutrition and training plan, adapts it to you continuously in the chat and answers your questions 24/7. No starving, no gym pressure, no waiting.">Kein Wissen fehlt dir – dir fehlt jemand, der dranbleibt. Dein KI-Coach erstellt deinen Ernährungs- und Trainingsplan, passt ihn im Chat laufend an dich an und beantwortet deine Fragen rund um die Uhr. Ohne Hungern, ohne Fitnessstudio-Zwang, ohne Wartezeit.</p>
+      <div class="hero-langs"><span class="hl-globe">🌍</span> <span data-de="Endlich ein Coach, der deine Sprache spricht: <b>Deutsch · Türkçe · Bosanski · العربية</b>" data-en="Finally a coach who speaks your language: <b>German · Türkçe · Bosanski · العربية</b>">Endlich ein Coach, der deine Sprache spricht: <b>Deutsch · Türkçe · Bosanski · العربية</b></span></div>
       <div class="hero-cta">
         <a href="coach.html" class="btn live" data-de="Coach LIVE testen – gratis" data-en="Try the coach LIVE – free">Coach LIVE testen – gratis</a>
-        <a onclick="goHome('#programme')" class="btn ghost" data-de="Programme ansehen" data-en="View programs">Programme ansehen →</a>
+        <a href="quiz.html" class="btn ghost" data-de="Kostenlos: Wie nehme ich ab?" data-en="Free: how do I lose weight?">Kostenlos: Wie nehme ich ab? →</a>
       </div>
       <div class="trust">
         <div><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#dcfce7"/><path d="M7 12l3.5 3.5L17 8.5" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-de="100% online" data-en="100% online">100% online</span></div>
@@ -761,7 +775,7 @@
         <li data-de="Einkaufslisten" data-en="Shopping lists">Einkaufslisten</li>
         <li data-de="Kalorien- & Makro-Guide" data-en="Calorie & macro guide">Kalorien- & Makro-Guide</li>
       </ul>
-      <a onclick="buyNow('plan')" class="btn ghost" style="cursor:pointer" data-de="Jetzt kaufen" data-en="Buy now">Jetzt kaufen</a>
+      <a onclick="buyNow('plan')" class="btn ghost" style="cursor:pointer" data-de="Ernährungsplan sichern – 39 €" data-en="Get the nutrition plan – €39">Ernährungsplan sichern – 39 €</a>
       <div class="card-pay">Apple&nbsp;Pay · PayPal · Kreditkarte</div>
     </div>
     <div class="price featured reveal">
@@ -775,7 +789,7 @@
         <li data-de="Rezepte, Einkaufslisten & Tracker" data-en="Recipes, shopping lists & tracker">Rezepte, Einkaufslisten & Tracker</li>
         <li data-de="1 Monat KI-Coach inklusive" data-en="1 month AI coach included">1 Monat KI-Coach inklusive</li>
       </ul>
-      <a onclick="buyNow('programm')" class="btn" style="cursor:pointer" data-de="Jetzt kaufen" data-en="Buy now">Jetzt kaufen</a>
+      <a onclick="buyNow('programm')" class="btn" style="cursor:pointer" data-de="Programm sichern – 97 €" data-en="Get the program – €97">Programm sichern – 97 €</a>
       <div class="card-pay">Apple&nbsp;Pay · PayPal · Kreditkarte</div>
     </div>
     <div class="price reveal">
@@ -789,9 +803,18 @@
         <li data-de="Motivation im Chat" data-en="Motivation in chat">Motivation im Chat</li>
         <li data-de="Jederzeit kündbar" data-en="Cancel anytime">Jederzeit kündbar</li>
       </ul>
-      <a onclick="buyNow('coach')" class="btn ghost" style="cursor:pointer" data-de="Abo starten" data-en="Start subscription">Abo starten</a>
-      <a href="coach.html" class="trylink" data-de="oder kostenlos testen →" data-en="or try for free →">oder kostenlos testen →</a>
+      <a href="coach.html" class="btn" style="cursor:pointer" data-de="Coach gratis testen →" data-en="Try the coach free →">Coach gratis testen →</a>
+      <a onclick="buyNow('coach')" class="trylink" style="cursor:pointer" data-de="oder direkt Abo starten – 19,90 €/Mon." data-en="or start subscription – €19.90/mo">oder direkt Abo starten – 19,90 €/Mon.</a>
     </div>
+  </div>
+  <div class="wrap">
+    <div class="cta-trust reveal">
+      <span>✅ <b data-de="Kein Risiko" data-en="No risk">Kein Risiko</b></span>
+      <span>💸 <b data-de="14 Tage Geld-zurück" data-en="14-day money-back">14 Tage Geld-zurück</b></span>
+      <span>🔓 <b data-de="Jederzeit kündbar" data-en="Cancel anytime">Jederzeit kündbar</b></span>
+      <span>⚡ <b data-de="Sofort-Zugang" data-en="Instant access">Sofort-Zugang</b></span>
+    </div>
+    <div class="price-anchor reveal" data-de="Ein Personal Trainer kostet schnell <span class='strike'>60 €/Stunde</span>. Dein VITALFORM KI-Coach: <b>19,90 €/Monat</b> – und immer für dich da, in deiner Sprache." data-en="A personal trainer easily costs <span class='strike'>€60/hour</span>. Your VITALFORM AI coach: <b>€19.90/month</b> – and always there for you, in your language.">Ein Personal Trainer kostet schnell <span class="strike">60 €/Stunde</span>. Dein VITALFORM KI-Coach: <b>19,90 €/Monat</b> – und immer für dich da, in deiner Sprache.</div>
   </div>
   <div class="wrap">
     <div class="checkout-info reveal">
@@ -840,8 +863,8 @@
 <section id="warum-nicht-ki" class="wn">
   <div class="wrap center shead reveal">
     <div class="eyebrow" data-de="Die ehrliche Frage" data-en="The honest question">Die ehrliche Frage</div>
-    <h2 data-de="„Das kann ChatGPT doch auch – gratis."" data-en="“ChatGPT can do that too – for free.”">„Das kann ChatGPT doch auch – gratis."</h2>
-    <p class="lead" data-de="Stimmt. Ein Backofen kann auch backen. Trotzdem gehst du zum Bäcker. Der Unterschied liegt nicht im Modell – er liegt in allem, was drumherum passiert." data-en="True. An oven can bake too. Yet you still go to the baker. The difference isn't the model – it's everything around it.">Stimmt. Ein Backofen kann auch backen. Trotzdem gehst du zum Bäcker. Der Unterschied liegt nicht im Modell – er liegt in allem, was drumherum passiert.</p>
+    <h2 data-de="„Das macht eine Gratis-KI doch auch – umsonst."" data-en="“A free AI does that too – for nothing.”">„Das macht eine Gratis-KI doch auch – umsonst."</h2>
+    <p class="lead" data-de="Stimmt – bis du zum dritten Mal alles neu erklärst, deinen Plan vergisst und wieder aufgibst. Eine Gratis-KI gibt dir Antworten. VITALFORM gibt dir ein System, das dich kennt und dranbleibt." data-en="True – until you explain everything for the third time, lose your plan and quit again. A free AI gives you answers. VITALFORM gives you a system that knows you and keeps you going.">Stimmt – bis du zum dritten Mal alles neu erklärst, deinen Plan vergisst und wieder aufgibst. Eine Gratis-KI gibt dir Antworten. VITALFORM gibt dir ein System, das dich kennt und dranbleibt.</p>
   </div>
   <div class="wrap wn-grid">
 
@@ -975,10 +998,10 @@
     <div class="g-card reveal">
       <div class="g-seal"><b>14</b><small data-de="TAGE" data-en="DAYS">TAGE</small></div>
       <div>
-        <div class="eyebrow" data-de="Freiwillige VITALFORM-Garantie" data-en="Voluntary VITALFORM guarantee">Freiwillige VITALFORM-Garantie</div>
-        <h2 style="font-size:1.8rem" data-de="14 Tage Geld-zurück – freiwillig, zusätzlich zum Gesetz" data-en="14-day money-back – voluntary, on top of the law">14 Tage Geld-zurück – freiwillig, zusätzlich zum Gesetz</h2>
-        <p data-de="Wir sind überzeugt von unserem System. Zusätzlich zu deinen gesetzlichen Rechten geben wir dir eine freiwillige 14-Tage-Geld-zurück-Garantie: Bist du innerhalb von 14 Tagen nach dem Kauf nicht zufrieden, schreib uns an info@vitalform.fit und wir erstatten dir den Kaufpreis für digitale Programme zurück (sofern nicht bereits vollständig heruntergeladen bzw. genutzt)." data-en="We stand behind our system. On top of your statutory rights, we voluntarily offer a 14-day money-back guarantee: if you're not satisfied within 14 days of purchase, email us at info@vitalform.fit and we'll refund the purchase price for digital programs (unless already fully downloaded or used).">Wir sind überzeugt von unserem System. Zusätzlich zu deinen gesetzlichen Rechten geben wir dir eine freiwillige 14-Tage-Geld-zurück-Garantie: Bist du innerhalb von 14 Tagen nach dem Kauf nicht zufrieden, schreib uns an info@vitalform.fit und wir erstatten dir den Kaufpreis für digitale Programme zurück (sofern nicht bereits vollständig heruntergeladen bzw. genutzt).</p>
-        <p class="g-legal" data-de="Davon unberührt bleibt dein gesetzliches Widerrufsrecht (14 Tage). Wichtig: Bei digitalen Inhalten kann dieses gesetzliche Widerrufsrecht vorzeitig erlöschen, wenn du dem sofortigen Start ausdrücklich zustimmst. Unsere freiwillige Garantie oben gilt unabhängig davon. Details in der Widerrufsbelehrung und den AGB." data-en="Your statutory right of withdrawal (14 days) remains unaffected. Note: for digital content this statutory right can expire early if you expressly agree to immediate start. Our voluntary guarantee above applies regardless. Details in the withdrawal policy and terms.">Davon unberührt bleibt dein gesetzliches Widerrufsrecht (14 Tage). Wichtig: Bei digitalen Inhalten kann dieses gesetzliche Widerrufsrecht vorzeitig erlöschen, wenn du dem sofortigen Start ausdrücklich zustimmst. Unsere freiwillige Garantie oben gilt unabhängig davon. Details in der <a onclick="showPage('widerruf')" style="color:inherit;text-decoration:underline;cursor:pointer">Widerrufsbelehrung</a> und den <a onclick="showPage('agb')" style="color:inherit;text-decoration:underline;cursor:pointer">AGB</a>.</p>
+        <div class="eyebrow" data-de="Ohne Risiko" data-en="No risk">Ohne Risiko</div>
+        <h2 style="font-size:1.9rem" data-de="Gefällt dir dein Plan nicht? Du bekommst dein Geld zurück." data-en="Not happy with your plan? You get your money back.">Gefällt dir dein Plan nicht? Du bekommst dein Geld zurück.</h2>
+        <p data-de="Wir sind so überzeugt von VITALFORM, dass wir dir eine <b>14-Tage-Geld-zurück-Garantie</b> geben. Bist du nicht zufrieden, genügt eine kurze E-Mail an info@vitalform.fit – ohne komplizierte Formulare, ohne Diskussion." data-en="We're so confident in VITALFORM that we give you a <b>14-day money-back guarantee</b>. Not satisfied? A short email to info@vitalform.fit is enough – no complicated forms, no discussion.">Wir sind so überzeugt von VITALFORM, dass wir dir eine <b>14-Tage-Geld-zurück-Garantie</b> geben. Bist du nicht zufrieden, genügt eine kurze E-Mail an info@vitalform.fit – ohne komplizierte Formulare, ohne Diskussion.</p>
+        <p class="g-legal" data-de="Freiwillige Garantie – zusätzlich zu deinem gesetzlichen Widerrufsrecht. Erstattet werden digitale Programme, die noch nicht vollständig genutzt wurden. Bei digitalen Inhalten kann das gesetzliche Widerrufsrecht vorzeitig erlöschen, wenn du dem sofortigen Start zustimmst. Details in Widerrufsbelehrung und AGB." data-en="Voluntary guarantee – on top of your statutory right of withdrawal. Refunds apply to digital programs not yet fully used. For digital content the statutory right can expire early if you agree to immediate start. Details in the withdrawal policy and terms.">Freiwillige Garantie – zusätzlich zu deinem gesetzlichen Widerrufsrecht. Erstattet werden digitale Programme, die noch nicht vollständig genutzt wurden. Bei digitalen Inhalten kann das gesetzliche Widerrufsrecht vorzeitig erlöschen, wenn du dem sofortigen Start zustimmst. Details in der <a onclick="showPage('widerruf')" style="color:inherit;text-decoration:underline;cursor:pointer">Widerrufsbelehrung</a> und den <a onclick="showPage('agb')" style="color:inherit;text-decoration:underline;cursor:pointer">AGB</a>.</p>
       </div>
     </div>
   </div>
