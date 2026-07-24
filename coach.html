@@ -172,6 +172,8 @@
   .card .close{margin-top:6px;color:var(--muted);font-size:.85rem;cursor:pointer;background:none;border:none}
   .card .fb{font-size:.85rem;font-weight:650;min-height:20px;margin-bottom:6px}
   .card .fb.ok{color:var(--green-2)}.card .fb.no{color:#b91c1c}
+  .ai-note{display:flex;gap:8px;align-items:flex-start;max-width:820px;margin:0 auto;padding:9px 16px;font-size:.8rem;line-height:1.45;color:var(--muted);background:#f4f9f5;border-bottom:1px solid var(--line)}
+  .ai-note b{color:var(--ink-2)}
   /* Barrierefreiheit (WCAG 2.2) */
   :focus-visible{outline:3px solid #0f7a37;outline-offset:2px;border-radius:8px}
   .send:focus-visible,.attach:focus-visible,.key-btn:focus-visible,.chip:focus-visible,.stopbtn:focus-visible{outline:3px solid #0b4d24;outline-offset:2px}
@@ -198,6 +200,8 @@
   </header>
 
   <div class="trialbar" id="trialbar">🎁 Kostenloser Test aktiv</div>
+
+  <div class="ai-note" role="note">ℹ️ <span>Du chattest mit einem <b>KI-System</b> (VITALFORM KI-Coach) – nicht mit einer Ärztin/einem Arzt, einer Ernährungsberatung oder einem Personal Trainer. Die KI kann Fehler machen und ersetzt keine medizinische Beratung.</span></div>
 
   <div class="chat" id="chat">
     <div class="wrap" id="wrap" aria-live="polite">

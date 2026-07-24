@@ -106,6 +106,15 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: "Zu viele Anfragen. Bitte kurz warten." });
   }
 
+  // DSGVO: Newsletter/Marketing nur mit ausdrücklicher Einwilligung (getrennte Checkbox).
+  // Ohne Einwilligung senden wir NUR den angeforderten 7-Tage-Plan (Erfüllung der Anfrage)
+  // und nehmen die Adresse NICHT in die Marketing-Liste auf.
+  const marketing = body.marketing === true;
+  if (!marketing) {
+    await sendPlanEmail(apiKey, email); // best-effort, angeforderter Inhalt
+    return res.status(200).json({ ok: true, existed: false, marketing: false });
+  }
+
   // Opcioni atributi (za personalizovani email u Brevu). Kreiraj ih u Brevo:
   // Contacts -> Settings -> Contact attributes (Text): KALORIENZIEL, PROTEINZIEL, ZIEL, TYP
   const attributes = {};
